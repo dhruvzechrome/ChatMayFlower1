@@ -6,18 +6,27 @@
 //
 
 import UIKit
+import FirebaseCore
+import IQKeyboardManagerSwift
+import FirebaseAuth
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    func application(_ app: UIApplication, open url: URL,
+                     options: [UIApplication.OpenURLOptionsKey: Any])
+      -> Bool {
+          
+        
+          return Auth.auth().canHandle(url)
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        FirebaseApp.configure()
+        IQKeyboardManager.shared.enable = true
         return true
     }
-
-    // MARK: UISceneSession Lifecycle
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
@@ -32,5 +41,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 
+}
+
+
+@IBDesignable extension UIView {
+    @IBInspectable var cornerRadius: CGFloat {
+        get { return layer.cornerRadius }
+        set {
+              layer.cornerRadius = newValue
+              layer.masksToBounds = (newValue > 0)
+        }
+    }
+}
+//Border
+@IBDesignable extension UIView {
+    @IBInspectable var borderColor: UIColor? {
+        get {
+            guard let cgColor = layer.borderColor else {
+                return nil
+            }
+            return UIColor(cgColor: cgColor)
+        }
+        set { layer.borderColor = newValue?.cgColor }
+    }
+
+    @IBInspectable var borderWidth: CGFloat {
+        get {
+            return layer.borderWidth
+        }
+        set {
+            layer.borderWidth = newValue
+        }
+    }
 }
 

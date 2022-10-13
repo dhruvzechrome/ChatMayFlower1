@@ -13,9 +13,15 @@
 		883EBD4828F7E09F000A59BA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 883EBD4628F7E09F000A59BA /* Main.storyboard */; };
 		883EBD4A28F7E0A2000A59BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 883EBD4928F7E0A2000A59BA /* Assets.xcassets */; };
 		883EBD4D28F7E0A2000A59BA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 883EBD4B28F7E0A2000A59BA /* LaunchScreen.storyboard */; };
+		883EBD5728F7E2EC000A59BA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 883EBD5628F7E2EC000A59BA /* GoogleService-Info.plist */; };
+		883EBD5928F7FBB6000A59BA /* PhoneVerificationCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EBD5828F7FBB6000A59BA /* PhoneVerificationCode.swift */; };
+		883EBD5B28F7FC38000A59BA /* OtpVerifyCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EBD5A28F7FC38000A59BA /* OtpVerifyCode.swift */; };
+		883EBD5D28F8451F000A59BA /* UserDetailsCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EBD5C28F8451E000A59BA /* UserDetailsCode.swift */; };
+		F92A51A7EF0E9398C747D05B /* Pods_ChatMayFlower.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F378DE097D07AA7FB5C801FD /* Pods_ChatMayFlower.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2DC5EE7365248C3F824D13CC /* Pods-ChatMayFlower.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatMayFlower.release.xcconfig"; path = "Target Support Files/Pods-ChatMayFlower/Pods-ChatMayFlower.release.xcconfig"; sourceTree = "<group>"; };
 		883EBD3D28F7E09F000A59BA /* ChatMayFlower.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatMayFlower.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		883EBD4028F7E09F000A59BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		883EBD4228F7E09F000A59BA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -24,6 +30,12 @@
 		883EBD4928F7E0A2000A59BA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		883EBD4C28F7E0A2000A59BA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		883EBD4E28F7E0A2000A59BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		883EBD5628F7E2EC000A59BA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		883EBD5828F7FBB6000A59BA /* PhoneVerificationCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneVerificationCode.swift; sourceTree = "<group>"; };
+		883EBD5A28F7FC38000A59BA /* OtpVerifyCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtpVerifyCode.swift; sourceTree = "<group>"; };
+		883EBD5C28F8451E000A59BA /* UserDetailsCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsCode.swift; sourceTree = "<group>"; };
+		C52B43D00632AAB91AC73A6C /* Pods-ChatMayFlower.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatMayFlower.debug.xcconfig"; path = "Target Support Files/Pods-ChatMayFlower/Pods-ChatMayFlower.debug.xcconfig"; sourceTree = "<group>"; };
+		F378DE097D07AA7FB5C801FD /* Pods_ChatMayFlower.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatMayFlower.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +43,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F92A51A7EF0E9398C747D05B /* Pods_ChatMayFlower.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F0FDB9DE40A8E64543CF8FD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F378DE097D07AA7FB5C801FD /* Pods_ChatMayFlower.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		883EBD3428F7E09F000A59BA = {
 			isa = PBXGroup;
 			children = (
 				883EBD3F28F7E09F000A59BA /* ChatMayFlower */,
 				883EBD3E28F7E09F000A59BA /* Products */,
+				E6E8EF8A6E0C647DBF9FB33D /* Pods */,
+				1F0FDB9DE40A8E64543CF8FD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -63,8 +86,21 @@
 				883EBD4928F7E0A2000A59BA /* Assets.xcassets */,
 				883EBD4B28F7E0A2000A59BA /* LaunchScreen.storyboard */,
 				883EBD4E28F7E0A2000A59BA /* Info.plist */,
+				883EBD5628F7E2EC000A59BA /* GoogleService-Info.plist */,
+				883EBD5828F7FBB6000A59BA /* PhoneVerificationCode.swift */,
+				883EBD5A28F7FC38000A59BA /* OtpVerifyCode.swift */,
+				883EBD5C28F8451E000A59BA /* UserDetailsCode.swift */,
 			);
 			path = ChatMayFlower;
+			sourceTree = "<group>";
+		};
+		E6E8EF8A6E0C647DBF9FB33D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C52B43D00632AAB91AC73A6C /* Pods-ChatMayFlower.debug.xcconfig */,
+				2DC5EE7365248C3F824D13CC /* Pods-ChatMayFlower.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,9 +110,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 883EBD5128F7E0A2000A59BA /* Build configuration list for PBXNativeTarget "ChatMayFlower" */;
 			buildPhases = (
+				B4889DC93A43AA8947894DD3 /* [CP] Check Pods Manifest.lock */,
 				883EBD3928F7E09F000A59BA /* Sources */,
 				883EBD3A28F7E09F000A59BA /* Frameworks */,
 				883EBD3B28F7E09F000A59BA /* Resources */,
+				5A1750C87728E8D93CD76D4E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -126,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				883EBD4D28F7E0A2000A59BA /* LaunchScreen.storyboard in Resources */,
+				883EBD5728F7E2EC000A59BA /* GoogleService-Info.plist in Resources */,
 				883EBD4A28F7E0A2000A59BA /* Assets.xcassets in Resources */,
 				883EBD4828F7E09F000A59BA /* Main.storyboard in Resources */,
 			);
@@ -133,13 +172,58 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		5A1750C87728E8D93CD76D4E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatMayFlower/Pods-ChatMayFlower-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatMayFlower/Pods-ChatMayFlower-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChatMayFlower/Pods-ChatMayFlower-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B4889DC93A43AA8947894DD3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ChatMayFlower-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		883EBD3928F7E09F000A59BA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				883EBD4528F7E09F000A59BA /* ViewController.swift in Sources */,
+				883EBD5B28F7FC38000A59BA /* OtpVerifyCode.swift in Sources */,
+				883EBD5D28F8451F000A59BA /* UserDetailsCode.swift in Sources */,
 				883EBD4128F7E09F000A59BA /* AppDelegate.swift in Sources */,
+				883EBD5928F7FBB6000A59BA /* PhoneVerificationCode.swift in Sources */,
 				883EBD4328F7E09F000A59BA /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -284,6 +368,7 @@
 		};
 		883EBD5228F7E0A2000A59BA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C52B43D00632AAB91AC73A6C /* Pods-ChatMayFlower.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -311,6 +396,7 @@
 		};
 		883EBD5328F7E0A2000A59BA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2DC5EE7365248C3F824D13CC /* Pods-ChatMayFlower.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
