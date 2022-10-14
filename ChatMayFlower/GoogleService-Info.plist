@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>151356979737-at4qab3ptv8um3iubi247ffns7mimh9o.apps.googleusercontent.com</string>
+	<string>1097966894476-che146n8u26qg7s6dprjqlm8dq1a9ile.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.151356979737-at4qab3ptv8um3iubi247ffns7mimh9o</string>
+	<string>com.googleusercontent.apps.1097966894476-che146n8u26qg7s6dprjqlm8dq1a9ile</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBznds9wkWRZDGAVhuvbyG6qz4fE3Cmv0c</string>
+	<string>AIzaSyAJfVHqMdy_ipvFW4jAXBBv4cz8TU8H--E</string>
 	<key>GCM_SENDER_ID</key>
-	<string>151356979737</string>
+	<string>1097966894476</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.agstya.ChatMayFlower</string>
 	<key>PROJECT_ID</key>
-	<string>chatmayflower</string>
+	<string>chatmayflower-eb7f6</string>
 	<key>STORAGE_BUCKET</key>
-	<string>chatmayflower.appspot.com</string>
+	<string>chatmayflower-eb7f6.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:151356979737:ios:48924c7fd1bf5e95a7c888</string>
+	<string>1:1097966894476:ios:69254eac74fd5a4a9f2aa9</string>
 </dict>
 </plist>

@@ -10,7 +10,7 @@ import FirebaseAuth
 class OtpVerifyCode: UIViewController {
         
     var verification = ""
-    
+    var phone = ""
     @IBOutlet weak var txtOtp: UITextField!
     @IBAction func otpVeri(_ sender: UIButton) {
         print(verification)
@@ -21,6 +21,24 @@ class OtpVerifyCode: UIViewController {
         )
         
         ////
+//        DataBaseManager.shared.userExists(with: phone, completion: { exists in
+//            guard !exists else{
+//                // user exists already
+//
+//                return
+//            }
+//            FirebaseAuth.Auth.auth().createUser(with: phone, completion: {[weak self] authResult, error in
+//                guard strongSelf = self  else {
+//                    return
+//                }
+//                guard authResult != nil , error == nil else {
+//                    print("Error occure")
+//                    return
+//                }
+//            })
+//            // user not exist
+//
+//        })
         
         Auth.auth().signIn(with: credential) { authResult, error in
             if let error = error {
@@ -45,12 +63,19 @@ class OtpVerifyCode: UIViewController {
               return
             }
             print("User Singin success")
+            
+            DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phone))
+            
+            
             let  alert = UIAlertController (title: "Otp Verified Successfully!!", message: "", preferredStyle: .alert)
             
                             alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: {_ in
-                              
+                                let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
+                                self.navigationController?.pushViewController(vc!, animated: true)
                             }))
             self.present(alert, animated: true)
+            
+           
             // User is signed in
             // ...
         }

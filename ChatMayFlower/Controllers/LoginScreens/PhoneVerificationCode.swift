@@ -19,10 +19,19 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
         if phoneNumber != nil {
             
             Auth.auth().settings?.isAppVerificationDisabledForTesting = false
+            
+           
+            
             PhoneAuthProvider.provider()
               .verifyPhoneNumber(phoneNumber!, uiDelegate: nil) { verificationID, error in
                   if let error = error {
                       print("fail otp sent",error)
+                      let  alert = UIAlertController (title: "Otp cannot sent!", message: "", preferredStyle: .alert)
+                      
+                                      alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: {_ in
+                                        
+                                      }))
+                      self.present(alert, animated: true)
                     return
                   }
                   // Sign in using the verificationID and the code sent to the user
@@ -31,6 +40,7 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
                   self.verificationID = UserDefaults.standard.string(forKey: "authVerificationID")
                   let vc = self.storyboard?.instantiateViewController(withIdentifier: "OtpVerifyCode") as? OtpVerifyCode
                   vc!.verification = verificationID!
+                  vc!.phone = phoneNumber!
                   self.navigationController?.pushViewController(vc!, animated: true)
               }
             
