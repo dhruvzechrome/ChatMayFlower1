@@ -45,6 +45,12 @@ class OtpVerifyCode: UIViewController {
               return
             }
             print("User Singin success")
+            let  alert = UIAlertController (title: "Otp Verified Successfully!!", message: "", preferredStyle: .alert)
+            
+                            alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: {_ in
+                              
+                            }))
+            self.present(alert, animated: true)
             // User is signed in
             // ...
         }

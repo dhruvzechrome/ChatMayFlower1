@@ -16,13 +16,13 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
         
         var phoneNumber = txtPhoneNumber.text
         
-        if txtPhoneNumber.text?.isValidContact == true {
+        if phoneNumber != nil {
             
-            Auth.auth().settings?.isAppVerificationDisabledForTesting = true
+            Auth.auth().settings?.isAppVerificationDisabledForTesting = false
             PhoneAuthProvider.provider()
               .verifyPhoneNumber(phoneNumber!, uiDelegate: nil) { verificationID, error in
                   if let error = error {
-                      
+                      print("fail otp sent",error)
                     return
                   }
                   // Sign in using the verificationID and the code sent to the user
@@ -33,6 +33,7 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
                   vc!.verification = verificationID!
                   self.navigationController?.pushViewController(vc!, animated: true)
               }
+            
           
         }
         else {
