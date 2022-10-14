@@ -277,6 +277,9 @@
                                                 <constraint firstAttribute="bottom" secondItem="q8O-Rc-6DU" secondAttribute="bottom" constant="20" id="u9F-bc-ZIy"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="user" destination="EAu-dE-QV0" id="ELf-5N-9nr"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -297,6 +300,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="tabelView" destination="O18-9F-IlY" id="X0n-Fg-4n3"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ej8-Sf-sxZ" sceneMemberID="firstResponder"/>
             </objects>

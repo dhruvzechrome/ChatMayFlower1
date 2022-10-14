@@ -12,7 +12,9 @@ import FirebaseDatabase
 
 class UserDetailsCode: UIViewController {
     
-    
+    @IBOutlet weak var user: UILabel!
+    @IBOutlet weak var tabelView: UITableView!
+    var data = ["dhruv","jay","dhaval"]
     @IBAction func logout(_ sender: UIBarButtonItem) {
         
         let firebaseAuth = Auth.auth()
@@ -29,8 +31,8 @@ class UserDetailsCode: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        DataBaseManager.shared.test()
-        
+        tabelView.delegate = self
+        tabelView.dataSource = self
         // Do any additional setup after loading the view.
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -44,12 +46,21 @@ class UserDetailsCode: UIViewController {
             navigationController?.pushViewController(vc!, animated: true)
         }
     }
+}
 
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        <#code#>
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        <#code#>
-//    }
+
+extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return data.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        user.text = data[indexPath.row]
+        return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tabelView.deselectRow(at: indexPath, animated: true)
+    }
+    
 }

@@ -27,15 +27,7 @@ class OtpVerifyCode: UIViewController {
 //
 //                return
 //            }
-//            FirebaseAuth.Auth.auth().createUser(with: phone, completion: {[weak self] authResult, error in
-//                guard strongSelf = self  else {
-//                    return
-//                }
-//                guard authResult != nil , error == nil else {
-//                    print("Error occure")
-//                    return
-//                }
-//            })
+//
 //            // user not exist
 //
 //        })
