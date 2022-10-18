@@ -19,18 +19,9 @@ class OtpVerifyCode: UIViewController {
           withVerificationID: verification,
           verificationCode: num!
         )
+   
         
-        ////
-//        DataBaseManager.shared.userExists(with: phone, completion: { exists in
-//            guard !exists else{
-//                // user exists already
-//
-//                return
-//            }
-//
-//            // user not exist
-//
-//        })
+// OTP Verification Process
         
         Auth.auth().signIn(with: credential) { authResult, error in
             if let error = error {
@@ -94,3 +85,38 @@ class OtpVerifyCode: UIViewController {
     */
 
 }
+
+
+//DataBaseManager.shared.userExists(with: self.phone, completion: { exists in
+//    guard !exists else{
+//        // user exists already
+//        let  alert = UIAlertController (title: "Otp Verified Successfully!!", message: "", preferredStyle: .alert)
+//        
+//        alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: {_ in
+//        let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
+//        self.navigationController?.pushViewController(vc!, animated: true)}))
+//        self.present(alert, animated: true)
+//        return
+//    }
+//    DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phone))
+//    let  alert = UIAlertController (title: "Otp Verified Successfully!!", message: "", preferredStyle: .alert)
+//    
+//                    alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: {_ in
+//                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
+//                        self.navigationController?.pushViewController(vc!, animated: true)
+//                    }))
+//    self.present(alert, animated: true)
+//    // user not exist
+//}
+
+////
+//        DataBaseManager.shared.userExists(with: phone, completion: { exists in
+//            guard !exists else{
+//                // user exists already
+//
+//                return
+//            }
+//
+//            // user not exist
+//
+//        })

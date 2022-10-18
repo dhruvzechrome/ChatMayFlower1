@@ -21,22 +21,67 @@ class DataBaseManager {
 //MARK: - use Account manage
 extension DataBaseManager {
     
-    public func userExists(with number: String, completion: @escaping ((Bool) -> Void)){
-        database.child(number).observeSingleEvent(of: .value, with: {snapshot in
+    public func userExists(with number: String){
+        database.child("Contact List").child(number).observeSingleEvent(of: .value, with: {snapshot in
             guard let founNumber = snapshot.value as? String else {
-                completion(false)
                 return
             }
-            completion(true)
+            
         })
     }
     
     /// insert new user to database
     public func insertUser(with user : ChatAppUser){
-        database.child(user.phoneNumber).setValue(["Phone number": user.phoneNumber])
+        database.child("Contact List").child(user.phoneNumber).setValue(["Phone number": user.phoneNumber], withCompletionBlock: { error, _ in
+            guard error == nil else {
+                print("Failed to write data")
+               
+                return
+            }
+            print("data written seccess")
+
+        })
     }
+    
+    public func createNewChat(with user : Message){
+        database.child("Chats").child(user.messagid).child("chatting").child("\(user.uii)").setValue(["\(user.uii)": user.chats], withCompletionBlock: { error, _ in
+            guard error == nil else {
+                print("Failed to write data")
+               
+                return
+            }
+            print("data written seccess")
+        })
+    }
+    
+    public func chatExist(with messageId: String){
+        database.child("Chats").child(messageId).observeSingleEvent(of: .value, with: {snapshot in
+            guard let founNumber = snapshot.value as? String else {
+                return
+            }
+            
+        })
+    }
+    
+    public func mychatting(with user : Message){
+        database.child("Chats").child(user.messagid).child("chatting").child("\(user.uii)").setValue(["\(user.uii)": user.chats], withCompletionBlock: { error, _ in
+            guard error == nil else {
+                print("Failed to write data")
+               
+                return
+            }
+            print("data written seccess")
+        })
+    }
+    
 }
+
 
 struct ChatAppUser {
     let phoneNumber: String
+}
+struct Message{
+    var messagid : String
+    var chats : String
+    var uii : Int
 }

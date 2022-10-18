@@ -16,12 +16,9 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
         
         var phoneNumber = txtPhoneNumber.text
         
-        if phoneNumber != nil {
-            
+        if phoneNumber?.isValidContact != false {
+      // Phone authentiacation OTP sent
             Auth.auth().settings?.isAppVerificationDisabledForTesting = false
-            
-           
-            
             PhoneAuthProvider.provider()
               .verifyPhoneNumber(phoneNumber!, uiDelegate: nil) { verificationID, error in
                   if let error = error {
@@ -37,6 +34,8 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
                   // Sign in using the verificationID and the code sent to the user
                   // ...
                   print("sign in success ", verificationID!)
+                  
+    // Verification id  for OTPverification
                   self.verificationID = UserDefaults.standard.string(forKey: "authVerificationID")
                   let vc = self.storyboard?.instantiateViewController(withIdentifier: "OtpVerifyCode") as? OtpVerifyCode
                   vc!.verification = verificationID!
@@ -62,18 +61,6 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
 
         // Do any additional setup after loading the view.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 
