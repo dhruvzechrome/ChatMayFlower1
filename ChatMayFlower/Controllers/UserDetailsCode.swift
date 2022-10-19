@@ -164,7 +164,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
                 print("true rooms exist")
             }else{
                 print("false room doesn't exist")
-                DataBaseManager.shared.createNewChat(with: Message( messagid: self.messageId!, chats: "",uii: 0))
+                DataBaseManager.shared.createNewChat(with: Message( messagid: self.messageId!, chats: "", sender: "",uii: 0))
             }
         })
         
