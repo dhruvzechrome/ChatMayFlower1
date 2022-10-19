@@ -7,20 +7,20 @@
 
 import Foundation
 import FirebaseDatabase
+import FirebaseAuth
 
 class DataBaseManager {
     
     static let shared = DataBaseManager()
     
     private let database = Database.database().reference()
-   
     
     
 }
 
 //MARK: - use Account manage
 extension DataBaseManager {
-    
+
     public func userExists(with number: String){
         database.child("Contact List").child(number).observeSingleEvent(of: .value, with: {snapshot in
             guard let founNumber = snapshot.value as? String else {
@@ -44,7 +44,8 @@ extension DataBaseManager {
     }
     
     public func createNewChat(with user : Message){
-        database.child("Chats").child(user.messagid).child("chatting").child("\(user.uii)").setValue(["\(user.uii)": user.chats], withCompletionBlock: { error, _ in
+        let num = FirebaseAuth.Auth.auth().currentUser?.phoneNumber
+        database.child("Chats").child(user.messagid).child("chatting").child("\(user.uii)").setValue(["\(num)": user.chats], withCompletionBlock: { error, _ in
             guard error == nil else {
                 print("Failed to write data")
                
@@ -64,7 +65,8 @@ extension DataBaseManager {
     }
     
     public func mychatting(with user : Message){
-        database.child("Chats").child(user.messagid).child("chatting").child("\(user.uii)").setValue(["\(user.uii)": user.chats], withCompletionBlock: { error, _ in
+        let num = FirebaseAuth.Auth.auth().currentUser?.phoneNumber
+        database.child("Chats").child(user.messagid).child("chatting").child("\(user.uii)").setValue(["\(num)": user.chats], withCompletionBlock: { error, _ in
             guard error == nil else {
                 print("Failed to write data")
                

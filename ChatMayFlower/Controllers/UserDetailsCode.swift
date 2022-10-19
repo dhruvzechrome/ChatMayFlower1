@@ -13,6 +13,7 @@ import FirebaseCoreInternal
 
 class UserDetailsCode: UIViewController {
     @IBOutlet weak var tabelView: UITableView!
+    var phones = ""
     var databaseRef: DatabaseReference!
     var reg: Int = 0
     var messageId:String?
@@ -80,19 +81,19 @@ class UserDetailsCode: UIViewController {
         tabelView.delegate = self
         tabelView.dataSource = self
         print(friends)
-        
-        // Do any additional setup after loading the view.
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        validAuth()
-        print("current User",FirebaseAuth.Auth.auth().currentUser?.phoneNumber)
         getData()
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.friends.remove(at: self.reg)
             print(self.friends)
             self.tabelView.reloadData()
             }
+        // Do any additional setup after loading the view.
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        validAuth()
+        print("current User",FirebaseAuth.Auth.auth().currentUser?.phoneNumber)
+       
     }
     
     func validAuth(){
@@ -138,6 +139,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         vc?.id = indexPath.row
         mychat()
         vc?.mid = messageId
+        vc?.phoneid = phones
         navigationController?.pushViewController(vc!, animated: true)
 //        friends = [ChatAppUser]()
     }
@@ -157,12 +159,12 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         
         
         
-        databaseRef.child("Chat").observeSingleEvent(of: .value, with: { (snapshot) in
+        databaseRef.child("Chat").observeSingleEvent(of: .value, with: { [self] (snapshot) in
             if snapshot.exists(){
                 print("true rooms exist")
             }else{
                 print("false room doesn't exist")
-                DataBaseManager.shared.createNewChat(with: Message(messagid: self.messageId!, chats: "",uii: 0))
+                DataBaseManager.shared.createNewChat(with: Message( messagid: self.messageId!, chats: "",uii: 0))
             }
         })
         

@@ -1,0 +1,6 @@
+framework module Pods_ChatMayFlower {
+  umbrella header "Pods-ChatMayFlower-umbrella.h"
+
+  export *
+  module * { export * }
+}

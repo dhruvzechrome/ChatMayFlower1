@@ -54,6 +54,7 @@ class OtpVerifyCode: UIViewController {
             
                             alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: {_ in
                                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
+                                vc?.phones = self.phone
                                 self.navigationController?.pushViewController(vc!, animated: true)
                             }))
             self.present(alert, animated: true)
