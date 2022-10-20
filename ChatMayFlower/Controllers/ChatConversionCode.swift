@@ -19,8 +19,8 @@ class ChatConversionCode: UIViewController {
     @IBOutlet weak var chatField: UITextField!
     var ui = 0
     var chat = [Message]()
-    var mid : String?
-    var fri = [ChatAppUser]()
+    var mid = ""
+    var fri = [String]()
     var friends = [Message]()
     var id: Int?
 //    @IBOutlet weak var chatTable: UITableView!
@@ -40,32 +40,50 @@ class ChatConversionCode: UIViewController {
         
        
     }
+    var dictArray: [[String:String]] = []
+    var array = [String]()
     func getchat(){
-        cu = FirebaseAuth.Auth.auth().currentUser!.phoneNumber!
-        print("Cu is",cu)
-        database.child("Chats").child(mid!).child("chatting").observe(.childAdded){[weak self](snapshot) in
-            let key = snapshot.childSnapshot(forPath: self!.mid!)
+        database.child("Chats").child(mid).child("chatting").observe(.childAdded){[weak self](snapshot) in
+            let key = snapshot.childSnapshot(forPath: self!.mid)
             print("Key:::---",key)
-            guard let value = snapshot.value as? [String:Any] else {return}
-            print(value)
-            print("\(FirebaseAuth.Auth.auth().currentUser!.phoneNumber!)")
-            if let nam = value["\(self!.fri[self!.id!].phoneNumber)"] as? String {
-                let number = value["\(self!.cu)"] as? String
-                let friend = Message(messagid: self!.mid!, chats: "\(number)", sender: "\(nam)", uii: self!.ui)
-              
-                self!.friends.append(friend)
-                
-            
-                if let row = self?.friends.count{
-                    let indexPath = IndexPath(row: row-1, section: 0)
-                    self?.chatTable.insertRows(at: [indexPath], with: .automatic)
-                    print("row",row)
-                }
-                self?.chatTable.reloadData()
-////                self?.friends.remove(at: reg)
-                print("all chats ",self!.friends)
-//
+            guard let value = snapshot.value as? [String:Any] else {return
+                print("Error")
             }
+            print("total data",value)
+            
+            if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
+                
+                for snap in snapshots {
+                    let cata = snap.key
+                    let ques = snap.value!
+                    self!.array.append("\(cata)")
+                    
+                    self!.dictArray.append([cata : String(describing: ques)])
+                }
+                
+            }
+            self?.chatTable.reloadData()
+//            print("key of value is ",self!.array)
+//            print("dictionary is ",self!.dictArray)
+            
+//            if let nam = value["\(self!.fri[self!.id!].phoneNumber)"] as? String {
+//
+//                let friend = Message(messagid: self!.mid!, chats: "d", sender: "\(nam)", uii: self!.ui)
+//
+//                self!.friends.append(friend)
+//                print("Nam is ",nam)
+////                print("Number iis ",number)
+//
+//                if let row = self?.friends.count{
+//                    let indexPath = IndexPath(row: row-1, section: 0)
+//                    self?.chatTable.insertRows(at: [indexPath], with: .automatic)
+//                    print("row",row)
+//                }
+//                self?.chatTable.reloadData()
+////                self?.friends.remove(at: reg)
+//                print("all chats ",self!.friends)
+//
+//            }
         }
     }
     
@@ -75,7 +93,7 @@ class ChatConversionCode: UIViewController {
             ui = ui + 1
 //            chat.append(Message(messagid: mid!, chats: chatField.text!, sender: <#String#>, uii: ui))
             database.child("Uid").setValue(ui)
-            DataBaseManager.shared.mychatting(with: Message(messagid: mid!, chats: chatField.text!, sender: "ul", uii: ui))
+            DataBaseManager.shared.mychatting(with: Message(messagid: mid, chats: chatField.text!, sender: "ul", uii: ui))
             chatTable.reloadData()
         }
     }
@@ -91,15 +109,20 @@ class ChatConversionCode: UIViewController {
         cu = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
         getchat()
     }
+    var llb = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         chatTable.delegate = self
         chatTable.dataSource = self
         cu = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
-        titl.title = fri[id!].phoneNumber
+        titl.title = fri[id!]
         
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
                 getdata()
+            llb = ui
+            if ui > llb{
+                getchat()
+            }
             
         })
         
@@ -115,15 +138,22 @@ class ChatConversionCode: UIViewController {
 
 extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return friends.count
+        return dictArray.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let chat = friends[indexPath.row]
+        let chat = dictArray[indexPath.row]
+        let kk = array[indexPath.row]
         let cell = chatTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? ChatTableViewCell
         
-        cell?.messages.text = "\(chat.sender) \n"+"\(chat.chats)"
-            cell?.messages.textAlignment = .center
+        cell?.messages.text = chat[kk]
+        if phoneid == kk {
+                    cell?.messages.textAlignment = .right
+                    
+                }
+                else {
+                    cell?.messages.textAlignment = .left
+                }
             return cell!
        
     }
