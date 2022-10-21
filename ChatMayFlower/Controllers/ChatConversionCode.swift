@@ -63,6 +63,7 @@ class ChatConversionCode: UIViewController {
                 
             }
             self?.chatTable.reloadData()
+            self!.bo = true
 //            print("key of value is ",self!.array)
 //            print("dictionary is ",self!.dictArray)
             
@@ -91,11 +92,14 @@ class ChatConversionCode: UIViewController {
         
         if chatField.text != nil{
             ui = ui + 1
+            bo = true
 //            chat.append(Message(messagid: mid!, chats: chatField.text!, sender: <#String#>, uii: ui))
             database.child("Uid").setValue(ui)
             DataBaseManager.shared.mychatting(with: Message(messagid: mid, chats: chatField.text!, sender: "ul", uii: ui))
             chatTable.reloadData()
+            chatField.text = ""
         }
+        
     }
     
   
@@ -108,7 +112,10 @@ class ChatConversionCode: UIViewController {
         }
         cu = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
         getchat()
+        
+        
     }
+    var bo = false
     var llb = 0
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -122,17 +129,27 @@ class ChatConversionCode: UIViewController {
             llb = ui
             if ui > llb{
                 getchat()
+
+            }
+            
+            if bo == true{
+                bo = false
+                let indexPath = IndexPath(item: array.count-1, section: 0)
+                chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
             }
             
         })
         
-        // Do any additional setup after loading the view.
     }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        let indexPath = IndexPath(item: array.count-1, section: 0)
+        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: false)
         getdata()
     }
+    
    
 }
 

@@ -12,6 +12,9 @@ import FirebaseCoreInternal
 
 
 class UserDetailsCode: UIViewController {
+    
+    var msgstatus = false
+    var ab = ""
     @IBOutlet weak var tabelView: UITableView!
     var phones = ""
     var databaseRef: DatabaseReference!
@@ -43,45 +46,41 @@ class UserDetailsCode: UIViewController {
             self?.tabelView.reloadData()
             print("key of value is ",self!.array)
             print("dictionary is ",self!.dictArray)
-            
-            
-//            if let number = value["Phone number"] as? String {
-//
-//                let friend = ChatAppUser(phoneNumber: number)
-//
-//                self?.friends.append(friend)
-//
-//                for i in self!.friends.startIndex...self!.friends.endIndex-1 {
-//                  print("Integer i",i)
-////                    self?.tabelView.reloadData()
-//
-//                    if self?.friends[i].phoneNumber == FirebaseAuth.Auth.auth().currentUser?.phoneNumber {
-//                        // Current user
-//                        print("Diffeent user",self?.friends[i].phoneNumber)
-//                        self?.reg = i
-//                        print("number index ",self?.reg)
-////                        self?.friends.remove(at: i)
-//                    }
-//                }
-//                if let row = self?.friends.count{
-//                    let indexPath = IndexPath(row: row-1, section: 0)
-//                    self?.tabelView.insertRows(at: [indexPath], with: .automatic)
-//                    print("row",row)
-//                }
-//                self?.tabelView.reloadData()
-////                self?.friends.remove(at: reg)
-//                print(self?.friends)
-//
-//
-//            }
-            
-            
         }
-        
-        
-        
-        
     }
+    
+    var msgkey = [String]()
+    func getMessageId(){
+        databaseRef = Database.database().reference().child("Chats")
+        databaseRef.observe(.childAdded){[weak self](snapshot) in
+            let key = snapshot.key
+//            print("Key",key)
+            guard let value = snapshot.value as? [String:Any] else {
+                print("No data Found")
+                return
+            }
+            
+            
+            if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
+
+                for snap in snapshots {
+                    let cata = key
+                    let ques = snap.value!
+                    self!.msgkey.append("\(cata)")
+                
+//                    self!.dictArray.append([cata : String(describing: ques)])
+                }
+
+            }
+            else{
+                print("No data Found")
+            }
+            self?.tabelView.reloadData()
+            print("key of value is ",self!.msgkey)
+//            print("dictionary is ",self!.dictArray)
+        }
+    }
+    
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
         
@@ -103,18 +102,34 @@ class UserDetailsCode: UIViewController {
         tabelView.dataSource = self
         print(friends)
         getData()
+        
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+           self.tabelView.refreshControl = refreshControl
+       
         // Do any additional setup after loading the view.
     }
+    
+    @objc func refresh(_ sender : Any)
+      {
+          array = [String]()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0)
+          { [self] in
+          getData()
+        }
+      }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        navigationItem.hidesBackButton = true
         validAuth()
         print("current User",phones)
-       
+        getMessageId()
     }
     
     func validAuth(){
         if FirebaseAuth.Auth.auth().currentUser == nil {
-            let vc = storyboard?.instantiateViewController(withIdentifier: "PhoneVerificationCode") as? PhoneVerificationCode
+            let vc = storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController
             navigationController?.pushViewController(vc!, animated: true)
         }
         phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
@@ -138,27 +153,15 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
        
         tabelView.deselectRow(at: indexPath, animated: true)
         let frd = array[indexPath.row]
-        let mun = FirebaseAuth.Auth.auth().currentUser?.phoneNumber
-        print("mun is ",mun!)
-        if (mun == "+916353918909" && frd == "+917046114310") || (mun == "+917046114310" && frd == "+916353918909") {
-            messageId = "6353918909+917046114310"
+        ab = frd
+        if msgkey.count > 0{
+        for avl in msgkey.startIndex...msgkey.endIndex-1 {
+            if msgkey[avl] == "\(phones)\(frd)" || msgkey[avl] == "\(frd)\(phones)"{
+                messageId = msgkey[avl]
+                msgstatus = true
+            }
         }
-        if (mun == "+916353918909" && frd == "+917984376122") || (mun == "+917984376122" && frd == "+916353918909"){
-            messageId = "6353918909+917984376122"
         }
-        if (mun == "+916353918909" && frd == "+919714479645") || (mun == "+919714479645" && frd == "+916353918909"){
-            messageId = "6353918909+919714479645"
-        }
-        if (mun == "+917046114310" && frd == "+917984376122") || (mun == "+917984376122" && frd == "+917046114310") {
-            messageId = "917046114310+917984376122"
-        }
-        if (mun == "+917046114310" && frd == "+919714479645") || (mun == "+919714479645" && frd == "+917046114310"){
-            messageId = "917046114310+919714479645"
-        }
-        if (mun == "+917984376122" && frd == "+919714479645") || (mun == "+919714479645" && frd == "+917984376122"){
-            messageId = "917984376122+919714479645"
-        }
-        
         let vc = storyboard?.instantiateViewController(withIdentifier: "ChatConversionCode") as? ChatConversionCode
         vc?.fri = array
         vc?.id = indexPath.row
@@ -181,18 +184,17 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
 //            DataBaseManager.shared.createNewChat(with: Message(messagid: messageId, chats: ""))
 //        })
         
-        
-        
-        
-        databaseRef.child("Chat").observeSingleEvent(of: .value, with: { [self] (snapshot) in
-            if snapshot.exists(){
-                print("true rooms exist")
-            }else{
-                print("false room doesn't exist")
-                DataBaseManager.shared.createNewChat(with: Message( messagid: self.messageId!, chats: "", sender: "",uii: 0))
-            }
-        })
-        
+        if msgstatus == false{
+            messageId = "\(phones)\(ab)"
+            databaseRef.child("Chat").observeSingleEvent(of: .value, with: { [self] (snapshot) in
+                if snapshot.exists(){
+                    print("true rooms exist")
+                }else{
+                    print("false room doesn't exist")
+                    DataBaseManager.shared.createNewChat(with: Message( messagid: self.messageId!, chats: "", sender: "",uii: 0))
+                }
+            })
+        }
     }
     
 }
