@@ -158,9 +158,7 @@ class ChatConversionCode: UIViewController {
 }
 
 extension ChatConversionCode{
-   
-   
-       
+    
     @objc func keyboardWillShow(sender: NSNotification) {
         
            if let keyboardSize = (sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
