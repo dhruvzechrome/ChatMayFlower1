@@ -12,6 +12,10 @@ import FirebaseDatabase
 
 
 class ChatConversionCode: UIViewController {
+    
+    @IBOutlet weak var bkview: UIView!
+    var keyboardheight : Int = 0
+    @IBOutlet weak var backgroundSV: UIScrollView!
     var cu = ""
     private let database = Database.database().reference()
     var phoneid = ""
@@ -102,14 +106,10 @@ class ChatConversionCode: UIViewController {
         
     }
     
-  
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 //        getdata()
-        if (self.chatTable.contentSize.height > self.chatTable.frame.size.height) {
-            let offset = CGPoint(x: CGFloat(0), y: CGFloat(self.chatTable.contentSize.height - self.chatTable.frame.size.height))
-            self.chatTable.setContentOffset(offset, animated: true)
-        }
         cu = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
         getchat()
         
@@ -121,12 +121,14 @@ class ChatConversionCode: UIViewController {
         super.viewDidLoad()
         chatTable.delegate = self
         chatTable.dataSource = self
+        keyboardheight = 0
         cu = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
         titl.title = fri[id!]
         
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
                 getdata()
             llb = ui
+            chatTable.reloadData()
             if ui > llb{
                 getchat()
 
@@ -139,18 +141,48 @@ class ChatConversionCode: UIViewController {
             }
             
         })
-        
+     
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil);
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil);
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         let indexPath = IndexPath(item: array.count-1, section: 0)
-        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: false)
+        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
         getdata()
     }
-    
+ 
+}
+
+extension ChatConversionCode{
    
+   
+       
+    @objc func keyboardWillShow(sender: NSNotification) {
+        
+           if let keyboardSize = (sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+                   //let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+               view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height - keyboardSize.height)
+               keyboardheight = Int(keyboardSize.height)
+               chatTable.frame.size = CGSize(width: chatTable.frame.width, height: chatTable.frame.height - keyboardSize.height)
+               print("asdasd" , keyboardheight)
+               }
+        let indexPath = IndexPath(item: array.count-1, section: 0)
+        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+       }
+
+    @objc func keyboardWillHide(sender: NSNotification) {
+        view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height + CGFloat(keyboardheight))
+           view.endEditing(true)
+       }
+    
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        view.endEditing(true)
+//    }
+    
 }
 
 extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
@@ -166,7 +198,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         cell?.messages.text = chat[kk]
         if phoneid == kk {
                     cell?.messages.textAlignment = .right
-                    
+
                 }
                 else {
                     cell?.messages.textAlignment = .left
