@@ -47,13 +47,13 @@ class OtpVerifyCode: UIViewController {
             }
             print("User Singin success")
             
-            DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phone))
+            DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phone,name: "",profileImage : ""))
             
             
             let  alert = UIAlertController (title: "Otp Verified Successfully!!", message: "", preferredStyle: .alert)
             
                             alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: {_ in
-                                let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
+                                let vc = self.storyboard?.instantiateViewController(withIdentifier: "AddUserInformation") as? AddUserInformation
                                 vc?.phones = self.phone
                                 self.navigationController?.pushViewController(vc!, animated: true)
                             }))

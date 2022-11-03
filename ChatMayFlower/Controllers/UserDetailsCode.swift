@@ -27,7 +27,7 @@ class UserDetailsCode: UIViewController {
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded){[weak self](snapshot) in
             let key = snapshot.key
-            print("Key",key)
+//            print("Key",key)
             guard let value = snapshot.value as? [String:Any] else {return}
             
             
@@ -44,8 +44,8 @@ class UserDetailsCode: UIViewController {
                 
             }
             self?.tabelView.reloadData()
-            print("key of value is ",self!.array)
-            print("dictionary is ",self!.dictArray)
+//            print("key of value is ",self!.array)
+//            print("dictionary is ",self!.dictArray)
         }
     }
     
@@ -76,7 +76,7 @@ class UserDetailsCode: UIViewController {
                 print("No data Found")
             }
             self?.tabelView.reloadData()
-            print("key of value is ",self!.msgkey)
+//            print("key of value is ",self!.msgkey)
 //            print("dictionary is ",self!.dictArray)
         }
     }
@@ -155,7 +155,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         let frd = array[indexPath.row]
         ab = frd
         if msgkey.count > 0{
-        for avl in msgkey.startIndex...msgkey.endIndex-1 {
+        for avl in msgkey.startIndex...msgkey.count - 1 {
             if msgkey[avl] == "\(phones)\(frd)" || msgkey[avl] == "\(frd)\(phones)"{
                 messageId = msgkey[avl]
                 msgstatus = true
@@ -183,7 +183,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
 //            // user not exists
 //            DataBaseManager.shared.createNewChat(with: Message(messagid: messageId, chats: ""))
 //        })
-        
+        print("Array is this ", array)
         if msgstatus == false{
             messageId = "\(phones)\(ab)"
             databaseRef.child("Chat").observeSingleEvent(of: .value, with: { [self] (snapshot) in

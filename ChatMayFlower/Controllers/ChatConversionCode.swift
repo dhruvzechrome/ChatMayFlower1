@@ -12,7 +12,8 @@ import FirebaseDatabase
 
 
 class ChatConversionCode: UIViewController {
-    
+    var bo = false
+    var llb = 0
     @IBOutlet weak var bkview: UIView!
     var keyboardheight : Int = 0
     @IBOutlet weak var backgroundSV: UIScrollView!
@@ -30,6 +31,9 @@ class ChatConversionCode: UIViewController {
 //    @IBOutlet weak var chatTable: UITableView!
     @IBOutlet weak var titl: UINavigationItem!
     var timer = Timer()
+    var dictArray: [[String:String]] = []
+    var array = [String]()
+    var keyBoardStatus = false
     
     func getdata(){
         database.child("Uid").getData(completion:  { error, snapshot in
@@ -44,16 +48,16 @@ class ChatConversionCode: UIViewController {
         
        
     }
-    var dictArray: [[String:String]] = []
-    var array = [String]()
+    
     func getchat(){
+        print("Message id is " ,  mid)
         database.child("Chats").child(mid).child("chatting").observe(.childAdded){[weak self](snapshot) in
             let key = snapshot.childSnapshot(forPath: self!.mid)
-            print("Key:::---",key)
+//            print("Key:::---",key)
             guard let value = snapshot.value as? [String:Any] else {return
                 print("Error")
             }
-            print("total data",value)
+//            print("total data",value)
             
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
                 
@@ -94,7 +98,7 @@ class ChatConversionCode: UIViewController {
     
     @IBAction func sendChat(_ sender: UIButton) {
         
-        if chatField.text != nil{
+        if chatField.text != ""{
             ui = ui + 1
             bo = true
 //            chat.append(Message(messagid: mid!, chats: chatField.text!, sender: <#String#>, uii: ui))
@@ -115,8 +119,7 @@ class ChatConversionCode: UIViewController {
         
         
     }
-    var bo = false
-    var llb = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         chatTable.delegate = self
@@ -124,7 +127,7 @@ class ChatConversionCode: UIViewController {
         keyboardheight = 0
         cu = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
         titl.title = fri[id!]
-        
+        tabBarController?.tabBar.isHidden = true
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
                 getdata()
             llb = ui
@@ -158,23 +161,35 @@ class ChatConversionCode: UIViewController {
 }
 
 extension ChatConversionCode{
-    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
     @objc func keyboardWillShow(sender: NSNotification) {
         
-           if let keyboardSize = (sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-                   //let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
-               view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height - keyboardSize.height)
-               keyboardheight = Int(keyboardSize.height)
-               chatTable.frame.size = CGSize(width: chatTable.frame.width, height: chatTable.frame.height - keyboardSize.height)
-               print("asdasd" , keyboardheight)
-               }
-        let indexPath = IndexPath(item: array.count-1, section: 0)
-        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        if keyBoardStatus == false {
+            if let keyboardSize = (sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+                    //let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+                view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height - keyboardSize.height)
+                bkview.frame.size = CGSize(width: bkview.bounds.width, height: bkview.frame.height - keyboardSize.height)
+                keyboardheight = Int(keyboardSize.height)
+                chatTable.frame.size = CGSize(width: chatTable.frame.width, height: chatTable.frame.height - keyboardSize.height)
+                backgroundSV.frame.size = CGSize(width: backgroundSV.bounds.width, height: backgroundSV.frame.height - keyboardSize.height)
+ //               print("asdasd" , keyboardheight)
+                }
+         let indexPath = IndexPath(item: array.count-1, section: 0)
+         chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            keyBoardStatus = true
+        }
+           
        }
 
     @objc func keyboardWillHide(sender: NSNotification) {
-        view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height + CGFloat(keyboardheight))
-           view.endEditing(true)
+        if keyBoardStatus  == true{
+            view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height + CGFloat(keyboardheight))
+            backgroundSV.frame.size = CGSize(width: backgroundSV.bounds.width, height: backgroundSV.frame.height + CGFloat(keyboardheight))
+            keyBoardStatus = false
+               view.endEditing(true)
+        }
        }
     
 //    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

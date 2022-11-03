@@ -10,12 +10,13 @@ pod 'Firebase/Core'
 pod 'Firebase/Auth'
 pod 'FirebaseCore'
 pod 'Firebase/Firestore'
-pod "FirebaseAuth"
-pod "Firebase/Database"
-pod 'IQKeyboardManagerSwift'
-
+pod 'FirebaseAuth'
+pod 'Firebase/Database'
+pod 'Firebase/Analytics'
+pod 'Firebase/Messaging'
 pod 'MessageKit'
 pod 'JGProgressHUD'
+pod 'FirebaseStorage'
 
 
 end
