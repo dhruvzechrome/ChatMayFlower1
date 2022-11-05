@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		882381E0291639BC00786164 /* EditProfileInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882381DF291639BC00786164 /* EditProfileInformation.swift */; };
 		8838834228FA722C0071E6E9 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8838834128FA722C0071E6E9 /* TableViewCell.swift */; };
 		883EBD4128F7E09F000A59BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EBD4028F7E09F000A59BA /* AppDelegate.swift */; };
 		883EBD4328F7E09F000A59BA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EBD4228F7E09F000A59BA /* SceneDelegate.swift */; };
@@ -28,6 +29,7 @@
 
 /* Begin PBXFileReference section */
 		2DC5EE7365248C3F824D13CC /* Pods-ChatMayFlower.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatMayFlower.release.xcconfig"; path = "Target Support Files/Pods-ChatMayFlower/Pods-ChatMayFlower.release.xcconfig"; sourceTree = "<group>"; };
+		882381DF291639BC00786164 /* EditProfileInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileInformation.swift; sourceTree = "<group>"; };
 		8838834128FA722C0071E6E9 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		883EBD3D28F7E09F000A59BA /* ChatMayFlower.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatMayFlower.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		883EBD4028F7E09F000A59BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				88A32E0D28F976240041B6ED /* LoginScreens */,
 				887D10BC291291A50086E251 /* ShowProfileDetail.swift */,
 				88A040C929137F53008FB921 /* AddUserInformation.swift */,
+				882381DF291639BC00786164 /* EditProfileInformation.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -292,6 +295,7 @@
 				883EBD5D28F8451F000A59BA /* UserDetailsCode.swift in Sources */,
 				883EBD4128F7E09F000A59BA /* AppDelegate.swift in Sources */,
 				889B210928FD64FA00189789 /* ChatConversionCode.swift in Sources */,
+				882381E0291639BC00786164 /* EditProfileInformation.swift in Sources */,
 				88A32E0F28F9769D0041B6ED /* DataBaseManager.swift in Sources */,
 				889B210B28FD653200189789 /* ChatTableViewCell.swift in Sources */,
 				88A040CA29137F53008FB921 /* AddUserInformation.swift in Sources */,

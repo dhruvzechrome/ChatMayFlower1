@@ -7,11 +7,15 @@
 
 import UIKit
 import FirebaseStorage
+import FirebaseCore
+import FirebaseAuth
+import FirebaseDatabase
+import FirebaseCoreInternal
 
 class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
-
+    var urlPath = ""
     var phones = ""
-    
+    var databaseRef: DatabaseReference!
     @IBOutlet weak var tname: UITextField!
     @IBOutlet weak var tphoneNumber: UITextField!
     @IBOutlet weak var imgProfile: UIImageView!
@@ -25,6 +29,69 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
         imgProfile.addGestureRecognizer(tapGesture)
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        getData()
+    }
+    
+    func getData(){
+        // Create Firebase Storage Reference
+        let storageRef = Storage.storage().reference()
+
+        databaseRef = Database.database().reference().child("Contact List")
+        databaseRef.observe(.childAdded){[weak self](snapshot) in
+            let key = snapshot.key
+//            print("Key",key)
+            guard let value = snapshot.value as? [String:Any] else {return}
+            
+            
+            if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
+                
+                for snap in snapshots {
+                    let cata = snap.key
+                    let ques = snap.value!
+                    
+                    let gif = snapshot.value! as! [String:String]
+                    if gif["Phone number"] ==  self?.phones{
+//                        print("Ppppphhhhh :",gif["Phone number"]!)
+                        
+                        self!.tphoneNumber.text = gif["Phone number"]!
+                        
+//                        self!.uphoneno = gif["Phone number"]!
+                        
+                        
+                        if gif["Name"] != nil{
+                            self!.tname.text = gif["Name"]!
+//                            self!.uname = gif["Name"]!
+                        }
+                        
+                        if gif["photo bytes"] != nil {
+                            self!.urlPath = gif["photo bytes"]!
+                        //Get File reference path
+                        let fileRef = storageRef.child(self!.urlPath)
+                        
+                        // Retrive data
+                        fileRef.getData(maxSize: 5 * 1024 * 1024 ) {data, error in
+                            
+                            // Check For error
+                            if error == nil && data != nil{
+                                let image = UIImage(data: data!)
+                                
+                                self!.imgProfile.image = image
+                                
+                            }
+                        }
+                        
+                        }else{
+                            self!.imgProfile.image = UIImage(named: "placeholder")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     @objc
     func imageTapped(tapGestureRecognizer : UITapGestureRecognizer)
     {
@@ -56,7 +123,6 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
         imagePickerController.allowsEditing = false
         self.present(imagePickerController, animated: true, completion: nil)
     }
-    var imageData = Data()
     var filename : String?
     var didselectedImage : UIImage?
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -69,8 +135,6 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
             _ = info[.imageURL] as? URL
             print("Local Path  > ",localPath!)
              filename = localPath?.lastPathComponent
-            imageData = selectedImage.jpegData(compressionQuality: 0.8)!
-            // Create a storage reference from our storage service
             
             print("Name of Image --->>> ",filename!)
             picker.dismiss(animated: true, completion: nil)
@@ -81,10 +145,6 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
         }
         
     }
-   
-    // Get a reference to the storage service using the default Firebase App
-    
-
     
     
     @IBAction func submit(_ sender: UIButton) {
@@ -93,34 +153,40 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
             return
         }
         
+        // Create Firebase Storage Reference
         let storageRef = Storage.storage().reference()
         
        
-        let image = didselectedImage!.jpegData(compressionQuality: 0.4)
+        let imageData = didselectedImage!.jpegData(compressionQuality: 0.4)
         
-        guard image != nil else {
+        guard imageData != nil else {
             return
         }
+        var path = ""
         // imagesRef still points to "images"
-        let fileRef = storageRef.child("images/\(UUID().uuidString).jpg")
+        if urlPath == ""{
+         path = "images/\(UUID().uuidString).jpg"
+        }else{
+            path = urlPath
+        }
+        let fileRef = storageRef.child(path)
         print("\(fileRef)")
         
+        // This is equivalent to creating the full reference
         // Upload data
-        let uploaTask = fileRef.putData(image!, metadata: nil) { metadata, error in
+        let uploadTask = fileRef.putData(imageData!, metadata: nil) { metadata, error in
             
             // Check error
             if error == nil && metadata != nil {
                 
             }
-            print("Meta data",metadata)
-            print("Error ",error)
         }
         
         if tname.text != "" && tphoneNumber.text != ""{
             
            
             
-            DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phones,name: tname.text!,profileImage : ""))
+            DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phones,name: tname.text!,profileImage : path))
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
             vc?.phones = self.phones
             self.navigationController?.pushViewController(vc!, animated: true)

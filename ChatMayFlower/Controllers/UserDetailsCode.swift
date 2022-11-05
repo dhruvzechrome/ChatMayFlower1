@@ -9,6 +9,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseCoreInternal
+import FirebaseStorage
 
 
 class UserDetailsCode: UIViewController {
@@ -23,6 +24,9 @@ class UserDetailsCode: UIViewController {
     var friends = [ChatAppUser]()
     var dictArray: [[String:String]] = []
     var array = [String]()
+    var strArray  = [[String:String]]()
+    var arraypractice = [[String:Any]]()
+    let storageRef = Storage.storage().reference()
     func getData(){
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded){[weak self](snapshot) in
@@ -34,16 +38,61 @@ class UserDetailsCode: UIViewController {
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
                 
                 for snap in snapshots {
-                    let cata = snap.key
-                    let ques = snap.value!
-                    if ques as! String != self!.phones {
-                        self!.array.append("\(ques)")
+//                    let cata = snap.key
+//                    let ques = snap.value!
+                    
+                    let gif = snapshot.value! as! [String:String]
+//                    if gif["Phone number"] !=  self?.phones{
+//                        print("Ppppphhhhh :",gif["Phone number"]!)
+//                        self!.dictArray.append(gif)
+//
+//
+//                    }
+                    
+                    if snapshot.key != self!.phones {
+                        
+                        if !self!.array.contains("\(snapshot.key)"){
+                        self!.array.append("\(snapshot.key)")
+                            print("Aray of number is \(self!.array)")
+                            
+                            
+                            if gif["photo bytes"] != nil {
+                            let fileRef = self!.storageRef.child(gif["photo bytes"]!)
+                            print("------------->>>>>>\(gif["photo bytes"]!)")
+                            fileRef.getData(maxSize: 5 * 1024 * 1024){ data, error in
+                                if error == nil && data != nil{
+                                    if let image = UIImage(data: data!){
+                                        print("Image ::-----\(image)")
+                                        DispatchQueue.main.async {
+                                            self!.arraypractice.append(["Name" : gif["Name"]! , "Phone number": gif["Phone number"]!, "profilepic": image])
+                                            print("ArrayPractise----------->>>\(self!.arraypractice)")
+                                            //self.myTable.reloadData()
+                                            if self!.array.count-1 == self!.arraypractice.count-1 {
+                                                self!.tabelView.reloadData()
+                                            }
+                                        }
+                                    }
+                                    
+                                }
+                                print("Errorr---\(error)")
+                            }
+                            }else{
+                                let ui = UIImage(named: "person")
+                                self!.arraypractice.append(["Name" : gif["Name"] as Any , "Phone number": gif["Phone number"]!, "profilepic": ui! ])
+                            
+                                print("ArrayPractise----------->>>\(self!.arraypractice)")
+                            }
+                        
+                        }
                     }
-                    self!.dictArray.append([cata : String(describing: ques)])
+                    
+                    
                 }
-                
+//                sstr.append(snapshot.value)
             }
-            self?.tabelView.reloadData()
+            print("Dictionary Array is ",self!.dictArray)
+            print("Sbapshot is ", snapshot.value!)
+//            self?.tabelView.reloadData()
 //            print("key of value is ",self!.array)
 //            print("dictionary is ",self!.dictArray)
         }
@@ -102,10 +151,10 @@ class UserDetailsCode: UIViewController {
         tabelView.dataSource = self
         print(friends)
         getData()
-        
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
-           self.tabelView.refreshControl = refreshControl
+       
+//        let refreshControl = UIRefreshControl()
+//        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+//           self.tabelView.refreshControl = refreshControl
        
         // Do any additional setup after loading the view.
     }
@@ -118,15 +167,19 @@ class UserDetailsCode: UIViewController {
           getData()
         }
       }
-    
+   
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationItem.hidesBackButton = true
+        
         validAuth()
         print("current User",phones)
         getMessageId()
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
     func validAuth(){
         if FirebaseAuth.Auth.auth().currentUser == nil {
             let vc = storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController
@@ -139,31 +192,38 @@ class UserDetailsCode: UIViewController {
 
 extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return array.count
+        return arraypractice.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let frd = array[indexPath.row]
+        let frd = arraypractice[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TableViewCell
-        cell?.userLabel.text = frd
+        cell?.userLabel.text = frd["Phone number"] as? String
+        print("my image is \(frd["profilepic"]!)")
+
+       
+            cell?.profile.image = frd["profilepic"] as? UIImage
+       
+        
 //        cell?.SetUp(with: data)
         return cell!
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
        
         tabelView.deselectRow(at: indexPath, animated: true)
-        let frd = array[indexPath.row]
-        ab = frd
+        let frd = arraypractice[indexPath.row]
+        ab = frd["Phone number"]! as! String
         if msgkey.count > 0{
-        for avl in msgkey.startIndex...msgkey.count - 1 {
-            if msgkey[avl] == "\(phones)\(frd)" || msgkey[avl] == "\(frd)\(phones)"{
+        for avl in 0...msgkey.count - 1 {
+            if msgkey[avl] == "\(phones)\(ab)" || msgkey[avl] == "\(ab)\(phones)"{
                 messageId = msgkey[avl]
+//                print("True -----------")
                 msgstatus = true
             }
         }
         }
         let vc = storyboard?.instantiateViewController(withIdentifier: "ChatConversionCode") as? ChatConversionCode
-        vc?.fri = array
+        vc?.receiverid = ab
         vc?.id = indexPath.row
         mychat()
         vc?.mid = messageId!
@@ -183,7 +243,6 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
 //            // user not exists
 //            DataBaseManager.shared.createNewChat(with: Message(messagid: messageId, chats: ""))
 //        })
-        print("Array is this ", array)
         if msgstatus == false{
             messageId = "\(phones)\(ab)"
             databaseRef.child("Chat").observeSingleEvent(of: .value, with: { [self] (snapshot) in

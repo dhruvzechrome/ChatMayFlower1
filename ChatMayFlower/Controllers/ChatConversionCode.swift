@@ -25,7 +25,7 @@ class ChatConversionCode: UIViewController {
     var ui = 0
     var chat = [Message]()
     var mid = ""
-    var fri = [String]()
+    var receiverid = ""
     var friends = [Message]()
     var id: Int?
 //    @IBOutlet weak var chatTable: UITableView!
@@ -114,20 +114,29 @@ class ChatConversionCode: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 //        getdata()
+        
+        tabBarController?.tabBar.isHidden = true
+       
+        
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         cu = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
-        getchat()
         
         
     }
-    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        getchat()
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         chatTable.delegate = self
         chatTable.dataSource = self
         keyboardheight = 0
         cu = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
-        titl.title = fri[id!]
-        tabBarController?.tabBar.isHidden = true
+        titl.title = receiverid
+       
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
                 getdata()
             llb = ui
@@ -152,10 +161,11 @@ class ChatConversionCode: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        getdata()
         let indexPath = IndexPath(item: array.count-1, section: 0)
         chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
-        getdata()
+        
+        
     }
  
 }

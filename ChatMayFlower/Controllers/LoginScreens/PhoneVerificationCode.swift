@@ -59,6 +59,8 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
+        tabBarController?.tabBar.isHidden = true
+
         // Do any additional setup after loading the view.
     }
 }

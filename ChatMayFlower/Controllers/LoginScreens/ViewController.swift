@@ -18,7 +18,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
-        
+        tabBarController?.tabBar.isHidden = true
+
         initializeHideKeyboard()
         // Do any additional setup after loading the view.
     }
