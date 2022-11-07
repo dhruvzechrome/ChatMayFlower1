@@ -17,6 +17,7 @@ pod 'Firebase/Messaging'
 pod 'MessageKit'
 pod 'JGProgressHUD'
 pod 'FirebaseStorage'
-
+pod 'IQKeyboardManager'
+pod 'Kingfisher'
 
 end

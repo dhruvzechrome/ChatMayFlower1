@@ -32,7 +32,7 @@ extension DataBaseManager {
     
     /// insert new user to database
     public func insertUser(with user : ChatAppUser){
-        database.child("Contact List").child(user.phoneNumber).setValue(["Phone number": user.phoneNumber,"Name":user.name,"photo bytes":user.profileImage], withCompletionBlock: { error, _ in
+        database.child("Contact List").child(user.phoneNumber).setValue(["Phone number": user.phoneNumber,"Name":user.name,"photo url":user.profileImage,"location" : user.location], withCompletionBlock: { error, _ in
             guard error == nil else {
                 print("Failed to write data")
                
@@ -83,6 +83,7 @@ struct ChatAppUser {
     let phoneNumber: String
     let name : String
     let profileImage : String
+    let location : String
 }
 struct Message{
     var messagid : String

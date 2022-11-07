@@ -12,9 +12,10 @@ import FirebaseCoreInternal
 import FirebaseStorage
 
 class ShowProfileDetail: UIViewController {
-   
+    
     @IBOutlet weak var profileImage: UIImageView!
     var urlPath = ""
+    var filename = ""
     var uname = ""
     var uphoneno = ""
     @IBOutlet weak var name: UILabel!
@@ -26,13 +27,14 @@ class ShowProfileDetail: UIViewController {
     var imag : UIImage?
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
         
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
-        tabBarController?.tabBar.isHidden = false
-
+        
+        
         // Do any additional setup after loading the view.
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -45,11 +47,11 @@ class ShowProfileDetail: UIViewController {
     func getData(){
         // Create Firebase Storage Reference
         let storageRef = Storage.storage().reference()
-
+        
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded){[weak self](snapshot) in
             let key = snapshot.key
-//            print("Key",key)
+            //            print("Key",key)
             guard let value = snapshot.value as? [String:Any] else {return}
             
             
@@ -61,7 +63,7 @@ class ShowProfileDetail: UIViewController {
                     
                     let gif = snapshot.value! as! [String:String]
                     if gif["Phone number"] ==  self?.phones{
-//                        print("Ppppphhhhh :",gif["Phone number"]!)
+                        //                        print("Ppppphhhhh :",gif["Phone number"]!)
                         
                         self!.phoneNumber.text = gif["Phone number"]!
                         
@@ -73,41 +75,35 @@ class ShowProfileDetail: UIViewController {
                             self!.uname = gif["Name"]!
                         }
                         
-                        if gif["photo bytes"] != nil {
-                            self!.urlPath = gif["photo bytes"]!
-                        //Get File reference path
-                        let fileRef = storageRef.child(self!.urlPath)
+//                        print("my image sssssssss \(gif["photo url"]!)")
                         
-                        // Retrive data
-                        fileRef.getData(maxSize: 5 * 1024 * 1024 ) {data, error in
+                        if gif["photo url"] != nil {
+                            self!.filename = gif["location"]!
+                            self!.urlPath = gif["photo url"]!
+                            let url = URL(string: gif["photo url"]!)
+                            print("URllllllll ----\(url)")
+                            self!.profileImage.kf.setImage(with: url)
                             
-                            // Check For error
-                            if error == nil && data != nil{
-                                let image = UIImage(data: data!)
-                                self!.imag = image
-                                self!.profileImage.image = image
-                                
-                            }
                         }
-                        
-                    }
-                        self!.imag = UIImage(named: "placeholder")
+                        else{
+                            self!.imag = UIImage(named: "placeholder")
+                        }
                     }
                 }
             }
         }
     }
-
+    
     
     @IBAction func logout(_ sender: UIButton) {
         let firebaseAuth = Auth.auth()
         do {
-          try firebaseAuth.signOut()
+            try firebaseAuth.signOut()
             let vc = storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController
             navigationController?.pushViewController(vc!, animated: true)
             print("Sign out success")
         } catch let signOutError as NSError {
-          print("Error signing out: %@", signOutError)
+            print("Error signing out: %@", signOutError)
         }
     }
     
@@ -119,6 +115,7 @@ class ShowProfileDetail: UIViewController {
         vc?.name = uname
         vc?.number = phones
         vc?.photoUrlPath = urlPath
+        vc?.filename = filename
         navigationController?.pushViewController(vc!, animated: true)
     }
 }

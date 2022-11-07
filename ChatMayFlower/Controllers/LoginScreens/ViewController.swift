@@ -8,7 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     @IBAction func login(_ sender: UIButton) {
         
         let vc = storyboard?.instantiateViewController(withIdentifier: "PhoneVerificationCode") as? PhoneVerificationCode
@@ -19,12 +19,12 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
         tabBarController?.tabBar.isHidden = true
-
+        
         initializeHideKeyboard()
         // Do any additional setup after loading the view.
     }
-
-
+    
+    
 }
 
 extension ViewController {

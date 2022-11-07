@@ -257,7 +257,7 @@
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                            <real key="value" value="20"/>
+                                                            <real key="value" value="25"/>
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
@@ -300,11 +300,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Chats" id="tvJ-KN-zH5">
-                        <barButtonItem key="rightBarButtonItem" title="logout" style="plain" id="zx6-Be-hSa">
-                            <connections>
-                                <action selector="logout:" destination="CDl-Lj-u7m" id="WT6-et-aVh"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="zx6-Be-hSa"/>
                     </navigationItem>
                     <connections>
                         <outlet property="tabelView" destination="O18-9F-IlY" id="X0n-Fg-4n3"/>
@@ -860,6 +856,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="zbO-kv-HGf"/>
                     <connections>
+                        <outlet property="backgroundSv" destination="kzs-g0-WVw" id="Afx-hu-xXR"/>
                         <outlet property="imgProfile" destination="aKF-sj-ZRX" id="03B-hn-o7U"/>
                         <outlet property="tname" destination="7MR-ZU-EDy" id="G8V-TO-IZD"/>
                         <outlet property="tphoneNumber" destination="18j-HR-8oS" id="3l2-w8-5xG"/>
@@ -1032,6 +1029,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Edit" id="SsN-Z7-csM"/>
                     <connections>
+                        <outlet property="backgroundSv" destination="Gwn-ww-PDe" id="sWP-Pa-nVm"/>
                         <outlet property="profileImage" destination="IGx-EV-1GH" id="4xg-7I-KC2"/>
                         <outlet property="tName" destination="Jho-Rr-rMB" id="V9U-4T-Owz"/>
                         <outlet property="tPhoneNumber" destination="Jyo-hP-cbh" id="4hx-B3-ZiC"/>
