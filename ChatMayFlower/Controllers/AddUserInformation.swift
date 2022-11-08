@@ -73,35 +73,29 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
                         //                        self!.uphoneno = gif["Phone number"]!
                         
                         
-                        if gif["Name"] != nil{
-                            self!.tname.text = gif["Name"]!
+                        if gif["Name"] != nil {
+                            if gif["Name"] != ""{
+                                self!.tname.text = gif["Name"]!
+                            }
+                            else {
+                                self!.tname.text = "No name available"
+                            }
                             //                            self!.uname = gif["Name"]!
                         }
                         let image = UIImage(named: "placeholder")
-                        self!.imgProfile.image = image
-                        
                         if gif["photo url"] != nil {
-                            self!.location = gif["location"]!
-                            self!.urlPath = gif["photo url"]!
-                            //Get File reference path
-                            let fileRef = storageRef.child(self!.urlPath)
-                            
-                            // Retrive data
-                            fileRef.getData(maxSize: 5 * 1024 * 1024 ) {data, error in
-                                
-                                // Check For error
-                                if error == nil && data != nil{
-                                    let image = UIImage(data: data!)
-                                    
-                                    self!.imgProfile.image = image
-                                    
-                                }
-                                let image = UIImage(named: "placeholder")
+                            if gif["photo url"] != "" {
+                                self!.location = gif["location"]!
+                                self!.urlPath = gif["photo url"]!
+                                print("Photo Url -------- \(self!.urlPath)")
+                                print("Photo location -------- \(self!.location)")
+                                let url = URL(string: self!.urlPath)
+                                self!.imgProfile.kf.setImage(with: url)
+                            }
+                            else {
                                 self!.imgProfile.image = image
                             }
-                            
-                        } else{
-                            let image = UIImage(named: "placeholder")
+                        } else {
                             self!.imgProfile.image = image
                         }
                     }
@@ -169,7 +163,7 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
         
         guard didselectedImage != nil else{
             if tname.text != "" && tphoneNumber.text != ""{
-                DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phones,name: tname.text!,profileImage : "", location: ""))
+                DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phones,name: tname.text!,profileImage : urlPath, location: location))
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
                 vc?.phones = self.phones
                 self.navigationController?.pushViewController(vc!, animated: true)
@@ -212,11 +206,12 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
                             // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
                               print("Urllll ----->",url!)
                               urlpth = "\(url!)"
+                              DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phones,name: tname.text!,profileImage : "\(urlpth)", location: location))
                           }
 
                 }
                 if tname.text != "" && tphoneNumber.text != ""{
-                    DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phones,name: tname.text!,profileImage : "\(urlpth)", location: location))
+                   
                     let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
                     vc?.phones = self.phones
                     self.navigationController?.pushViewController(vc!, animated: true)

@@ -7,8 +7,10 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseDatabase
+
 class OtpVerifyCode: UIViewController {
-    
+    private let database = Database.database().reference()
     var verification = ""
     var phone = ""
     @IBOutlet weak var txtOtp: UITextField!
@@ -23,7 +25,7 @@ class OtpVerifyCode: UIViewController {
         
         // OTP Verification Process
         
-        Auth.auth().signIn(with: credential) { authResult, error in
+        Auth.auth().signIn(with: credential) {[self] authResult, error in
             if let error = error {
                 let authError = error as NSError
                 if authError.code == AuthErrorCode.secondFactorRequired.rawValue {
@@ -47,7 +49,34 @@ class OtpVerifyCode: UIViewController {
             }
             print("User Singin success")
             
-            DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phone,name: "",profileImage : "", location: ""))
+            database.child("Contact List").child(phone).observeSingleEvent(of: .value, with: { snapshot in
+                // Get user value
+                let value = snapshot.value as? NSDictionary
+                if value == nil{
+                    print("User is not register" )
+                    DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phone,name: "",profileImage : "", location: ""))
+                }
+                else{
+                    print("User is already register" ,value!)
+                }
+              
+
+              }) { error in
+                print(error.localizedDescription)
+              }
+            
+//            observeSingleEvent(of: .value, with: {snapshot in
+//                if let founNumber = snapshot.key as? String{
+//
+//                }  else {
+//                    print("snapshot.value   \(snapshot.key)")
+//                    print("User is not register" )
+//                    DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phone,name: "",profileImage : "", location: ""))
+//                    return
+//                }
+//                print("User is already register" , founNumber)
+//            })
+            
             
             
             let  alert = UIAlertController (title: "Otp Verified Successfully!!", message: "", preferredStyle: .alert)

@@ -25,7 +25,7 @@ class UserDetailsCode: UIViewController {
     var dictArray: [[String:String]] = []
     var array = [String]()
     var strArray  = [[String:String]]()
-    var arraypractice = [[String:Any]]()
+    var arrayDetails = [[String:Any]]()
     let storageRef = Storage.storage().reference()
     func getData(){
         databaseRef = Database.database().reference().child("Contact List")
@@ -42,12 +42,6 @@ class UserDetailsCode: UIViewController {
                     //                    let ques = snap.value!
                     
                     let gif = snapshot.value! as! [String:String]
-                    //                    if gif["Phone number"] !=  self?.phones{
-                    //                        print("Ppppphhhhh :",gif["Phone number"]!)
-                    //                        self!.dictArray.append(gif)
-                    //
-                    //
-                    //                    }
                     
                     if snapshot.key != self!.phones {
                         
@@ -59,25 +53,17 @@ class UserDetailsCode: UIViewController {
                             if gif["Name"] != nil{
                                 
                                 if gif["photo url"] != nil {
-                                    self!.arraypractice.append(["Name" : gif["Name"]! , "Phone number": gif["Phone number"]!, "profilepic": gif["photo url"]!])
-                                    print("ArrayPractise----------->>>\(self!.arraypractice)")
+                                    self!.arrayDetails.append(["Name" : gif["Name"]! , "Phone number": gif["Phone number"]!, "profilepic": gif["photo url"]!])
+                                    print("ArrayPractise----------->>>\(self!.arrayDetails)")
                                 }else{
-                                    self!.arraypractice.append(["Name" : gif["Name"]! , "Phone number": gif["Phone number"]!, "profilepic": ""])
-                                    print("ArrayPractise----------->>>\(self!.arraypractice)")
+                                    self!.arrayDetails.append(["Name" : gif["Name"]! , "Phone number": gif["Phone number"]!, "profilepic": ""])
+                                    print("ArrayPractise----------->>>\(self!.arrayDetails)")
                                 }
                                 
                             }else{
-                                self!.arraypractice.append(["Name" : "" , "Phone number": gif["Phone number"]!, "profilepic": ""])
-                                print("ArrayPractise----------->>>\(self!.arraypractice)")
+                                self!.arrayDetails.append(["Name" : "" , "Phone number": gif["Phone number"]!, "profilepic": ""])
+                                print("ArrayPractise----------->>>\(self!.arrayDetails)")
                             }
-//                            if gif["photo bytes"] != nil {
-//
-//                            }else{
-//                                let ui = UIImage(named: "person")
-//                                self!.arraypractice.append(["Name" : gif["Name"] as Any , "Phone number": gif["Phone number"]!, "profilepic": ui! ])
-                                
-                                
-//                            }
                             
                         }
                     }
@@ -188,11 +174,11 @@ class UserDetailsCode: UIViewController {
 
 extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arraypractice.count
+        return arrayDetails.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let frd = arraypractice[indexPath.row]
+        let frd = arrayDetails[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TableViewCell
         cell?.userLabel.text = frd["Phone number"] as? String
         print("my image is \(frd["profilepic"]!)")
@@ -209,7 +195,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         tabelView.deselectRow(at: indexPath, animated: true)
-        let frd = arraypractice[indexPath.row]
+        let frd = arrayDetails[indexPath.row]
         ab = frd["Phone number"]! as! String
         if msgkey.count > 0{
             for avl in 0...msgkey.count - 1 {

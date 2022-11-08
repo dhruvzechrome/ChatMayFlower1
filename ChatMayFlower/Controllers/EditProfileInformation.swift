@@ -146,9 +146,9 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
                                 print(error)
                               } else {
                                 // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
-                                  print("Urllll ---sfgdfdfgdfgdf-->",url!)
                                   urlpth = "\(url!)"
                                   DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.number,name: tName.text!,profileImage : "\(urlpth)", location: filename!))
+                                  self.navigationController?.popViewController(animated: true)
                               }
 
                     }
@@ -156,7 +156,7 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
                     
 //                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
 //                    vc?.phones = self.number
-                    self.navigationController?.popViewController(animated: true)
+                    
                 }
             }
             print("Error ====== \(error)")

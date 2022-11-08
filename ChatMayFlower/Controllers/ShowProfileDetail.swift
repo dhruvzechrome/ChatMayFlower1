@@ -40,7 +40,6 @@ class ShowProfileDetail: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
-        print("Hello")
         getData()
     }
     var imagearray = [UIImage]()
@@ -62,7 +61,7 @@ class ShowProfileDetail: UIViewController {
                     let ques = snap.value!
                     
                     let gif = snapshot.value! as! [String:String]
-                    if gif["Phone number"] ==  self?.phones{
+                    if gif["Phone number"] ==  self?.phones {
                         //                        print("Ppppphhhhh :",gif["Phone number"]!)
                         
                         self!.phoneNumber.text = gif["Phone number"]!
@@ -70,23 +69,32 @@ class ShowProfileDetail: UIViewController {
                         self!.uphoneno = gif["Phone number"]!
                         
                         
-                        if gif["Name"] != nil{
-                            self!.name.text = gif["Name"]!
-                            self!.uname = gif["Name"]!
+                        if gif["Name"] != nil {
+                            if gif["Name"] != "" {
+                                self!.name.text = gif["Name"]!
+                                self!.uname = gif["Name"]!
+                            }
+                            else {
+                                self!.uname = "No name available"
+                            }
                         }
-                        
 //                        print("my image sssssssss \(gif["photo url"]!)")
-                        
-                        if gif["photo url"] != nil {
-                            self!.filename = gif["location"]!
-                            self!.urlPath = gif["photo url"]!
-                            let url = URL(string: gif["photo url"]!)
-                            print("URllllllll ----\(url)")
-                            self!.profileImage.kf.setImage(with: url)
-                            
+                        self!.imag = UIImage(named: "placeholder")
+                        if gif["photo url"] != nil  {
+                            if gif["photo url"] != "" {
+                                self!.filename = gif["location"]!
+                                self!.urlPath = gif["photo url"]!
+                                let url = URL(string: gif["photo url"]!)
+                                print("URllllllll ----\(url)")
+                                self!.profileImage.kf.setImage(with: url)
+                            }
+                            else {
+                                self!.profileImage.image = self!.imag
+                            }
                         }
-                        else{
-                            self!.imag = UIImage(named: "placeholder")
+                        else {
+                            
+                            self!.profileImage.image = self!.imag
                         }
                     }
                 }

@@ -34,6 +34,7 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
                     // Sign in using the verificationID and the code sent to the user
                     // ...
                     print("sign in success ", verificationID!)
+           
                     
                     // Verification id  for OTPverification
                     self.verificationID = UserDefaults.standard.string(forKey: "authVerificationID")
