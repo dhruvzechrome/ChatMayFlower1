@@ -9,9 +9,11 @@
 import UIKit
 import FirebaseAuth
 import FirebaseDatabase
+import Kingfisher
 
-
-class ChatConversionCode: UIViewController {
+class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+    
+    
     var bo = false
     var llb = 0
     @IBOutlet weak var bkview: UIView!
@@ -34,14 +36,14 @@ class ChatConversionCode: UIViewController {
     var dictArray: [[String:String]] = []
     var array = [String]()
     var keyBoardStatus = false
-    
-    func getdata(){
+    func getdata() {
         database.child("Uid").getData(completion:  { error, snapshot in
             guard error == nil else {
                 print(error!.localizedDescription)
                 return;
             }
             let userName = snapshot?.value;
+        
             self.ui = userName as! Int
             //            print(self.ui)
         });
@@ -49,71 +51,82 @@ class ChatConversionCode: UIViewController {
         
     }
     
-    func getchat(){
+    func getchat() {
+        print("my array is this ",array)
+        print("my dic array is this ",dictArray)
         print("Message id is " ,  mid)
-        database.child("Chats").child(mid).child("chatting").observe(.childAdded){[weak self](snapshot) in
-            let key = snapshot.childSnapshot(forPath: self!.mid)
-            //            print("Key:::---",key)
-            guard let value = snapshot.value as? [String:Any] else {return
-                print("Error")
-            }
-            //            print("total data",value)
-            
-            if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
+        array.removeAll()
+        dictArray.removeAll()
+        
+        
+        database.child("Chats").child(mid).child("chatting").observe(.childAdded) {[weak self](snapshot) in
+            DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+                guard let value = snapshot.value as? [String:Any] else {return
+                    print("Error")
+                }
                 
-                for snap in snapshots {
-                    let cata = snap.key
-                    let ques = snap.value!
-                    self!.array.append("\(cata)")
+                if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
                     
-                    self!.dictArray.append([cata : String(describing: ques)])
+                    for snap in snapshots {
+                        let cata = snap.key
+                        let ques = snap.value!
+                        print("Cata ---------- \(cata)")
+                        print("Ques >>>>---------- \(ques)")
+                        
+                        self?.array.append("\(cata)")
+                        self?.dictArray.append([cata : String(describing: ques)])
+                        
+                    }
+                    
+                }
+                
+                if (self?.array.count)! > 0 {
+                    self?.chatTable.reloadData()
+                    print("my array is this ",self?.array)
+                    print("my dic array is this ",self?.dictArray)
+                    print("my array is this ",self?.array.count)
+                    print("my dic array is this ",self?.dictArray.count)
                 }
                 
             }
-            self?.chatTable.reloadData()
-            self!.bo = true
-            //            print("key of value is ",self!.array)
-            //            print("dictionary is ",self!.dictArray)
-            
-            //            if let nam = value["\(self!.fri[self!.id!].phoneNumber)"] as? String {
-            //
-            //                let friend = Message(messagid: self!.mid!, chats: "d", sender: "\(nam)", uii: self!.ui)
-            //
-            //                self!.friends.append(friend)
-            //                print("Nam is ",nam)
-            ////                print("Number iis ",number)
-            //
-            //                if let row = self?.friends.count{
-            //                    let indexPath = IndexPath(row: row-1, section: 0)
-            //                    self?.chatTable.insertRows(at: [indexPath], with: .automatic)
-            //                    print("row",row)
-            //                }
-            //                self?.chatTable.reloadData()
-            ////                self?.friends.remove(at: reg)
-            //                print("all chats ",self!.friends)
-            //
-            //            }
         }
     }
     
     @IBAction func sendChat(_ sender: UIButton) {
         
-        if chatField.text != ""{
+        if chatField.text != "" {
             ui = ui + 1
-            bo = true
-            //            chat.append(Message(messagid: mid!, chats: chatField.text!, sender: <#String#>, uii: ui))
             database.child("Uid").setValue(ui)
-            DataBaseManager.shared.mychatting(with: Message(messagid: mid, chats: chatField.text!, sender: "ul", uii: ui))
-            chatTable.reloadData()
+            database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(cu)": chatField.text!], withCompletionBlock: { error, _ in
+                guard error == nil else {
+                    print("Failed to write data")
+                    
+                    return
+                }
+                print("data written seccess")
+            })
+            //            DataBaseManager.shared.mychatting(with: Message(messagid: mid, chats: chatField.text!, sender: "ul", uii: ui, chatPhotos: ""))
             chatField.text = ""
+            DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+                chatTable.reloadData()
+                let indexPath = IndexPath(item: array.count-1, section: 0)
+                chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                
+            }
         }
-        
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //        getdata()
+         getchat()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
+            print("my array is this----------------====== ",array)
+            print("my dic array is this ",dictArray)
+            print("my array is this ",array.count)
+            print("my dic array is this ",dictArray.count)
+        }
         
         tabBarController?.tabBar.isHidden = true
         
@@ -127,7 +140,7 @@ class ChatConversionCode: UIViewController {
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        getchat()
+       
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -136,41 +149,84 @@ class ChatConversionCode: UIViewController {
         keyboardheight = 0
         cu = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
         titl.title = receiverid
-        
-        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
-            getdata()
-            llb = ui
-            chatTable.reloadData()
-            if ui > llb{
-                getchat()
-                
-            }
-            
-            if bo == true{
-                bo = false
-                let indexPath = IndexPath(item: array.count-1, section: 0)
-                chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
-            }
-            
-        })
-        
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+//        addImageVideo.addGestureRecognizer(tapGesture)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil);
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil);
     }
+   
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         getdata()
-        let indexPath = IndexPath(item: array.count-1, section: 0)
-        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+       
         
         
     }
     
+    @IBAction func addImageVideo(_ sender: UIButton) {
+        imageTapped()
+    }
+    @objc
+    func imageTapped()
+    {
+        print("Image Tapped...!")
+        let ac = UIAlertController(title: "Select Image From", message: "", preferredStyle: .actionSheet)
+        let cameraBtn = UIAlertAction(title: "Camera", style: .default){(_) in
+            print("Camera Press")
+            self.showImagePicker(selectSource: .camera)
+        }
+        let libraryBtn = UIAlertAction(title: "Library", style: .default){(_) in
+            print("Library Press")
+            self.showImagePicker(selectSource: .photoLibrary)
+        }
+        let cancelBtn = UIAlertAction(title: "Cancel", style: .cancel , handler: nil)
+        ac.addAction(cameraBtn)
+        ac.addAction(libraryBtn)
+        ac.addAction(cancelBtn)
+        self.present(ac, animated: true, completion: nil)
+    }
+    
+    func showImagePicker(selectSource:UIImagePickerController.SourceType)
+    {
+        guard UIImagePickerController.isSourceTypeAvailable(selectSource) else{
+            print("Selected Source not available")
+            return
+        }
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = selectSource
+        imagePickerController.allowsEditing = false
+        self.present(imagePickerController, animated: true, completion: nil)
+    }
+    var filename : String?
+    var didselectedImage : UIImage?
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        if let selectedImage =  info[.originalImage] as? UIImage{
+            print("Selected image ",selectedImage)
+//            add.image = selectedImage
+            didselectedImage = selectedImage
+            let localPath = info[.imageURL] as? NSURL
+            _ = info[.imageURL] as? URL
+            print("Local Path  > ",localPath!)
+    
+            picker.dismiss(animated: true, completion: nil)
+            let imgVc = storyboard?.instantiateViewController(withIdentifier: "ImageAndVideoShowCode") as? ImageAndVideoShowCode
+            imgVc?.navselectedImage = didselectedImage
+            imgVc?.mesId = mid
+            imgVc?.uid = ui
+            self.show(imgVc!, sender: self)
+            
+        }
+        else{
+            print("Image not found...!")
+        }
+        
+    }
 }
-
-extension ChatConversionCode{
+extension ChatConversionCode {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
@@ -214,21 +270,55 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let chat = dictArray[indexPath.row]
-        let kk = array[indexPath.row]
+        if indexPath.row < dictArray.count {
+            let chat = dictArray[indexPath.row]
+            let kk = array[indexPath.row]
+            
+            if kk == "chatPhoto" {
+                if chat[kk] != "" {
+                    let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
+                    let url = URL(string: chat["chatPhoto"]!)
+                    cell?.photos.kf.setImage(with: url)
+                    return cell!
+                }
+            }
+                let cell = chatTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? ChatTableViewCell
+                print("My chatting is",chat)
+                print("my id is ",kk)
+
+                cell?.messages.text = chat[kk]
+
+                if phoneid == kk {
+                    cell?.messages.textAlignment = .right
+
+                }
+                else {
+                    cell?.messages.textAlignment = .left
+
+                }
+                //        }
+                cell?.messages.numberOfLines = 0
+                return cell!
+
+        }
         let cell = chatTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? ChatTableViewCell
-        
-        cell?.messages.text = chat[kk]
-        if phoneid == kk {
-            cell?.messages.textAlignment = .right
-        }
-        else {
-            cell?.messages.textAlignment = .left
-        }
         return cell!
-        
     }
     
-    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row < dictArray.count {
+            let chat = dictArray[indexPath.row]
+            let kk = array[indexPath.row]
+            
+            let cell = chatTable.cellForRow(at: indexPath)
+            if kk == "chatPhoto" {
+                if chat[kk] != "" {
+                    return 200
+                }
+            }
+        }
+       
+        return UITableView.automaticDimension
+    }
 }
 

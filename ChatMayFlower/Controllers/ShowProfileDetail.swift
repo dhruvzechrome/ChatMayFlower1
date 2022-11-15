@@ -40,6 +40,7 @@ class ShowProfileDetail: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
+        phoneNumber.text = phones
         getData()
     }
     var imagearray = [UIImage]()
@@ -64,7 +65,7 @@ class ShowProfileDetail: UIViewController {
                     if gif["Phone number"] ==  self?.phones {
                         //                        print("Ppppphhhhh :",gif["Phone number"]!)
                         
-                        self!.phoneNumber.text = gif["Phone number"]!
+//                        self!.phoneNumber.text = gif["Phone number"]!
                         
                         self!.uphoneno = gif["Phone number"]!
                         

@@ -78,7 +78,7 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
                                 self!.tname.text = gif["Name"]!
                             }
                             else {
-                                self!.tname.text = "No name available"
+//                                self!.tname.text = "No name available"
                             }
                             //                            self!.uname = gif["Name"]!
                         }

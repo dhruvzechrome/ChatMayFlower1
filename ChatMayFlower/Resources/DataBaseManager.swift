@@ -66,7 +66,7 @@ extension DataBaseManager {
     
     public func mychatting(with user : Message){
         let num = FirebaseAuth.Auth.auth().currentUser!.phoneNumber
-        database.child("Chats").child(user.messagid).child("chatting").child("\(user.uii)").setValue(["\(num!)": user.chats], withCompletionBlock: { error, _ in
+        database.child("Chats").child(user.messagid).child("chatting").child("\(user.uii)").setValue(["\(num!)": user.chats,"chatPhoto":user.chatPhotos], withCompletionBlock: { error, _ in
             guard error == nil else {
                 print("Failed to write data")
                
@@ -90,5 +90,7 @@ struct Message{
     var chats : String
     var sender : String
     var uii : Int
+    let chatPhotos : String
+
 }
 
