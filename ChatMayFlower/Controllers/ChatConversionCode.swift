@@ -10,7 +10,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 import Kingfisher
-
+import MBProgressHUD
 class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
     
@@ -43,7 +43,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                 return;
             }
             let userName = snapshot?.value;
-        
+            
             self.ui = userName as! Int
             //            print(self.ui)
         });
@@ -66,7 +66,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                 if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
                     
                     for snap in snapshots {
-//                        print("snap shot is ",snapshot.value)
+                        //                        print("snap shot is ",snapshot.value)
                         
                         
                         let cata = snap.key
@@ -82,14 +82,16 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     
                 }
                 
+                
+                
                 if self?.array.count != 0 {
-//                    DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
-//                        let indexPath = IndexPath(item: array.count-1, section: 0)
-//                        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
-//
-//                    }
-               
-//
+                    //                    DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+                    //                        let indexPath = IndexPath(item: array.count-1, section: 0)
+                    //                        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                    //
+                    //                    }
+                    
+                    //
                     print("my srtttttttt array is this @@@@@###$$$%%^^&& ",self?.srtttt)
                     print("my array is this ",self?.array)
                     print("my array is this ",self?.array.count)
@@ -127,22 +129,28 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-                getdata()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
-//            print("my array is this----------------====== ",array)
-//            print("my dic array is this ",srtttt)
-//            print("my array is this ",array.count)
-//            print("my dic array is this ",srtttt.count)
-//        }
+        getdata()
+        //        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
+        //            print("my array is this----------------====== ",array)
+        //            print("my dic array is this ",srtttt)
+        //            print("my array is this ",array.count)
+        //            print("my dic array is this ",srtttt.count)
+        //        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [self] in
+            
+        }
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
             if bo == true {
+                
                 let indexPath = IndexPath(item: array.count-1, section: 0)
                 chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
                 llb = ui
                 bo = false
             }
-            
-            })
+            else {
+                hideProgress()
+            }
+        })
         tabBarController?.tabBar.isHidden = true
         
         
@@ -157,18 +165,19 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         super.viewWillLayoutSubviews()
         
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         chatTable.delegate = self
         chatTable.dataSource = self
         keyboardheight = 0
         getchat()
+        mbProgressHUD(text: "Loading")
         
         cu = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
         titl.title = receiverid
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
-//        addImageVideo.addGestureRecognizer(tapGesture)
+        //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+        //        addImageVideo.addGestureRecognizer(tapGesture)
         
         
         
@@ -176,7 +185,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil);
     }
-   
+    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -227,12 +236,12 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         
         if let selectedImage =  info[.originalImage] as? UIImage{
             print("Selected image ",selectedImage)
-//            add.image = selectedImage
+            //            add.image = selectedImage
             didselectedImage = selectedImage
             let localPath = info[.imageURL] as? NSURL
             _ = info[.imageURL] as? URL
             print("Local Path  > ",localPath!)
-    
+            
             picker.dismiss(animated: true, completion: nil)
             let imgVc = storyboard?.instantiateViewController(withIdentifier: "ImageAndVideoShowCode") as? ImageAndVideoShowCode
             imgVc?.navselectedImage = didselectedImage
@@ -299,55 +308,107 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
             let txtChat = myyo?[kk]
             print("Array length is =====------------> \(array.count)")
             print("dict Array length is =====------------> \(srtttt.count)")
-            if kk == "chatPhoto" {
-                if txtChat != "" {
-                    let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
-                    let url = URL(string: txtChat ?? "")
-                    cell?.photos.kf.setImage(with: url)
-                    return cell!
+            if kk == "\(phoneid)chatPhoto" || kk == "\(receiverid)chatPhoto" || kk == "chatPhoto" {
+                if kk == "\(receiverid)chatPhoto" {
+                    if txtChat != "" {
+                        let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
+                        let url = URL(string: txtChat ?? "")
+                        cell?.photos.kf.setImage(with: url)
+                        return cell!
+                    }
                 }
+                else  if kk == "\(phoneid)chatPhoto"{
+                    if txtChat != "" {
+                        let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderImageChatCell") as? SenderImageChatCell
+                        let url = URL(string: txtChat ?? "")
+                        cell?.senderImage.kf.setImage(with: url)
+                        return cell!
+                    }
+                }else {
+                    if txtChat != "" {
+                        let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
+                        let url = URL(string: txtChat ?? "")
+                        cell?.photos.kf.setImage(with: url)
+                        return cell!
+                    }
+                }
+                
             } else {
-                let cell = chatTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? ChatTableViewCell
+                
                 print("My chatting is",chat)
                 print("my id is ",kk)
-
-                cell?.messages.text = txtChat
-
+                
+                
+                
                 if phoneid == kk {
-                    cell?.messages.textAlignment = .right
-
+                    let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderViewCell", for: indexPath) as? SenderViewCell
+                    cell?.senderMessage.text = "\(txtChat!) "
+                    
+                    return cell!
                 }
                 else {
-                    cell?.messages.textAlignment = .left
-
+                    let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverViewCell", for: indexPath) as? ReceiverViewCell
+                    cell?.receiverMessages.text = " \(txtChat!)"
+                    return cell!
                 }
                 //        }
-                cell?.messages.numberOfLines = 0
-                return cell!
             }
-
+            
         }
-        let cell = chatTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? ChatTableViewCell
+        let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderViewCell", for: indexPath) as? SenderViewCell
         return cell!
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row < srtttt.count {
-            let chat = srtttt[indexPath.row]
-            let kk = array[indexPath.row]
-            let kei = key[indexPath.row]
-            let myyo = chat[kei]
-            let txtChat = myyo?[kk]
-            
-            let cell = chatTable.cellForRow(at: indexPath)
-            if kk == "chatPhoto" {
-                if txtChat != "" {
-                    return 200
-                }
-            }
-        }
-       
-        return UITableView.automaticDimension
-    }
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        if indexPath.row < srtttt.count {
+//            let chat = srtttt[indexPath.row]
+//            let kk = array[indexPath.row]
+//            let kei = key[indexPath.row]
+//            let myyo = chat[kei]
+//            let txtChat = myyo?[kk]
+//
+//            let cell = chatTable.cellForRow(at: indexPath)
+//            if kk == "chatPhoto" {
+//                if txtChat != "" {
+//                    return 200
+//                }
+//            }
+//        }
+//
+//        return UITableView.automaticDimension
+//    }
 }
 
+extension ChatConversionCode {
+  func mbProgressHUD(text: String){
+    DispatchQueue.main.async {
+      let progressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
+      progressHUD.label.text = text
+      progressHUD.contentColor = .systemBlue
+    }
+  }
+  func hideProgress(){
+    DispatchQueue.main.async {
+      MBProgressHUD.hide(for: self.view, animated: false)
+    }
+  }
+}
+
+class UILabel : UIKit.UILabel {
+    var insets = UIEdgeInsets.zero {
+        didSet { invalidateIntrinsicContentSize() }
+    }
+
+    override func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
+        let textRect = super.textRect(forBounds: bounds, limitedToNumberOfLines: numberOfLines)
+        let invertedInsets = UIEdgeInsets(top: -insets.top,
+                                          left: -insets.left,
+                                          bottom: -insets.bottom,
+                                          right: -insets.right)
+        return textRect.inset(by: invertedInsets)
+    }
+
+    override func drawText(in rect: CGRect) {
+        super.drawText(in: rect.inset(by: insets))
+    }
+}

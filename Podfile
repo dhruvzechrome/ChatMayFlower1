@@ -19,5 +19,6 @@ pod 'JGProgressHUD'
 pod 'FirebaseStorage'
 pod 'IQKeyboardManager'
 pod 'Kingfisher'
+pod 'MBProgressHUD'
 
 end

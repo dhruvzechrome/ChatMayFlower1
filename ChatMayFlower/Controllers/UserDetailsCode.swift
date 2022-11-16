@@ -11,6 +11,7 @@ import FirebaseDatabase
 import FirebaseCoreInternal
 import FirebaseStorage
 import Kingfisher
+import MBProgressHUD
 
 class UserDetailsCode: UIViewController {
     
@@ -204,13 +205,16 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
                 }
             }
         }
+        mbProgressHUD(text: "Loading..")
         let vc = storyboard?.instantiateViewController(withIdentifier: "ChatConversionCode") as? ChatConversionCode
         vc?.receiverid = ab
         vc?.id = indexPath.row
         mychat()
         vc?.mid = messageId!
         vc?.phoneid = phones
+        
         navigationController?.pushViewController(vc!, animated: true)
+        hideProgress()
         //        friends = [ChatAppUser]()
     }
     
@@ -238,4 +242,19 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
+}
+
+extension UserDetailsCode {
+  func mbProgressHUD(text: String){
+    DispatchQueue.main.async {
+      let progressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
+      progressHUD.label.text = text
+      progressHUD.contentColor = .systemBlue
+    }
+  }
+  func hideProgress(){
+    DispatchQueue.main.async {
+      MBProgressHUD.hide(for: self.view, animated: false)
+    }
+  }
 }

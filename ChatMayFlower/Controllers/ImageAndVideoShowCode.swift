@@ -67,7 +67,7 @@ class ImageAndVideoShowCode: UIViewController {
                                   uid = uid! + 1
                                   database.child("Uid").setValue(uid)
                                   if commentField.text == "" {
-                                      database.child("Chats").child(mesId).child("chatting").child("\(uid!)").setValue(["chatPhoto": urlpth], withCompletionBlock: { error, _ in
+                                      database.child("Chats").child(mesId).child("chatting").child("\(uid!)").setValue(["\(num)chatPhoto": urlpth], withCompletionBlock: { error, _ in
                                           guard error == nil else {
                                               print("Failed to write data")
                                              
@@ -79,7 +79,7 @@ class ImageAndVideoShowCode: UIViewController {
                                           }
                                       })
                                   }else{
-                                      database.child("Chats").child(mesId).child("chatting").child("\(uid!)").setValue(["chatPhoto": urlpth,"\(num)":commentField.text!], withCompletionBlock: { error, _ in
+                                      database.child("Chats").child(mesId).child("chatting").child("\(uid!)").setValue(["\(num)chatPhoto": urlpth,"\(num)":commentField.text!], withCompletionBlock: { error, _ in
                                           guard error == nil else {
                                               print("Failed to write data")
                                              

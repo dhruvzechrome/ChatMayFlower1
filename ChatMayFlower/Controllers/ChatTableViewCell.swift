@@ -7,9 +7,28 @@
 
 import UIKit
 
-class ChatTableViewCell: UITableViewCell {
+class ChatTableViewCell: UITableViewCell{
     
-    @IBOutlet weak var messages: UILabel!
+}
+
+class SenderImageChatCell : UITableViewCell {
+    
+    @IBOutlet weak var senderImage: UIImageView!
+}
+
+class ImageTableViewCell: UITableViewCell {
+
+    @IBOutlet weak var photos: UIImageView!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+
+}
+
+class ReceiverViewCell: UITableViewCell {
+    
+    @IBOutlet weak var receiverMessages: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -17,4 +36,11 @@ class ChatTableViewCell: UITableViewCell {
     
     
 }
+
+
+class SenderViewCell : UITableViewCell{
+    
+    @IBOutlet weak var senderMessage: UILabel!
+}
+
 
