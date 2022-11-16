@@ -29,10 +29,6 @@ class ImageAndVideoShowCode: UIViewController {
     @IBAction func sent(_ sender: UIButton) {
         
         guard selectedImage != nil else{
-           
-            
-//                let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
-//                vc?.phones = self.number
                 self.navigationController?.popViewController(animated: true)
             
             return
@@ -78,20 +74,26 @@ class ImageAndVideoShowCode: UIViewController {
                                               return
                                           }
                                           print("data written seccess")
+                                          DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+                                              navigationController?.popViewController(animated: true)
+                                          }
                                       })
                                   }else{
-                                      database.child("Chats").child(mesId).child("chatting").child("\(uid!)").setValue(["\(num)":commentField.text!,"chatPhoto": urlpth], withCompletionBlock: { error, _ in
+                                      database.child("Chats").child(mesId).child("chatting").child("\(uid!)").setValue(["chatPhoto": urlpth,"\(num)":commentField.text!], withCompletionBlock: { error, _ in
                                           guard error == nil else {
                                               print("Failed to write data")
                                              
                                               return
                                           }
                                           print("data written seccess")
+                                          DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+                                              navigationController?.popViewController(animated: true)
+                                          }
                                       })
                                   }
                                   
 //                                  DataBaseManager.shared.mychatting(with: Message(messagid: mesId, chats: commentField.text!, sender: "ul", uii: uid, chatPhotos: urlpth))
-                                  self.navigationController?.popViewController(animated: true)
+                                  
                               }
 
                     }
