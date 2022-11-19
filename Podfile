@@ -20,5 +20,6 @@ pod 'FirebaseStorage'
 pod 'IQKeyboardManager'
 pod 'Kingfisher'
 pod 'MBProgressHUD'
+pod 'YPImagePicker'
 
 end

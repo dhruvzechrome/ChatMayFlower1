@@ -9,6 +9,7 @@ import UIKit
 import FirebaseStorage
 import FirebaseAuth
 import FirebaseDatabase
+import MBProgressHUD
 
 class ImageAndVideoShowCode: UIViewController {
     var navselectedImage : UIImage?
@@ -18,10 +19,14 @@ class ImageAndVideoShowCode: UIViewController {
     var mesId = ""
     var uid :Int?
     var num = ""
+    var videoUrl : String?
     override func viewDidLoad() {
         super.viewDidLoad()
         if navselectedImage != nil {
             selectedImage.image = navselectedImage
+        }
+        else {
+            
         }
         num = FirebaseAuth.Auth.auth().currentUser!.phoneNumber!
     }
@@ -33,7 +38,7 @@ class ImageAndVideoShowCode: UIViewController {
             
             return
         }
-        
+        mbProgressHUD(text: "Loading..")
         let storageRef = Storage.storage().reference()
         
         let imageData = navselectedImage?.jpegData(compressionQuality: 0.4)
@@ -74,12 +79,14 @@ class ImageAndVideoShowCode: UIViewController {
                                               return
                                           }
                                           print("data written seccess")
+                                          
                                           DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                                               navigationController?.popViewController(animated: true)
+                                              hideProgress()
                                           }
                                       })
                                   }else{
-                                      database.child("Chats").child(mesId).child("chatting").child("\(uid!)").setValue(["\(num)chatPhoto": urlpth,"\(num)":commentField.text!], withCompletionBlock: { error, _ in
+                                      database.child("Chats").child(mesId).child("chatting").child("\(uid!)").setValue(["\(num)text":commentField.text!,"\(num)chatPhoto": urlpth], withCompletionBlock: { error, _ in
                                           guard error == nil else {
                                               print("Failed to write data")
                                              
@@ -88,6 +95,7 @@ class ImageAndVideoShowCode: UIViewController {
                                           print("data written seccess")
                                           DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                                               navigationController?.popViewController(animated: true)
+                                              hideProgress()
                                           }
                                       })
                                   }
@@ -106,9 +114,20 @@ class ImageAndVideoShowCode: UIViewController {
             }
             print("Error ====== \(error)")
         }
-        
-        
-        
     }
     
+}
+extension ImageAndVideoShowCode {
+  func mbProgressHUD(text: String){
+    DispatchQueue.main.async {
+      let progressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
+      progressHUD.label.text = text
+      progressHUD.contentColor = .systemBlue
+    }
+  }
+  func hideProgress(){
+    DispatchQueue.main.async {
+      MBProgressHUD.hide(for: self.view, animated: false)
+    }
+  }
 }

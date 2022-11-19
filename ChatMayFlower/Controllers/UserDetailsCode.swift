@@ -35,7 +35,7 @@ class UserDetailsCode: UIViewController {
 //            //            print("Key",key)
 //            guard let value = snapshot.value as? [String:Any] else {return}
             
-            
+            self!.mbProgressHUD(text: "Loading.")
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
                 
                 for snap in snapshots {
@@ -107,6 +107,7 @@ class UserDetailsCode: UIViewController {
                 print("No data Found")
             }
             self?.tabelView.reloadData()
+            self?.hideProgress()
             //            print("key of value is ",self!.msgkey)
             //            print("dictionary is ",self!.dictArray)
         }
@@ -129,6 +130,7 @@ class UserDetailsCode: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        mbProgressHUD(text: "Loading..")
         tabelView.delegate = self
         tabelView.dataSource = self
         print(friends)
@@ -165,6 +167,7 @@ class UserDetailsCode: UIViewController {
         if FirebaseAuth.Auth.auth().currentUser == nil {
             let vc = storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController
             navigationController?.pushViewController(vc!, animated: true)
+            hideProgress()
         }
         phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
     }
