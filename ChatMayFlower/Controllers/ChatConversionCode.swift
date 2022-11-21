@@ -42,6 +42,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     var dictArray: [[String:String]] = []
     var array = [String]()
     var keyBoardStatus = false
+    
+    var replyUser :UILabel?
+    var replytxt : UILabel?
     func getdata() {
         database.child("Uid").getData(completion:  { error, snapshot in
             guard error == nil else {
@@ -57,6 +60,8 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         
     }
     var srtttt = [[String:[String:String]]]()
+    var replcht :[String:String]?
+    var replcout : String?
     var key = [String]()
     func getchat() {
         print("my array is this ",array)
@@ -73,16 +78,22 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     
                     for snap in snapshots {
                         //                        print("snap shot is ",snapshot.value)
-                        
+                        print("Snapshot is %%%%%%%%% \(snapshot.value)")
                         
                         let cata = snap.key
                         let ques = snap.value!
-                        print("Cata ---------- \(cata)")
+//                        let chat  = snapshot.value["916353918909chatPhoto"] as! String
+//                        print("Cata ---------- \(¸ƒ)")
                         print("Ques >>>>---------- \(ques)")
-                        self?.srtttt.append([snapshot.key :[cata : "\(ques)"]])
-                        self?.key.append(snapshot.key)
-                        self?.array.append("\(cata)")
-                        self?.chatTable.reloadData()
+                        
+                        if !(self?.key.contains(snapshot.key))! {
+                            self?.srtttt.append([snapshot.key :snapshot.value as! [String:String]])
+                            self?.key.append(snapshot.key)
+                            self?.array.append("\(cata)")
+                            self?.chatTable.reloadData()
+                        }
+                        
+                        
                         self?.bo = true
                     }
                     
@@ -99,8 +110,8 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     
                     //
                     print("my srtttttttt array is this @@@@@###$$$%%^^&& ",self?.srtttt)
-                    print("my array is this ",self?.array)
-                    print("my array is this ",self?.array.count)
+                    print("my array is this ",self?.key.count)
+//                    print("my array is this ",self?.array.count)
                     print("my dic array is this ",self?.srtttt.count)
                 }
                 
@@ -112,22 +123,37 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         
         if chatField.text != "" {
             ui = ui + 1
+            
             database.child("Uid").setValue(ui)
-            database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(cu)": chatField.text!], withCompletionBlock: { error, _ in
-                guard error == nil else {
-                    print("Failed to write data")
+            
+            if replcht == nil {
+                database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(cu)": chatField.text!], withCompletionBlock: { error, _ in
+                    guard error == nil else {
+                        print("Failed to write data")
+                        
+                        return
+                    }
+                    print("data written seccess")
+                })
+                //            DataBaseManager.shared.mychatting(with: Message(messagid: mid, chats: chatField.text!, sender: "ul", uii: ui, chatPhotos: ""))
+                chatField.text = ""
+                DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+                    chatTable.reloadData()
+                    let indexPath = IndexPath(item: array.count-1, section: 0)
+                    chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
                     
-                    return
                 }
-                print("data written seccess")
-            })
-            //            DataBaseManager.shared.mychatting(with: Message(messagid: mid, chats: chatField.text!, sender: "ul", uii: ui, chatPhotos: ""))
-            chatField.text = ""
-            DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
-                chatTable.reloadData()
-                let indexPath = IndexPath(item: array.count-1, section: 0)
-                chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
-                
+            } else {
+                database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(cu)": chatField.text!,replcout:replcht as Any], withCompletionBlock: { [self] error, _ in
+                    guard error == nil else {
+                        print("Failed to write data")
+                        
+                        return
+                    }
+                    replcht?.removeAll()
+                    chatField.text = ""
+                    print("data written seccess")
+                })
             }
         }
     }
@@ -397,14 +423,17 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
             let kei = key[indexPath.row]
             let myyo = chat[kei]
             let txtChat = myyo?[kk]
+            
 //            print("Array length is =====------------> \(array.count)")
 //            print("dict Array length is =====------------> \(srtttt.count)")
             if kk == "\(phoneid)chatPhoto" || kk == "\(receiverid)chatPhoto" || kk == "chatPhoto" {
                 if kk == "\(receiverid)chatPhoto" {
                     if txtChat != "" {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
+                        cell?.receiverComentImage.text = myyo?["\(receiverid)text"]
                         let url = URL(string: txtChat ?? "")
                         cell?.photos.kf.setImage(with: url)
+                        cell?.selectionStyle = .none
                         return cell!
                     }
                 }
@@ -412,8 +441,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                     if txtChat != "" {
                         
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderImageChatCell") as? SenderImageChatCell
+                        cell?.senderImageComment.text = myyo?["\(phoneid)text"]
+                        print("Chats =================......\(myyo)")
                         let url = URL(string: txtChat ?? "")
                         cell?.senderImage.kf.setImage(with: url)
+                        cell?.selectionStyle = .none
                         return cell!
                     }
                 }else {
@@ -421,6 +453,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
                         let url = URL(string: txtChat ?? "")
                         cell?.photos.kf.setImage(with: url)
+                        cell?.selectionStyle = .none
                         return cell!
                     }
                 }
@@ -457,12 +490,13 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                 if phoneid == kk || "\(phoneid)text" == kk {
                     let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderViewCell", for: indexPath) as? SenderViewCell
                     cell?.senderMessage.text = "\(txtChat!)"
-                    
+                    cell?.selectionStyle = .none
                     return cell!
                 }
                 else {
                     let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverViewCell", for: indexPath) as? ReceiverViewCell
                     cell?.receiverMessages.text = "\(txtChat!)"
+                    cell?.selectionStyle = .none
                     return cell!
                 }
                 //        }
@@ -473,8 +507,52 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         return cell!
     }
     
+//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//
+//    }
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let chat = srtttt[indexPath.row]
+        let kk = array[indexPath.row]
+        let kei = key[indexPath.row]
+        let myyo = chat[kei]
+        let txtChat = myyo?[kk]
+        replcht = myyo
+        replcout = kei
+        print("Chat is the ----\(myyo)")
+        let action = UIContextualAction(style: .normal,
+                                        title: "Reply") { [weak self] (action, view, completionHandler) in
+         
+            self?.handleMarkAsFavourite(chats: txtChat!, user:kk)
+            
+                                            completionHandler(true)
+            
+           
+        }
+        action.backgroundColor = .clear
+        return UISwipeActionsConfiguration(actions: [action])
+    }
     
+    func handleMarkAsFavourite(chats:String, user: String){
+//        chatField.
+        keyBoardStatus = true
+        chatField.becomeFirstResponder()
+        chatTable.tableFooterView = footerview()
+        keyBoardStatus = false
+        replyUser?.text = "\(user)"
+        replytxt?.text = "\(chats)"
+        
+    }
     
+    private func footerview() -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 50))
+        replyUser = UILabel(frame: CGRect(x: 10, y: 0, width: chatTable.frame.width, height: 30))
+        replytxt = UILabel(frame: CGRect(x: 20, y: 25, width: chatTable.frame.width, height: 20))
+        view.addSubview(replyUser!)
+        view.addSubview(replytxt!)
+        view.backgroundColor = .red
+        
+        return view
+    }
 }
 
 extension ChatConversionCode {

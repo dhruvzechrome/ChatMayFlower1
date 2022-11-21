@@ -60,6 +60,9 @@ class SenderVideoCell : UITableViewCell {
 
 class ImageTableViewCell: UITableViewCell {
 
+    
+    @IBOutlet weak var receiverComentImage: UILabel!
+    
     @IBOutlet weak var photos: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
