@@ -59,7 +59,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         
         
     }
-    var srtttt = [[String:[String:String]]]()
+    var srtttt = [[String:[String:Any]]]()
     var replcht :[String:String]?
     var replcout : String?
     var key = [String]()
@@ -85,9 +85,10 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
 //                        let chat  = snapshot.value["916353918909chatPhoto"] as! String
 //                        print("Cata ---------- \(¸ƒ)")
                         print("Ques >>>>---------- \(ques)")
-                        
+                        let  json = snapshot.value as? [String:Any]
+                        print("JSON is -------=== \(json)")
                         if !(self?.key.contains(snapshot.key))! {
-                            self?.srtttt.append([snapshot.key :snapshot.value as! [String:String]])
+                            self?.srtttt.append([snapshot.key :snapshot.value as! [String:Any]])
                             self?.key.append(snapshot.key)
                             self?.array.append("\(cata)")
                             self?.chatTable.reloadData()
@@ -152,6 +153,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     }
                     replcht?.removeAll()
                     chatField.text = ""
+//                    footerview().isHidden = true
                     print("data written seccess")
                 })
             }
@@ -406,12 +408,17 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         let kei = key[indexPath.row]
         let myyo = chat[kei]
         let txtChat = myyo?[kk]
+        print("Chats =================......\(String(describing: myyo))")
+        print("reply chat is =======--- \(key)")
+        print("Array is ..........  \(array)")
+        print("SELECTED INDEX is =====--=-= \(kk)")
+        print("Array length is =====------------> \(chat)")
         if kk == "\(phoneid)chatVideo" || kk == "\(receiverid)chatVideo" {
-            videoPlayer(videoUrl: txtChat!)
+            videoPlayer(videoUrl: txtChat! as! String)
 //            print("MY URL IS ++++ \(txtChat)")
             
         }else if kk == "\(phoneid)chatPhoto" || kk == "\(receiverid)chatPhoto" || kk == "chatPhoto" {
-            imageShow(url:txtChat!)
+            imageShow(url:txtChat! as! String)
 //            print("Image Url is \(txtChat)")
         }else {
         }
@@ -423,35 +430,77 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
             let kei = key[indexPath.row]
             let myyo = chat[kei]
             let txtChat = myyo?[kk]
-            
-//            print("Array length is =====------------> \(array.count)")
+            let abc = myyo?[kk]  as? [String : Any]
+//            if  phoneid != kk || "\(phoneid)text" != kk || kk != "\(phoneid)chatPhoto" || kk != "\(receiverid)chatPhoto" {
+//
+//
+//                print("Chats =================......\(String(describing: myyo?["\(phoneid)"]))")
+//            }
+//            print("Chats =================......\(String(describing: myyo))")
+//            print("reply chat is =======--- \(key)")
+//            print("Array is ..........  \(array)")
+//            print("SELECTED INDEX is =====--=-= \(kk)")
+//            print("Array length is =====------------> \(chat)")
 //            print("dict Array length is =====------------> \(srtttt.count)")
+            if abc?["\(phoneid)"] != nil || abc?["\(receiverid)"] != nil {
+                if myyo?["\(phoneid)"] == nil {
+                    print("Message Reply of receiver is \(abc?["\(receiverid)"])")
+                    let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyViewCell") as? ReceiverReplyViewCell
+                    if abc?["\(receiverid)"] == nil{
+                        cell?.receiverMessages.text = abc?["\(phoneid)"] as? String
+                    } else {
+                        cell?.receiverMessages.text = abc?["\(receiverid)"] as? String
+                    }
+                    if myyo?["\(receiverid)"] == nil {
+                        cell?.receiverReply.text = myyo?["\(phoneid)"] as? String
+                    } else {
+                        cell?.receiverReply.text = myyo?["\(receiverid)"] as? String
+                    }
+                    return cell!
+                }
+                else {
+                    print("Message Reply of sender is \(abc?["\(phoneid)"])")
+                    let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyViewCell") as? SenderReplyViewCell
+                    if abc?["\(phoneid)"] == nil{
+                        cell?.senderMessages.text = abc?["\(receiverid)"] as? String
+                    } else {
+                        cell?.senderMessages.text = abc?["\(phoneid)"] as? String
+                    }
+                    if myyo?["\(phoneid)"] == nil {
+                        cell?.senderReply.text = myyo?["\(receiverid)"] as? String
+                    }
+                    else {
+                        cell?.senderReply.text = myyo?["\(phoneid)"] as? String
+                    }
+                    return cell!
+                }
+            }else {
             if kk == "\(phoneid)chatPhoto" || kk == "\(receiverid)chatPhoto" || kk == "chatPhoto" {
                 if kk == "\(receiverid)chatPhoto" {
-                    if txtChat != "" {
+                    if txtChat as! String != "" {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
-                        cell?.receiverComentImage.text = myyo?["\(receiverid)text"]
-                        let url = URL(string: txtChat ?? "")
+                        cell?.receiverComentImage.text = myyo?["\(receiverid)text"] as? String
+                        let url = URL(string: txtChat  as! String)
                         cell?.photos.kf.setImage(with: url)
                         cell?.selectionStyle = .none
                         return cell!
                     }
                 }
                 else  if kk == "\(phoneid)chatPhoto"{
-                    if txtChat != "" {
+                    if txtChat as! String != "" {
                         
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderImageChatCell") as? SenderImageChatCell
-                        cell?.senderImageComment.text = myyo?["\(phoneid)text"]
-                        print("Chats =================......\(myyo)")
-                        let url = URL(string: txtChat ?? "")
+                        cell?.senderImageComment.text = myyo?["\(phoneid)text"] as? String
+                        
+                        let url = URL(string: txtChat  as! String)
                         cell?.senderImage.kf.setImage(with: url)
                         cell?.selectionStyle = .none
                         return cell!
                     }
                 }else {
-                    if txtChat != "" {
+                    if txtChat as! String != "" {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
-                        let url = URL(string: txtChat ?? "")
+                        let url = URL(string: txtChat as! String)
                         cell?.photos.kf.setImage(with: url)
                         cell?.selectionStyle = .none
                         return cell!
@@ -460,23 +509,23 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                 
             } else if kk == "\(phoneid)chatVideo" || kk == "\(receiverid)chatVideo" {
                 if kk == "\(receiverid)chatVideo" {
-                    if txtChat != "" {
+                    if txtChat as! String != "" {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverVideoCell") as? ReceiverVideoCell
-                        cell?.confi(videoUrl: txtChat ?? "")
+                        cell?.confi(videoUrl: txtChat  as! String)
                         return cell!
                     }
                 }
                 else  if kk == "\(phoneid)chatVideo"{
-                    if txtChat != "" {
+                    if txtChat as! String != "" {
 //                        print("MY VIDEO URL IS -------\(txtChat)")
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderVideoCell") as? SenderVideoCell
-                        cell?.confi(videoUrl: txtChat ?? "")
+                        cell?.confi(videoUrl: txtChat  as! String)
                         return cell!
                     }
                 }else {
-                    if txtChat != "" {
+                    if txtChat as! String != "" {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
-                        let url = URL(string: txtChat ?? "")
+                        let url = URL(string: txtChat  as! String)
                         cell?.photos.kf.setImage(with: url)
                         return cell!
                     }
@@ -501,6 +550,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                 }
                 //        }
             }
+            }
             
         }
         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderViewCell", for: indexPath) as? SenderViewCell
@@ -515,21 +565,76 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         let kk = array[indexPath.row]
         let kei = key[indexPath.row]
         let myyo = chat[kei]
-        let txtChat = myyo?[kk]
-        replcht = myyo
+        let txtChat = myyo?[kk] as? String
+        let abc = myyo?[kk]  as? [String : Any]
+        replcht = myyo as? [String : String]
         replcout = kei
-        print("Chat is the ----\(myyo)")
-        let action = UIContextualAction(style: .normal,
-                                        title: "Reply") { [weak self] (action, view, completionHandler) in
-         
-            self?.handleMarkAsFavourite(chats: txtChat!, user:kk)
-            
-                                            completionHandler(true)
-            
-           
+        print("receiver message is \(myyo?["\(receiverid)"])")
+        print("Sender  message is \(myyo?["\(phoneid)"])")
+        print("MYYO  is the ----  \(myyo)")
+        print("ABC IS THE ====  \(abc)")
+        print("TEXTCHAT IS ///////    \(txtChat)")
+        print("KK IS THE \\\\\\  \(kk)---\(kei)")
+        if abc?["\(phoneid)"] != nil || abc?["\(receiverid)"] != nil {
+            if myyo?["\(phoneid)"] == nil {
+                print("Obviously")
+                print("Phone ID chat === \(myyo?["\(phoneid)"])")
+                var msg = ""
+                if myyo!["\(self.receiverid)"] == nil {
+                    replcht = ["\(self.receiverid)" : "\(myyo!["\(self.phoneid)"]!)"]
+                    msg = "\(myyo!["\(self.phoneid)"]!)"
+                } else {
+                    replcht = ["\(self.receiverid)" : "\(myyo!["\(self.receiverid)"]!)"]
+                    msg = "\(myyo!["\(self.receiverid)"]!)"
+                }
+                
+                
+                replcout = kei
+                let action = UIContextualAction(style: .normal,
+                                                title: "Reply") { [weak self] (action, view, completionHandler) in
+                 
+                    self?.handleMarkAsFavourite(chats: msg , user: self!.receiverid)
+                    
+                                                    completionHandler(true)
+                }
+                action.backgroundColor = .clear
+                return UISwipeActionsConfiguration(actions: [action])
+            } else {
+                print("Obviously")
+                var msg = ""
+                if myyo!["\(self.phoneid)"] == nil {
+                    replcht = ["\(self.phoneid)" : "\(myyo!["\(self.receiverid)"]!)"]
+                    msg = myyo!["\(self.receiverid)"] as! String
+                } else {
+                    replcht = ["\(self.phoneid)" : "\(myyo!["\(self.phoneid)"]!)"]
+                    msg = myyo!["\(self.phoneid)"] as! String
+                }
+                
+                
+                replcout = kei
+                let action = UIContextualAction(style: .normal,
+                                                title: "Reply") { [weak self] (action, view, completionHandler) in
+                 
+                    self?.handleMarkAsFavourite(chats: msg , user: self!.phoneid)
+                    
+                                                    completionHandler(true)
+                }
+                action.backgroundColor = .clear
+                return UISwipeActionsConfiguration(actions: [action])
+            }
         }
-        action.backgroundColor = .clear
-        return UISwipeActionsConfiguration(actions: [action])
+            let action = UIContextualAction(style: .normal,
+                                            title: "Reply") { [weak self] (action, view, completionHandler) in
+             
+                self?.handleMarkAsFavourite(chats: txtChat! , user:kk)
+                
+                                                completionHandler(true)
+            }
+            action.backgroundColor = .clear
+            return UISwipeActionsConfiguration(actions: [action])
+        
+        
+        
     }
     
     func handleMarkAsFavourite(chats:String, user: String){

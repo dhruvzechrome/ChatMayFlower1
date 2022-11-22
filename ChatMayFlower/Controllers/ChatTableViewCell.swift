@@ -120,5 +120,26 @@ class ReceiverVideoCell : UITableViewCell {
     }
 }
 
+class SenderReplyViewCell: UITableViewCell {
+    
+    @IBOutlet weak var senderReply: UILabel!
+    @IBOutlet weak var senderMessages: UILabel!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+    
+    
+}
 
-
+class ReceiverReplyViewCell: UITableViewCell {
+    
+    @IBOutlet weak var receiverReply: UILabel!
+    @IBOutlet weak var receiverMessages: UILabel!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+    
+    
+}
