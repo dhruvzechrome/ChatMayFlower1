@@ -439,22 +439,14 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
             let myyo = chat[kei]
             let txtChat = myyo?[kk]
             let abc = myyo?[kk]  as? [String : Any]
-            //            if  phoneid != kk || "\(phoneid)text" != kk || kk != "\(phoneid)chatPhoto" || kk != "\(receiverid)chatPhoto" {
-            //
-            //
-            //                print("Chats =================......\(String(describing: myyo?["\(phoneid)"]))")
-            //            }
-            //            print("Chats =================......\(String(describing: myyo))")
-            //            print("reply chat is =======--- \(key)")
-            //            print("Array is ..........  \(array)")
-            //            print("SELECTED INDEX is =====--=-= \(kk)")
-            //            print("Array length is =====------------> \(chat)")
-            //            print("dict Array length is =====------------> \(srtttt.count)")
-            if abc?["\(phoneid)"] != nil || abc?["\(receiverid)"] != nil ||  abc?["\(receiverid)chatPhoto"] != nil || abc?["\(phoneid)chatPhoto"] != nil{
+            if abc?["\(phoneid)"] != nil || abc?["\(receiverid)"] != nil ||  abc?["\(receiverid)chatPhoto"] != nil || abc?["\(phoneid)chatPhoto"] != nil || abc?["\(receiverid)chatVideo"] != nil || abc?["\(phoneid)chatVideo"] != nil {
+                
                 if abc?["\(receiverid)chatPhoto"] != nil || abc?["\(phoneid)chatPhoto"] != nil {
+                    
                     if myyo?["\(phoneid)"] == nil {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyImageCell") as? ReceiverReplyImageCell
                         cell?.receiverreply.text = myyo?["\(receiverid)"] as? String
+                        
                         if abc?["\(receiverid)chatPhoto"] == nil{
                             let bar = abc?["\(phoneid)chatPhoto"] as? String
                             cell?.confi(videoUrl: bar!)
@@ -507,6 +499,67 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             cell?.user.text = "\(receiverid)"
                             if abc?["\(receiverid)text"] == nil{
                                 cell?.sendermsg.text = "Photo"
+                              
+                            }
+                        }
+                        return cell!
+                    }
+                } else if abc?["\(receiverid)chatVideo"] != nil || abc?["\(phoneid)chatVideo"] != nil {
+                    if myyo?["\(phoneid)"] == nil {
+                        let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyImageCell") as? ReceiverReplyImageCell
+                        cell?.receiverreply.text = myyo?["\(receiverid)"] as? String
+                        
+                        if abc?["\(receiverid)chatVideo"] == nil{
+                            let bar = abc?["\(phoneid)chatVideo"] as? String
+                            cell?.videocon(videoUrl: bar!)
+                        } else {
+                            let bar = abc?["\(receiverid)chatVideo"] as? String
+                            print("-=-=-=-====-=-= \(bar!)")
+                            cell?.videocon(videoUrl: bar!)
+                        }
+                        
+                        if abc?["\(receiverid)text"] == nil {
+                            cell?.receivermsg.text = abc?["\(phoneid)text"] as? String
+                            cell?.user.text = "You"
+                            if abc?["\(phoneid)text"] == nil{
+                                cell?.receivermsg.text = "Video"
+                            }
+                        } else {
+                            cell?.receivermsg.text = abc?["\(receiverid)text"] as? String
+                            cell?.user.text = "\(receiverid)"
+                            if abc?["\(receiverid)text"] == nil{
+                                cell?.receivermsg.text = "Video"
+                               
+                            }
+                        }
+                        return cell!
+                        
+                    } else {
+                        let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyImageCell") as? SenderReplyImageCell
+                        cell?.senderreply.text = myyo?["\(phoneid)"] as? String
+                        
+                        if abc?["\(receiverid)chatVideo"] == nil{
+                            let bar = abc?["\(phoneid)chatVideo"] as? String
+                            cell?.videocon(videoUrl: bar!)
+                        } else {
+                            let bar = abc?["\(receiverid)chatVideo"] as? String
+                            print("-=-=-=-====-=-= \(bar!)")
+                            cell?.videocon(videoUrl: bar!)
+                        }
+                        
+                        
+                        if abc?["\(receiverid)text"] == nil{
+                            cell?.sendermsg.text = abc?["\(phoneid)text"] as? String
+                            cell?.user.text = "You"
+                            if abc?["\(phoneid)text"] == nil{
+                                cell?.sendermsg.text = "Video"
+                                print("yahh")
+                            }
+                        } else {
+                            cell?.sendermsg.text = abc?["\(receiverid)text"] as? String
+                            cell?.user.text = "\(receiverid)"
+                            if abc?["\(receiverid)text"] == nil{
+                                cell?.sendermsg.text = "Video"
                               
                             }
                         }

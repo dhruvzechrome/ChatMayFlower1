@@ -181,7 +181,10 @@ class SenderReplyImageCell: UITableViewCell {
 //        }
 //        imgreplysender.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
     }
-        
+    func videocon(videoUrl: String){
+        guard let url = URL(string: videoUrl) else { return }
+        imgreplysender.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
+    }
 
 }
 class ReceiverReplyImageCell: UITableViewCell {
@@ -203,6 +206,10 @@ class ReceiverReplyImageCell: UITableViewCell {
         
     }
     
+    func videocon(videoUrl: String){
+        guard let url = URL(string: videoUrl) else { return }
+        imgreplyreceiver.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
+    }
 
 }
 
