@@ -153,7 +153,7 @@ class UserDetailsCode: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        navigationItem.hidesBackButton = true
+        
         
         validAuth()
         print("current User",phones)
@@ -162,6 +162,8 @@ class UserDetailsCode: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
+        navigationItem.hidesBackButton = true
+        tabBarController?.tabBarItem.accessibilityElementIsFocused()
     }
     func validAuth(){
         if FirebaseAuth.Auth.auth().currentUser == nil {
