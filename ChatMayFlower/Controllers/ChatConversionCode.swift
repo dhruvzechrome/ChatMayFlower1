@@ -20,84 +20,86 @@ import FirebaseStorage
 class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
     @IBAction func backPopBtn(_ sender: UIButton) {
-        seenstatus = false
+        seenVcStatus = false
         navigationController?.popViewController(animated: true)
     }
     
-    var bo = false
-    var llb = 0
+    
     @IBOutlet weak var bkview: UIView!
     var keyboardheight : Int = 0
     @IBOutlet weak var backgroundSV: UIScrollView!
-    var cu = ""
     private let database = Database.database().reference()
-    var phoneid = ""
-    @IBOutlet weak var chatTable: UITableView!
-    @IBOutlet weak var chatField: UITextField!
-    var ui = 0
-    var chat = [Message]()
-    var mid = ""
-    var receiverid = ""
-    var friends = [Message]()
-    var id: Int?
-    //    @IBOutlet weak var chatTable: UITableView!
-    @IBOutlet weak var titl: UINavigationItem!
-    var timer = Timer()
-    var dictArray: [[String:String]] = []
-    var array = [String]()
-    var keyBoardStatus = false
+    var phoneid = ""                            // current user
+    var receiverid = ""                         // receiver user
+    @IBOutlet weak var chatTable: UITableView!  // tableview for showing chats
+    @IBOutlet weak var chatField: UITextField!  // textfield for chatting
+    var ui = 0                      // uid  for chatting
+    var mid = ""                    // message id of sender and receiver
     
-    var replyUser :UILabel?
-    var replytxt : UILabel?
+    @IBOutlet weak var titl: UINavigationItem!  // title  of  receiver user
+    var textFieldBtnStatus = false              // textFieldBtnStatus for get repeating of call uid
+    var timer = Timer()                     // for repeatative
     
-    var seenstatus = false
-    var senn : [[String:Bool]] = []
-    var cnt = 0
-    var ing = 0
-    var arraystatus = [String]()
+    var chatMapKey = [String]()            // for store key of data
+    var chatMap = [[String:[String:Any]]]()  // map of chatting
+    var replyChat :[String:String]?           // reply chat with key in
+    var replyText : String?                    //passing chat for reply
+    var key = [String]()
+    var seen : [[String:Bool]] = []   // for store data which is in map format
+    
+    var keyBoardStatus = false       // for showing keyboard
+    
+    var replyUser :UILabel?      // when we swipe for reply this shows usernumber
+    var replytxt : UILabel?      // when we swipe for reply this shows text for which we give reply
+    
+    var seenVcStatus = false      // use for view controller data calling seenStatus
+    var seenStatusLabel = "" // seenStatusLabel
+    var oppositeSeenStatus = false   // for not show seen when receiver sent msg
+    var counter = 0             // use for variable like   counter//
+    var arrayStatus = [String]() // s capital
     func status(){
-        senn.removeAll()
-        arraystatus.removeAll()
+        seen.removeAll()
+        arrayStatus.removeAll()
         
         database.child("Chats").child(mid).child("status").observe(.childAdded) {[weak self](snapshot) in
             if let snap = snapshot.value {
-                print("yes yj \(snapshot.key)")
+//                print("yes yj \(snapshot.key)")
                 
-                if !(self?.arraystatus.contains(snapshot.key))! {
-                    self?.arraystatus.append(snapshot.key)
-                    self?.senn.append(["\(snapshot.key)":snapshot.value as! Bool])
-                    let apex = self?.senn[self!.ing]
+                if !(self?.arrayStatus.contains(snapshot.key))! {
+                    self?.arrayStatus.append(snapshot.key)
+                    self?.seen.append(["\(snapshot.key)":snapshot.value as! Bool])
+                    let apex = self?.seen[self!.counter]
                     let smf = apex?["\(self!.phoneid)"]
-                    self?.ing = self!.ing + 1
-                    if self?.ing == 2 {
-                        self?.ing = 0
+                    self?.counter = self!.counter + 1
+                    if self?.counter == 2 {
+                        self?.counter = 0
                     }
                     if  smf != nil && smf == false {
-                        print("all done")
+//                        print("all done")
                         self?.database.child("Chats").child(self!.mid).child("status").setValue(["\(self!.phoneid)":true, "\(self!.receiverid)":true])
                         //                        self?.chatTable.tableFooterView = self?.hidefooterview()
                     }
                 }
-                if self!.senn.count == 2{
-                    print("sennnn \(self?.senn)")
-                    let apex = self?.senn[0]
-                    let bpex = self?.senn[1]
+                if self!.seen.count == 2{
+//                    print("seen \(self?.seen)")
+                    let apex = self?.seen[0]
+                    let bpex = self?.seen[1]
                     if (apex?["\(self!.receiverid)"] == true || bpex?["\(self!.receiverid)"] == true) && ( apex?["\(self!.phoneid)"] == false || bpex?["\(self!.phoneid)"] == false) {
-                        print("Hide footer \(self!.receiverid)")
+//                        print("Hide footer \(self!.receiverid)")
                         self?.chatTable.tableFooterView = self?.msgsseenfhidefooterview()
                     } else if (apex?["\(self!.receiverid)"] == true || apex?["\(self!.phoneid)"] == true) && (bpex?["\(self!.receiverid)"] == true || bpex?["\(self!.phoneid)"] == true) {
-                        print("message seen \(apex)")
-                        self?.hasseen = "seen"
-                        if self?.bphigh == false {
+//                        print("message seen \(apex)")
+                        self?.seenStatusLabel = "seen"
+                        if self?.oppositeSeenStatus == false {
                             self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
                             self?.scrollToBottom()
                         }
                         
                     }
                     else {
-                        print("message not seen")
-                        self?.hasseen = "delevried"
-                        if self?.bphigh == false {
+//                        print("message not seen")
+                        self?.seenStatusLabel = "delivered"
+                        if self?.oppositeSeenStatus == false {
                             self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
                             self?.scrollToBottom()
                         }
@@ -129,7 +131,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         
         
     }
-    var hasseen = ""
+    
     private func msgsSeenfooterview() -> UIView {
         
         let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 30))
@@ -137,7 +139,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         
         seeninmsg.textAlignment = .right
         seeninmsg.font = UIFont.systemFont(ofSize: 14)
-        seeninmsg.text = hasseen
+        seeninmsg.text = seenStatusLabel
         seeninmsg.textColor = .black
         view.backgroundColor = .none
         view.addSubview(seeninmsg)
@@ -148,15 +150,11 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         
         return view
     }
-    var srtttt = [[String:[String:Any]]]()
-    var replcht :[String:String]?
-    var replcout : String?
-    var key = [String]()
+   
     func getchat() {
-        //        print("my array is this ",array)
-        //        print("my dic array is this ",srtttt)
+        //        print("my chatMapKey is this ",chatMapKey)
+        //        print("my dic array is this ",chatMap)
         //        print("Message id is " ,  mid)
-        cnt = 0
         database.child("Chats").child(mid).child("chatting").observe(.childAdded) {[weak self](snapshot) in
             DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                 guard let value = snapshot.value as? [String:Any] else {return
@@ -177,33 +175,32 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                         let  json = snapshot.value as? [String:Any]
                         //                        print("JSON is -------=== \(json)")
                         if !(self?.key.contains(snapshot.key))! {
-                            self?.srtttt.append([snapshot.key :snapshot.value as! [String:Any]])
+                            self?.chatMap.append([snapshot.key :snapshot.value as! [String:Any]])
                             self?.key.append(snapshot.key)
-                            self?.array.append("\(cata)")
+                            self?.chatMapKey.append("\(cata)")
                             self?.chatTable.reloadData()
-                            self?.bphigh = false
+                            self?.oppositeSeenStatus = false
                         }
                         
-                        self?.cnt = self!.key.count
-                        self?.bo = true
+                        self?.textFieldBtnStatus = true
                     }
                     
                 }
                 
                 
                 
-                if self?.array.count != 0 {
+                if self?.chatMapKey.count != 0 {
                     //                    DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
-                    //                        let indexPath = IndexPath(item: array.count-1, section: 0)
+                    //                        let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
                     //                        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
                     //
                     //                    }
                     
                     //
-                    //                    print("my srtttttttt array is this @@@@@###$$$%%^^&& ",self?.srtttt)
+                    //                    print("my chatMap chatMapKey is this @@@@@###$$$%%^^&& ",self?.chatMap)
                     //                    print("my array is this ",self?.key.count)
-                    //                    //                    print("my array is this ",self?.array.count)
-                    //                    print("my dic array is this ",self?.srtttt.count)
+                    //                    //                    print("my chatMapKey is this ",self?.chatMapKey.count)
+                    //                    print("my dic array is this ",self?.chatMap.count)
                 }
                 
             }
@@ -215,13 +212,13 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         chatTable.sectionFooterHeight = 0
         if chatField.text != "" {
             ui = ui + 1
-            hasseen = "deleveried"
+            seenStatusLabel = "delivered"
             chatTable.tableFooterView = msgsSeenfooterview()
             database.child("Uid").setValue(ui)
             database.child("Chats").child(mid).child("status").setValue(["\(phoneid)":true,"\(receiverid)":false])
-            if replcht == nil {
+            if replyChat == nil {
                 
-                database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(cu)": chatField.text!], withCompletionBlock: { error, _ in
+                database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(phoneid)": chatField.text!], withCompletionBlock: { error, _ in
                     guard error == nil else {
                         print("Failed to write data")
                         
@@ -229,24 +226,24 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     }
                     print("data written seccess")
                     
-                    self.bphigh = false
+                    self.oppositeSeenStatus = false
                     
                 })
                 //            DataBaseManager.shared.mychatting(with: Message(messagid: mid, chats: chatField.text!, sender: "ul", uii: ui, chatPhotos: ""))
                 chatField.text = ""
                 DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                     self.chatTable.reloadData()
-                    let indexPath = IndexPath(item: array.count-1, section: 0)
+                    let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
                     chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
                 }
             } else {
-                database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(cu)": chatField.text!,replcout:replcht as Any], withCompletionBlock: { [self] error, _ in
+                database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(phoneid)": chatField.text!,replyText:replyChat as Any], withCompletionBlock: { [self] error, _ in
                     guard error == nil else {
                         print("Failed to write data")
                         
                         return
                     }
-                    replcht?.removeAll()
+                    replyChat?.removeAll()
                     chatField.text = ""
                     footerview().isHidden = true
                     print("data written seccess")
@@ -262,10 +259,10 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         super.viewWillAppear(animated)
         getdata()
         //        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
-        //            print("my array is this----------------====== ",array)
-        //            print("my dic array is this ",srtttt)
-        //            print("my array is this ",array.count)
-        //            print("my dic array is this ",srtttt.count)
+        //            print("my chatMapKey is this----------------====== ",chatMapKey)
+        //            print("my dic array is this ",chatMap)
+        //            print("my chatMapKey is this ",chatMapKey.count)
+        //            print("my dic array is this ",chatMap.count)
         //        }
         
         tabBarController?.tabBar.isHidden = true
@@ -274,15 +271,13 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        cu = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
-        
         
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
     }
-    var bphigh = false
+    
     override func viewDidLoad() {
         print("view didload call")
         super.viewDidLoad()
@@ -294,23 +289,20 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         //            status()
         //
         //        })
-        seenstatus = true
+        seenVcStatus = true
         
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
             
-            if seenstatus == true {
+            if seenVcStatus == true {
                 
                 status()
-                if bo == true {
+                if textFieldBtnStatus == true {
                     
-                    let indexPath = IndexPath(item: array.count-1, section: 0)
+                    let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
                     chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
                     //                    scrollToBottom()
                     getdata()
-                    
-                    llb = ui
-                    
-                    bo = false
+                    textFieldBtnStatus = false
                 }
                 else {
                     hideProgress()
@@ -320,7 +312,6 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         getchat()
         status()
         mbProgressHUD(text: "Loading")
-        cu = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
         titl.title = receiverid
         //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         //        addImageVideo.addGestureRecognizer(tapGesture)
@@ -476,7 +467,7 @@ extension ChatConversionCode {
                 backgroundSV.frame.size = CGSize(width: backgroundSV.bounds.width, height: backgroundSV.frame.height - keyboardSize.height)
                 //               print("asdasd" , keyboardheight)
             }
-            let indexPath = IndexPath(item: array.count-1, section: 0)
+            let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
             chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
             keyBoardStatus = true
         }
@@ -516,11 +507,11 @@ extension ChatConversionCode {
 
 extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return srtttt.count
+        return chatMap.count
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let chat = srtttt[indexPath.row]
-        let kk = array[indexPath.row]
+        let chat = chatMap[indexPath.row]
+        let kk = chatMapKey[indexPath.row]
         let kei = key[indexPath.row]
         let myyo = chat[kei]
         let txtChat = myyo?[kk]
@@ -530,7 +521,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         //        print("myyo =================......\(String(describing: myyo))")
         //        print("txtchat is ======----> \(txtChat)")
         //        print("key chat is =======--- \(key)")
-        //        print("Array is ..........  \(array)")
+        //        print("chatMapKey is ..........  \(chatMapKey)")
         
         for i in 0...key.count-1 {
             if key[i] == kk {
@@ -563,9 +554,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row < srtttt.count {
-            let chat = srtttt[indexPath.row]
-            let kk = array[indexPath.row]
+        if indexPath.row < chatMap.count {
+            let chat = chatMap[indexPath.row]
+            let kk = chatMapKey[indexPath.row]
             let kei = key[indexPath.row]
             let myyo = chat[kei]
             let txtChat = myyo?[kk]
@@ -604,9 +595,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             }
                         }
                         cell?.selectionStyle = .none
-                        if indexPath.row == array.count-1{
+                        if indexPath.row == chatMapKey.count-1{
                             chatTable.tableFooterView = msgsseenfhidefooterview()
-                            bphigh = true
+                            oppositeSeenStatus = true
                         }
                         return cell!
                         
@@ -678,9 +669,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             }
                         }
                         cell?.selectionStyle = .none
-                        if indexPath.row == array.count-1{
+                        if indexPath.row == chatMapKey.count-1{
                             chatTable.tableFooterView = msgsseenfhidefooterview()
-                            bphigh = true
+                            oppositeSeenStatus = true
                         }
                         return cell!
                         
@@ -736,9 +727,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         cell?.receiverReply.text = myyo?["\(receiverid)"] as? String
                     }
                     cell?.selectionStyle = .none
-                    if indexPath.row == array.count-1{
+                    if indexPath.row == chatMapKey.count-1{
                         chatTable.tableFooterView = msgsseenfhidefooterview()
-                        bphigh = true
+                        oppositeSeenStatus = true
                     }
                     return cell!
                 }
@@ -770,9 +761,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             let url = URL(string: txtChat  as! String)
                             cell?.photos.kf.setImage(with: url)
                             cell?.selectionStyle = .none
-                            if indexPath.row == array.count-1{
+                            if indexPath.row == chatMapKey.count-1{
                                 chatTable.tableFooterView = msgsseenfhidefooterview()
-                                bphigh = true
+                                oppositeSeenStatus = true
                             }
                             return cell!
                         }
@@ -804,9 +795,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverVideoCell") as? ReceiverVideoCell
                             cell?.confi(videoUrl: txtChat  as! String)
                             cell?.selectionStyle = .none
-                            if indexPath.row == array.count-1{
+                            if indexPath.row == chatMapKey.count-1{
                                 chatTable.tableFooterView = msgsseenfhidefooterview()
-                                bphigh = true
+                                oppositeSeenStatus = true
                             }
                             return cell!
                         }
@@ -845,9 +836,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         cell?.receiverMessages.text = "\(txtChat!)"
                         cell?.selectionStyle = .none
                         
-                        if indexPath.row == array.count-1{
+                        if indexPath.row == chatMapKey.count-1{
                             chatTable.tableFooterView = msgsseenfhidefooterview()
-                            bphigh = true
+                            oppositeSeenStatus = true
                         }
                         return cell!
                     }
@@ -865,36 +856,36 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
     //
     //    }
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let chat = srtttt[indexPath.row]
-        let kk = array[indexPath.row]
+        let chat = chatMap[indexPath.row]
+        let kk = chatMapKey[indexPath.row]
         let kei = key[indexPath.row]
         let myyo = chat[kei]
         let txtChat = myyo?[kk] as? String
         let abc = myyo?[kk]  as? [String : Any]
-        replcht = myyo as? [String : String]
-        replcout = kei
+        replyChat = myyo as? [String : String]
+        replyText = kei
         //        print("receiver message is \(myyo?["\(receiverid)"])")
         //        print("Sender  message is \(myyo?["\(phoneid)"])")
         //        print("MYYO  is the ----  \(myyo)")
         //        print("ABC IS THE ====  \(abc)")
         //        print("TEXTCHAT IS ///////    \(txtChat)")
         //        print("KK IS THE \\\\\\  \(kk)---\(kei)")
-        bphigh = true
+        oppositeSeenStatus = true
         chatTable.tableFooterView = msgsseenfhidefooterview()
         if abc?["\(phoneid)"] != nil || abc?["\(receiverid)"] != nil || myyo?["\(phoneid)"] != nil || myyo?["\(receiverid)"] != nil {
             if myyo?["\(phoneid)"] == nil {
                 //                print("Phone ID chat === \(myyo?["\(phoneid)"])")
                 var msg = ""
                 if myyo!["\(self.receiverid)"] == nil {
-                    replcht = ["\(self.receiverid)" : "\(myyo!["\(self.phoneid)"]!)"]
+                    replyChat = ["\(self.receiverid)" : "\(myyo!["\(self.phoneid)"]!)"]
                     msg = "\(myyo!["\(self.phoneid)"]!)"
                 } else {
-                    replcht = ["\(self.receiverid)" : "\(myyo!["\(self.receiverid)"]!)"]
+                    replyChat = ["\(self.receiverid)" : "\(myyo!["\(self.receiverid)"]!)"]
                     msg = "\(myyo!["\(self.receiverid)"]!)"
                 }
                 
                 
-                replcout = kei
+                replyText = kei
                 let action = UIContextualAction(style: .normal,
                                                 title: "Reply") { [weak self] (action, view, completionHandler) in
                     
@@ -908,15 +899,15 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                 //                print("Obviously")
                 var msg = ""
                 if myyo!["\(self.phoneid)"] == nil {
-                    replcht = ["\(self.phoneid)" : "\(myyo!["\(self.receiverid)"]!)"]
+                    replyChat = ["\(self.phoneid)" : "\(myyo!["\(self.receiverid)"]!)"]
                     msg = myyo!["\(self.receiverid)"] as! String
                 } else {
-                    replcht = ["\(self.phoneid)" : "\(myyo!["\(self.phoneid)"]!)"]
+                    replyChat = ["\(self.phoneid)" : "\(myyo!["\(self.phoneid)"]!)"]
                     msg = myyo!["\(self.phoneid)"] as! String
                 }
                 
                 
-                replcout = kei
+                replyText = kei
                 let action = UIContextualAction(style: .normal,
                                                 title: "Reply") { [weak self] (action, view, completionHandler) in
                     
@@ -981,11 +972,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
     @objc func pressed(sender: UIButton!) {
         chatTable.tableFooterView = hidefooterview()
         chatTable.bounces = true
-        bphigh = false
+        oppositeSeenStatus = false
     }
     private func hidefooterview() -> UIView {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 0))
-        let indexPath = IndexPath(item: array.count-1, section: 0)
+        let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
         chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
         return view
     }

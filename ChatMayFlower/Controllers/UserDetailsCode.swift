@@ -213,7 +213,6 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         mbProgressHUD(text: "Loading..")
         let vc = storyboard?.instantiateViewController(withIdentifier: "ChatConversionCode") as? ChatConversionCode
         vc?.receiverid = ab
-        vc?.id = indexPath.row
         mychat()
         vc?.mid = messageId!
         vc?.phoneid = phones
