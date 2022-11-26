@@ -19,12 +19,9 @@ import FirebaseStorage
 
 class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
-    @IBAction func backPopBtn(_ sender: UIButton) {
-        seenVcStatus = false
-        navigationController?.popViewController(animated: true)
-    }
     
     
+    var replyImageView:UIImageView = UIImageView()
     @IBOutlet weak var bkview: UIView!
     var keyboardheight : Int = 0
     @IBOutlet weak var backgroundSV: UIScrollView!
@@ -33,34 +30,86 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     var receiverid = ""                         // receiver user
     @IBOutlet weak var chatTable: UITableView!  // tableview for showing chats
     @IBOutlet weak var chatField: UITextField!  // textfield for chatting
-    var ui = 0                      // uid  for chatting
-    var mid = ""                    // message id of sender and receiver
-    
-    @IBOutlet weak var titl: UINavigationItem!  // title  of  receiver user
+    var ui = 0                                  // uid  for chatting
+    var mid = ""                                // message id of sender and receiver
+    var didselectedImage : UIImage?
+    @IBOutlet weak var titl: UINavigationItem!  // title  of  navigation item
     var textFieldBtnStatus = false              // textFieldBtnStatus for get repeating of call uid
-    var timer = Timer()                     // for repeatative
+    var timer = Timer()                         // for repeatative
     
-    var chatMapKey = [String]()            // for store key of data
-    var chatMap = [[String:[String:Any]]]()  // map of chatting
-    var replyChat :[String:String]?           // reply chat with key in
-    var replyText : String?                    //passing chat for reply
+    var chatMapKey = [String]()                 // for store key of data
+    var chatMap = [[String:[String:Any]]]()     // map of chatting
+    var replyChat :[String:String]?             // reply chat with key in
+    var replyText : String?                     //passing chat for reply
     var key = [String]()
-    var seen : [[String:Bool]] = []   // for store data which is in map format
+    var seen : [[String:Bool]] = []             // for store data which is in map format
     
-    var keyBoardStatus = false       // for showing keyboard
+    var keyBoardStatus = false                  // for showing keyboard
     
-    var replyUser :UILabel?      // when we swipe for reply this shows usernumber
-    var replytxt : UILabel?      // when we swipe for reply this shows text for which we give reply
+    var replyUser :UILabel?                     // when we swipe for reply this shows usernumber
+    var replytxt : UILabel?                     // when we swipe for reply this shows text for which we give reply
     
-    var seenVcStatus = false      // use for view controller data calling seenStatus
-    var seenStatusLabel = "" // seenStatusLabel
-    var oppositeSeenStatus = false   // for not show seen when receiver sent msg
-    var counter = 0             // use for variable like   counter//
-    var arrayStatus = [String]() // s capital
+    var seenVcStatus = false                    // use for view controller data calling seenStatus
+    var seenStatusLabel = ""                    // seenStatusLabel
+    var oppositeSeenStatus = false              // for not show seen when receiver sent msg
+    var counter = 0                             // use for variable like   counter//
+    var arrayStatus = [String]()                // s capital
+    var toggle = false
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        getdata()
+        tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewDidLoad() {
+        print("view didload call")
+        super.viewDidLoad()
+        chatTable.delegate = self
+        chatTable.dataSource = self
+        keyboardheight = 0
+        seenVcStatus = true
+        
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
+            
+            if seenVcStatus == true {
+               
+                    status()
+               
+                
+                if textFieldBtnStatus == true {
+                    let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
+                    chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                    // scrollToBottom()
+                    getdata()
+                    textFieldBtnStatus = false
+                } else {
+                    hideProgress()
+                }
+            }
+        })
+        getchat()
+        status()
+        mbProgressHUD(text: "Loading")
+        titl.title = receiverid
+        //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+        //        addImageVideo.addGestureRecognizer(tapGesture)
+        
+        
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil);
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil);
+    }
+    
+    @IBAction func backPopBtn(_ sender: UIButton) {
+        seenVcStatus = false
+        navigationController?.popViewController(animated: true)
+    }
+    
     func status(){
         seen.removeAll()
         arrayStatus.removeAll()
-        
         database.child("Chats").child(mid).child("status").observe(.childAdded) {[weak self](snapshot) in
             if let snap = snapshot.value {
 //                print("yes yj \(snapshot.key)")
@@ -68,8 +117,8 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                 if !(self?.arrayStatus.contains(snapshot.key))! {
                     self?.arrayStatus.append(snapshot.key)
                     self?.seen.append(["\(snapshot.key)":snapshot.value as! Bool])
-                    let apex = self?.seen[self!.counter]
-                    let smf = apex?["\(self!.phoneid)"]
+                    let combineStatus = self?.seen[self!.counter]
+                    let smf = combineStatus?["\(self!.phoneid)"]
                     self?.counter = self!.counter + 1
                     if self?.counter == 2 {
                         self?.counter = 0
@@ -82,14 +131,17 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                 }
                 if self!.seen.count == 2{
 //                    print("seen \(self?.seen)")
-                    let apex = self?.seen[0]
-                    let bpex = self?.seen[1]
-                    if (apex?["\(self!.receiverid)"] == true || bpex?["\(self!.receiverid)"] == true) && ( apex?["\(self!.phoneid)"] == false || bpex?["\(self!.phoneid)"] == false) {
+                    let aStatus = self?.seen[0]
+                    let bStatus = self?.seen[1]
+                    if (aStatus?["\(self!.receiverid)"] == true || bStatus?["\(self!.receiverid)"] == true) && ( aStatus?["\(self!.phoneid)"] == false || bStatus?["\(self!.phoneid)"] == false) {
 //                        print("Hide footer \(self!.receiverid)")
                         self?.chatTable.tableFooterView = self?.msgsseenfhidefooterview()
-                    } else if (apex?["\(self!.receiverid)"] == true || apex?["\(self!.phoneid)"] == true) && (bpex?["\(self!.receiverid)"] == true || bpex?["\(self!.phoneid)"] == true) {
+                    } else if (aStatus?["\(self!.receiverid)"] == true || aStatus?["\(self!.phoneid)"] == true) && (bStatus?["\(self!.receiverid)"] == true || bStatus?["\(self!.phoneid)"] == true) {
 //                        print("message seen \(apex)")
                         self?.seenStatusLabel = "seen"
+//                        if self?.toggle == false {
+//                            self?.scrollToBottom()
+//                        }
                         if self?.oppositeSeenStatus == false {
                             self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
                             self?.scrollToBottom()
@@ -99,6 +151,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     else {
 //                        print("message not seen")
                         self?.seenStatusLabel = "delivered"
+//                        if self?.toggle == false {
+////                            self?.scrollToBottom()
+//                        }
                         if self?.oppositeSeenStatus == false {
                             self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
                             self?.scrollToBottom()
@@ -132,25 +187,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         
     }
     
-    private func msgsSeenfooterview() -> UIView {
-        
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 30))
-        let seeninmsg = UILabel(frame: CGRect(x: chatTable.frame.width-82, y: 0, width: 80, height: 20))
-        
-        seeninmsg.textAlignment = .right
-        seeninmsg.font = UIFont.systemFont(ofSize: 14)
-        seeninmsg.text = seenStatusLabel
-        seeninmsg.textColor = .black
-        view.backgroundColor = .none
-        view.addSubview(seeninmsg)
-        return view
-    }
-    private func msgsseenfhidefooterview() -> UIView {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 0))
-        
-        return view
-    }
+
    
+// MARK: - Get Chatting from Firebase Database
     func getchat() {
         //        print("my chatMapKey is this ",chatMapKey)
         //        print("my dic array is this ",chatMap)
@@ -164,39 +203,26 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                 if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
                     
                     for snap in snapshots {
-                        //                        print("snap shot is ",snapshot.value)
-                        //                        print("Snapshot is %%%%%%%%% \(snapshot.value)")
-                        
                         let cata = snap.key
                         let ques = snap.value!
-                        //                        let chat  = snapshot.value["916353918909chatPhoto"] as! String
-                        //                        print("Cata ---------- \(¸ƒ)")
-                        //                        print("Ques >>>>---------- \(ques)")
                         let  json = snapshot.value as? [String:Any]
-                        //                        print("JSON is -------=== \(json)")
                         if !(self?.key.contains(snapshot.key))! {
                             self?.chatMap.append([snapshot.key :snapshot.value as! [String:Any]])
                             self?.key.append(snapshot.key)
                             self?.chatMapKey.append("\(cata)")
                             self?.chatTable.reloadData()
                             self?.oppositeSeenStatus = false
+                            self?.toggle = false
                         }
-                        
                         self?.textFieldBtnStatus = true
                     }
-                    
                 }
-                
-                
-                
                 if self?.chatMapKey.count != 0 {
                     //                    DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                     //                        let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
                     //                        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
                     //
                     //                    }
-                    
-                    //
                     //                    print("my chatMap chatMapKey is this @@@@@###$$$%%^^&& ",self?.chatMap)
                     //                    print("my array is this ",self?.key.count)
                     //                    //                    print("my chatMapKey is this ",self?.chatMapKey.count)
@@ -207,6 +233,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         }
     }
     
+   // MARK: - Send Chats to Firebase Realtime Database
     @IBAction func sendChat(_ sender: UIButton) {
         footerview().isHidden = true
         chatTable.sectionFooterHeight = 0
@@ -216,20 +243,17 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
             chatTable.tableFooterView = msgsSeenfooterview()
             database.child("Uid").setValue(ui)
             database.child("Chats").child(mid).child("status").setValue(["\(phoneid)":true,"\(receiverid)":false])
+            
             if replyChat == nil {
-                
                 database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(phoneid)": chatField.text!], withCompletionBlock: { error, _ in
                     guard error == nil else {
                         print("Failed to write data")
-                        
                         return
                     }
                     print("data written seccess")
-                    
                     self.oppositeSeenStatus = false
-                    
+                    self.toggle = false
                 })
-                //            DataBaseManager.shared.mychatting(with: Message(messagid: mid, chats: chatField.text!, sender: "ul", uii: ui, chatPhotos: ""))
                 chatField.text = ""
                 DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                     self.chatTable.reloadData()
@@ -240,12 +264,10 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                 database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(phoneid)": chatField.text!,replyText:replyChat as Any], withCompletionBlock: { [self] error, _ in
                     guard error == nil else {
                         print("Failed to write data")
-                        
                         return
                     }
                     replyChat?.removeAll()
                     chatField.text = ""
-                    footerview().isHidden = true
                     print("data written seccess")
                 })
                 
@@ -255,82 +277,15 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     
     
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        getdata()
-        //        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
-        //            print("my chatMapKey is this----------------====== ",chatMapKey)
-        //            print("my dic array is this ",chatMap)
-        //            print("my chatMapKey is this ",chatMapKey.count)
-        //            print("my dic array is this ",chatMap.count)
-        //        }
-        
-        tabBarController?.tabBar.isHidden = true
-        
-        
-    }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-    }
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        
-    }
-    
-    override func viewDidLoad() {
-        print("view didload call")
-        super.viewDidLoad()
-        chatTable.delegate = self
-        chatTable.dataSource = self
-        keyboardheight = 0
-        //        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
-        //
-        //            status()
-        //
-        //        })
-        seenVcStatus = true
-        
-        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
-            
-            if seenVcStatus == true {
-                
-                status()
-                if textFieldBtnStatus == true {
-                    
-                    let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
-                    chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
-                    //                    scrollToBottom()
-                    getdata()
-                    textFieldBtnStatus = false
-                }
-                else {
-                    hideProgress()
-                }
-            }
-        })
-        getchat()
-        status()
-        mbProgressHUD(text: "Loading")
-        titl.title = receiverid
-        //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
-        //        addImageVideo.addGestureRecognizer(tapGesture)
-        
-        
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil);
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil);
-    }
     
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
     
+}
+
+// MARK: - ImagePicker Codes
+extension ChatConversionCode {
     @IBAction func addImageVideo(_ sender: UIButton) {
         imageTapped()
-        
     }
     @objc
     func imageTapped()
@@ -365,8 +320,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         imagePickerController.allowsEditing = false
         self.present(imagePickerController, animated: true, completion: nil)
     }
-    var filename : String?
-    var didselectedImage : UIImage?
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         if let  videoURL = info[.mediaURL] as? URL
@@ -449,8 +403,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         }
         
     }
-    
 }
+
+ // MARK: - Keyboard handling
 extension ChatConversionCode {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
@@ -483,49 +438,33 @@ extension ChatConversionCode {
         }
     }
     
-    func videoPlayer(videoUrl:String){
-        print("Tapped....\(videoUrl)")
-        let Url = URL(string: videoUrl)
-        let player = AVPlayer(url: Url!)
-        let playerController = AVPlayerViewController()
-        playerController.player = player
-        //        let playerLayer =  AVPlayerLayer(player: player)
-        //        playerLayer.frame = self.view.frame
-        //        playerLayer.videoGravity = .resizeAspect
-        //        self.view.layer.addSublayer(playerLayer)
-        player.play()
-        present(playerController, animated: true)
-    }
     
-    func imageShow(url:String){
-        let vc = storyboard?.instantiateViewController(withIdentifier: "ImageVc") as? ImageVc
-        vc?.str = url
-        present(vc!, animated: true)
-    }
     
 }
 
+
+// MARK: - Delegate Methods of TableView
 extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatMap.count
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let chat = chatMap[indexPath.row]
-        let kk = chatMapKey[indexPath.row]
-        let kei = key[indexPath.row]
-        let myyo = chat[kei]
-        let txtChat = myyo?[kk]
+        let userNumberKey = chatMapKey[indexPath.row]
+        let uniqueKey = key[indexPath.row]
+        let chatText = chat[uniqueKey]
+        let txtChat = chatText?[userNumberKey]
         //        print("chat length is =====------------> \(chat)")
-        //        print("kk INDEX is =====--=-= \(kk)")
-        //        print("kei is =====-------> \(kei)")
-        //        print("myyo =================......\(String(describing: myyo))")
+        //        print("userNumberKey INDEX is =====--=-= \(userNumberKey)")
+        //        print("uniqueKey is =====-------> \(uniqueKey)")
+        //        print("chatText =================......\(String(describing: chatText))")
         //        print("txtchat is ======----> \(txtChat)")
         //        print("key chat is =======--- \(key)")
         //        print("chatMapKey is ..........  \(chatMapKey)")
         
         for i in 0...key.count-1 {
-            if key[i] == kk {
-                //                print("kei is =====-------> \(kk)")
+            if key[i] == userNumberKey {
+                //                print("userNumberKey is =====-------> \(userNumberKey)")
                 let val = key.count - i - 1
                 //                print("i is ",key[key.count-val-1])
                 //                print("\(key.count-val-1) ===")
@@ -543,11 +482,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         }
         
         
-        if kk == "\(phoneid)chatVideo" || kk == "\(receiverid)chatVideo" {
+        if userNumberKey == "\(phoneid)chatVideo" || userNumberKey == "\(receiverid)chatVideo" {
             videoPlayer(videoUrl: txtChat! as! String)
             //            print("MY URL IS ++++ \(txtChat)")
             
-        }else if kk == "\(phoneid)chatPhoto" || kk == "\(receiverid)chatPhoto" || kk == "chatPhoto" {
+        }else if userNumberKey == "\(phoneid)chatPhoto" || userNumberKey == "\(receiverid)chatPhoto" || userNumberKey == "chatPhoto" {
             imageShow(url:txtChat! as! String)
             //            print("Image Url is \(txtChat)")
         }else {
@@ -556,20 +495,20 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row < chatMap.count {
             let chat = chatMap[indexPath.row]
-            let kk = chatMapKey[indexPath.row]
-            let kei = key[indexPath.row]
-            let myyo = chat[kei]
-            let txtChat = myyo?[kk]
-            let abc = myyo?[kk]  as? [String : Any]
+            let userNumberKey = chatMapKey[indexPath.row]
+            let uniqueKey = key[indexPath.row]
+            let chatText = chat[uniqueKey]
+            let txtChat = chatText?[userNumberKey]
+            let abc = chatText?[userNumberKey]  as? [String : Any]  // Use for replying chats
             if abc?["\(phoneid)"] != nil || abc?["\(receiverid)"] != nil ||  abc?["\(receiverid)chatPhoto"] != nil || abc?["\(phoneid)chatPhoto"] != nil || abc?["\(receiverid)chatVideo"] != nil || abc?["\(phoneid)chatVideo"] != nil {
                 
                 if abc?["\(receiverid)chatPhoto"] != nil || abc?["\(phoneid)chatPhoto"] != nil {
                     
-                    if myyo?["\(phoneid)"] == nil {
+                    if chatText?["\(phoneid)"] == nil {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyImageCell") as? ReceiverReplyImageCell
-                        cell?.receiverreply.text = myyo?["\(receiverid)"] as? String
+                        cell?.receiverreply.text = chatText?["\(receiverid)"] as? String
                         
-                        if abc?["\(receiverid)chatPhoto"] == nil{
+                        if abc?["\(receiverid)chatPhoto"] == nil {
                             let bar = abc?["\(phoneid)chatPhoto"] as? String
                             cell?.confi(videoUrl: bar!)
                             cell?.user.text = "You"
@@ -583,29 +522,30 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         if abc?["\(receiverid)text"] == nil {
                             cell?.receivermsg.text = abc?["\(phoneid)text"] as? String
                             
-                            if abc?["\(phoneid)text"] == nil{
+                            if abc?["\(phoneid)text"] == nil {
                                 cell?.receivermsg.text = "Photo"
                             }
                         } else {
                             cell?.receivermsg.text = abc?["\(receiverid)text"] as? String
                             
-                            if abc?["\(receiverid)text"] == nil{
+                            if abc?["\(receiverid)text"] == nil {
                                 cell?.receivermsg.text = "Photo"
                                 
                             }
                         }
                         cell?.selectionStyle = .none
-                        if indexPath.row == chatMapKey.count-1{
+                        if indexPath.row == chatMapKey.count-1 {
                             chatTable.tableFooterView = msgsseenfhidefooterview()
                             oppositeSeenStatus = true
+                            toggle = true
                         }
                         return cell!
                         
                     } else {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyImageCell") as? SenderReplyImageCell
-                        cell?.senderreply.text = myyo?["\(phoneid)"] as? String
+                        cell?.senderreply.text = chatText?["\(phoneid)"] as? String
                         
-                        if abc?["\(receiverid)chatPhoto"] == nil{
+                        if abc?["\(receiverid)chatPhoto"] == nil {
                             let bar = abc?["\(phoneid)chatPhoto"] as? String
                             cell?.confi(videoUrl: bar!)
                             cell?.user.text = "You"
@@ -617,31 +557,34 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         }
                         
                         
-                        if abc?["\(receiverid)text"] == nil{
+                        if abc?["\(receiverid)text"] == nil {
                             cell?.sendermsg.text = abc?["\(phoneid)text"] as? String
                             
-                            if abc?["\(phoneid)text"] == nil{
+                            if abc?["\(phoneid)text"] == nil {
                                 cell?.sendermsg.text = "Photo"
                                 print("yahh")
                             }
                         } else {
                             cell?.sendermsg.text = abc?["\(receiverid)text"] as? String
                             
-                            if abc?["\(receiverid)text"] == nil{
+                            if abc?["\(receiverid)text"] == nil {
                                 cell?.sendermsg.text = "Photo"
                                 
                             }
                         }
                         cell?.selectionStyle = .none
+                        if indexPath.row == chatMapKey.count-1 {
+                            toggle = true
+                        }
                         return cell!
                     }
                 } else if abc?["\(receiverid)chatVideo"] != nil || abc?["\(phoneid)chatVideo"] != nil {
                     
-                    if myyo?["\(phoneid)"] == nil {
+                    if chatText?["\(phoneid)"] == nil {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyImageCell") as? ReceiverReplyImageCell
-                        cell?.receiverreply.text = myyo?["\(receiverid)"] as? String
+                        cell?.receiverreply.text = chatText?["\(receiverid)"] as? String
                         
-                        if abc?["\(receiverid)chatVideo"] == nil{
+                        if abc?["\(receiverid)chatVideo"] == nil {
                             let bar = abc?["\(phoneid)chatVideo"] as? String
                             cell?.videocon(videoUrl: bar!)
                             cell?.user.text = "You"
@@ -657,29 +600,30 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         if abc?["\(receiverid)text"] == nil {
                             cell?.receivermsg.text = abc?["\(phoneid)text"] as? String
                             
-                            if abc?["\(phoneid)text"] == nil{
+                            if abc?["\(phoneid)text"] == nil {
                                 cell?.receivermsg.text = "Video"
                             }
                         } else {
                             cell?.receivermsg.text = abc?["\(receiverid)text"] as? String
                             
-                            if abc?["\(receiverid)text"] == nil{
+                            if abc?["\(receiverid)text"] == nil {
                                 cell?.receivermsg.text = "Video"
                                 
                             }
                         }
                         cell?.selectionStyle = .none
-                        if indexPath.row == chatMapKey.count-1{
+                        if indexPath.row == chatMapKey.count-1 {
                             chatTable.tableFooterView = msgsseenfhidefooterview()
                             oppositeSeenStatus = true
+                            toggle = true
                         }
                         return cell!
                         
                     } else {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyImageCell") as? SenderReplyImageCell
-                        cell?.senderreply.text = myyo?["\(phoneid)"] as? String
+                        cell?.senderreply.text = chatText?["\(phoneid)"] as? String
                         
-                        if abc?["\(receiverid)chatVideo"] == nil{
+                        if abc?["\(receiverid)chatVideo"] == nil {
                             let bar = abc?["\(phoneid)chatVideo"] as? String
                             cell?.videocon(videoUrl: bar!)
                             cell?.user.text = "You"
@@ -691,26 +635,29 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         }
                         
                         
-                        if abc?["\(receiverid)text"] == nil{
+                        if abc?["\(receiverid)text"] == nil {
                             cell?.sendermsg.text = abc?["\(phoneid)text"] as? String
                             
-                            if abc?["\(phoneid)text"] == nil{
+                            if abc?["\(phoneid)text"] == nil {
                                 cell?.sendermsg.text = "Video"
                                 //                                print("yahh")
                             }
                         } else {
                             cell?.sendermsg.text = abc?["\(receiverid)text"] as? String
                             
-                            if abc?["\(receiverid)text"] == nil{
+                            if abc?["\(receiverid)text"] == nil {
                                 cell?.sendermsg.text = "Video"
                                 
                             }
                         }
                         cell?.selectionStyle = .none
+                        if indexPath.row == chatMapKey.count-1 {
+                            toggle = true
+                        }
                         return cell!
                     }
                 }
-                else if myyo?["\(phoneid)"] == nil {
+                else if chatText?["\(phoneid)"] == nil {
                     //                    print("Message Reply of receiver is \(abc?["\(receiverid)"])")
                     let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyViewCell") as? ReceiverReplyViewCell
                     if abc?["\(receiverid)"] == nil{
@@ -720,63 +667,71 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         cell?.receiverMessages.text = abc?["\(receiverid)"] as? String
                         cell?.user.text = "\(receiverid)"
                     }
-                    if myyo?["\(receiverid)"] == nil {
-                        cell?.receiverReply.text = myyo?["\(phoneid)"] as? String
+                    if chatText?["\(receiverid)"] == nil {
+                        cell?.receiverReply.text = chatText?["\(phoneid)"] as? String
                         
                     } else {
-                        cell?.receiverReply.text = myyo?["\(receiverid)"] as? String
+                        cell?.receiverReply.text = chatText?["\(receiverid)"] as? String
                     }
                     cell?.selectionStyle = .none
-                    if indexPath.row == chatMapKey.count-1{
+                    if indexPath.row == chatMapKey.count-1 {
                         chatTable.tableFooterView = msgsseenfhidefooterview()
                         oppositeSeenStatus = true
+                        toggle = true
                     }
                     return cell!
                 }
-                else if myyo?["\(receiverid)"] == nil{
+                else if chatText?["\(receiverid)"] == nil {
                     //                    print("Message Reply of sender is \(abc?["\(phoneid)"])")
                     let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyViewCell") as? SenderReplyViewCell
-                    if abc?["\(phoneid)"] == nil{
+                    if abc?["\(phoneid)"] == nil {
                         cell?.senderMessages.text = abc?["\(receiverid)"] as? String
                         cell?.user.text = "\(receiverid)"
                     } else {
                         cell?.senderMessages.text = abc?["\(phoneid)"] as? String
                         cell?.user.text = "You"
                     }
-                    if myyo?["\(phoneid)"] == nil {
-                        cell?.senderReply.text = myyo?["\(receiverid)"] as? String
+                    if chatText?["\(phoneid)"] == nil {
+                        cell?.senderReply.text = chatText?["\(receiverid)"] as? String
                     }
                     else {
-                        cell?.senderReply.text = myyo?["\(phoneid)"] as? String
+                        cell?.senderReply.text = chatText?["\(phoneid)"] as? String
                     }
                     cell?.selectionStyle = .none
+                    if indexPath.row == chatMapKey.count-1 {
+                        toggle = true
+                    }
                     return cell!
                 }
             }else {
-                if kk == "\(phoneid)chatPhoto" || kk == "\(receiverid)chatPhoto" || kk == "chatPhoto" {
-                    if kk == "\(receiverid)chatPhoto" {
+                if userNumberKey == "\(phoneid)chatPhoto" || userNumberKey == "\(receiverid)chatPhoto" || userNumberKey == "chatPhoto" {
+                    if userNumberKey == "\(receiverid)chatPhoto" {
                         if txtChat as! String != "" {
                             let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
-                            cell?.receiverComentImage.text = myyo?["\(receiverid)text"] as? String
+                            cell?.receiverComentImage.text = chatText?["\(receiverid)text"] as? String
                             let url = URL(string: txtChat  as! String)
                             cell?.photos.kf.setImage(with: url)
                             cell?.selectionStyle = .none
-                            if indexPath.row == chatMapKey.count-1{
+                            if indexPath.row == chatMapKey.count-1 {
                                 chatTable.tableFooterView = msgsseenfhidefooterview()
                                 oppositeSeenStatus = true
+                                toggle = true
                             }
                             return cell!
                         }
                     }
-                    else  if kk == "\(phoneid)chatPhoto"{
+                    else  if userNumberKey == "\(phoneid)chatPhoto" {
                         if txtChat as! String != "" {
                             
                             let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderImageChatCell") as? SenderImageChatCell
-                            cell?.senderImageComment.text = myyo?["\(phoneid)text"] as? String
+                            cell?.senderImageComment.text = chatText?["\(phoneid)text"] as? String
                             
                             let url = URL(string: txtChat  as! String)
                             cell?.senderImage.kf.setImage(with: url)
                             cell?.selectionStyle = .none
+                            if indexPath.row == chatMapKey.count-1 {
+                                toggle = true
+                            }
                             return cell!
                         }
                     }else {
@@ -785,29 +740,38 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             let url = URL(string: txtChat as! String)
                             cell?.photos.kf.setImage(with: url)
                             cell?.selectionStyle = .none
-                            return cell!
-                        }
-                    }
-                    
-                } else if kk == "\(phoneid)chatVideo" || kk == "\(receiverid)chatVideo" {
-                    if kk == "\(receiverid)chatVideo" {
-                        if txtChat as! String != "" {
-                            let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverVideoCell") as? ReceiverVideoCell
-                            cell?.confi(videoUrl: txtChat  as! String)
-                            cell?.selectionStyle = .none
-                            if indexPath.row == chatMapKey.count-1{
+                            if indexPath.row == chatMapKey.count-1 {
                                 chatTable.tableFooterView = msgsseenfhidefooterview()
                                 oppositeSeenStatus = true
+                                toggle = true
                             }
                             return cell!
                         }
                     }
-                    else  if kk == "\(phoneid)chatVideo"{
+                    
+                } else if userNumberKey == "\(phoneid)chatVideo" || userNumberKey == "\(receiverid)chatVideo" {
+                    if userNumberKey == "\(receiverid)chatVideo" {
+                        if txtChat as! String != "" {
+                            let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverVideoCell") as? ReceiverVideoCell
+                            cell?.confi(videoUrl: txtChat  as! String)
+                            cell?.selectionStyle = .none
+                            if indexPath.row == chatMapKey.count-1 {
+                                chatTable.tableFooterView = msgsseenfhidefooterview()
+                                oppositeSeenStatus = true
+                                toggle = true
+                            }
+                            return cell!
+                        }
+                    }
+                    else  if userNumberKey == "\(phoneid)chatVideo" {
                         if txtChat as! String != "" {
                             //                        print("MY VIDEO URL IS -------\(txtChat)")
                             let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderVideoCell") as? SenderVideoCell
                             cell?.confi(videoUrl: txtChat  as! String)
                             cell?.selectionStyle = .none
+                            if indexPath.row == chatMapKey.count-1 {
+                                toggle = true
+                            }
                             return cell!
                         }
                     }else {
@@ -816,19 +780,23 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             let url = URL(string: txtChat  as! String)
                             cell?.photos.kf.setImage(with: url)
                             cell?.selectionStyle = .none
+                            if indexPath.row == chatMapKey.count-1 {
+                                chatTable.tableFooterView = msgsseenfhidefooterview()
+                                oppositeSeenStatus = true
+                                toggle = true
+                            }
                             return cell!
                         }
                     }
                 }
                 else {
-                    
-                    //                print("My chatting is",chat)
-                    //                print("my id is ",kk)
-                    
-                    if phoneid == kk || "\(phoneid)text" == kk {
+                    if phoneid == userNumberKey || "\(phoneid)text" == userNumberKey {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderViewCell", for: indexPath) as? SenderViewCell
                         cell?.senderMessage.text = "\(txtChat!)"
                         cell?.selectionStyle = .none
+                        if indexPath.row == chatMapKey.count-1 {
+                            toggle = true
+                        }
                         return cell!
                     }
                     else {
@@ -836,9 +804,10 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         cell?.receiverMessages.text = "\(txtChat!)"
                         cell?.selectionStyle = .none
                         
-                        if indexPath.row == chatMapKey.count-1{
+                        if indexPath.row == chatMapKey.count-1 {
                             chatTable.tableFooterView = msgsseenfhidefooterview()
                             oppositeSeenStatus = true
+                            toggle = true
                         }
                         return cell!
                     }
@@ -852,27 +821,25 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         return cell!
     }
     
-    //    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-    //
-    //    }
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let chat = chatMap[indexPath.row]
-        let kk = chatMapKey[indexPath.row]
-        let kei = key[indexPath.row]
-        let myyo = chat[kei]
-        let txtChat = myyo?[kk] as? String
-        let abc = myyo?[kk]  as? [String : Any]
+        let userNumberKey = chatMapKey[indexPath.row]
+        let uniqueKey = key[indexPath.row]
+        let myyo = chat[uniqueKey]
+        let txtChat = myyo?[userNumberKey] as? String
+        let abc = myyo?[userNumberKey]  as? [String : Any]
         replyChat = myyo as? [String : String]
-        replyText = kei
-        //        print("receiver message is \(myyo?["\(receiverid)"])")
-        //        print("Sender  message is \(myyo?["\(phoneid)"])")
-        //        print("MYYO  is the ----  \(myyo)")
-        //        print("ABC IS THE ====  \(abc)")
-        //        print("TEXTCHAT IS ///////    \(txtChat)")
-        //        print("KK IS THE \\\\\\  \(kk)---\(kei)")
+        replyText = uniqueKey
+        //  print("receiver message is \(myyo?["\(receiverid)"])")
+        //  print("Sender  message is \(myyo?["\(phoneid)"])")
+        //  print("MYYO  is the ----  \(myyo)")
+        //  print("ABC IS THE ====  \(abc)")
+        //  print("TEXTCHAT IS ///////    \(txtChat)")
+        //  print("userNumberKey IS THE \\\\\\  \(userNumberKey)---\(uniqueKey)")
         oppositeSeenStatus = true
         chatTable.tableFooterView = msgsseenfhidefooterview()
         if abc?["\(phoneid)"] != nil || abc?["\(receiverid)"] != nil || myyo?["\(phoneid)"] != nil || myyo?["\(receiverid)"] != nil {
+            print("reply chat photo")
             if myyo?["\(phoneid)"] == nil {
                 //                print("Phone ID chat === \(myyo?["\(phoneid)"])")
                 var msg = ""
@@ -883,9 +850,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                     replyChat = ["\(self.receiverid)" : "\(myyo!["\(self.receiverid)"]!)"]
                     msg = "\(myyo!["\(self.receiverid)"]!)"
                 }
-                
-                
-                replyText = kei
+                replyText = uniqueKey
                 let action = UIContextualAction(style: .normal,
                                                 title: "Reply") { [weak self] (action, view, completionHandler) in
                     
@@ -907,7 +872,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                 }
                 
                 
-                replyText = kei
+                replyText = uniqueKey
                 let action = UIContextualAction(style: .normal,
                                                 title: "Reply") { [weak self] (action, view, completionHandler) in
                     
@@ -918,23 +883,145 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                 action.backgroundColor = .clear
                 return UISwipeActionsConfiguration(actions: [action])
             }
-        }
-        let action = UIContextualAction(style: .normal,
-                                        title: "Reply") { [weak self] (action, view, completionHandler) in
+        } else {
+            if userNumberKey == "\(phoneid)chatPhoto" || userNumberKey == "\(receiverid)chatPhoto" {
+                print("my chat photo, \(userNumberKey)------chat \(replyChat)===")
+                if userNumberKey == "\(phoneid)chatPhoto" {
+                    
+                    if replyChat?["\(phoneid)text"] == nil{
+                        let action = UIContextualAction(style: .normal,
+                                                        title: "Reply") { [weak self] (action, view, completionHandler) in
+                            
+                            self?.replyforPhotos(chats: "Photo" , user:userNumberKey ,photourl: txtChat ?? "")
+                            
+                            completionHandler(true)
+                        }
+                        action.backgroundColor = .clear
+                        return UISwipeActionsConfiguration(actions: [action])
+                    } else {
+                        print("IOIOIOIOIOIOIs")
+                        let action = UIContextualAction(style: .normal,
+                                                        title: "Reply") { [weak self] (action, view, completionHandler) in
+                            
+                            self?.replyforPhotos(chats: self?.replyChat?["\(self!.phoneid)text"] ?? "" , user:userNumberKey ,photourl: txtChat ?? "")
+                            
+                            completionHandler(true)
+                        }
+                        action.backgroundColor = .clear
+                        return UISwipeActionsConfiguration(actions: [action])
+                    }
+                    
+                } else {
+                    if replyChat?["\(receiverid)text"] == nil  {
+                        let action = UIContextualAction(style: .normal,
+                                                        title: "Reply") { [weak self] (action, view, completionHandler) in
+                            
+                            self?.replyforPhotos(chats: "" , user:userNumberKey ,photourl: txtChat ?? "")
+                            
+                            completionHandler(true)
+                        }
+                        action.backgroundColor = .clear
+                        return UISwipeActionsConfiguration(actions: [action])
+                    } else {
+                        print("IOIOIOIOIOIOIs")
+                        let action = UIContextualAction(style: .normal,
+                                                        title: "Reply") { [weak self] (action, view, completionHandler) in
+                            
+                            self?.replyforPhotos(chats: self?.replyChat?["\(self!.receiverid)text"] ?? "" , user:userNumberKey ,photourl: txtChat ?? "")
+                            
+                            completionHandler(true)
+                        }
+                        action.backgroundColor = .clear
+                        return UISwipeActionsConfiguration(actions: [action])
+                    }
+                }
+            }else if userNumberKey == "\(phoneid)chatVideo" || userNumberKey == "\(receiverid)chatVideo" {
+                if  userNumberKey == "\(phoneid)chatVideo" {
+                    
+                    if replyChat?["\(phoneid)text"] == nil{
+                        let action = UIContextualAction(style: .normal,
+                                                        title: "Reply") { [weak self] (action, view, completionHandler) in
+                            
+                            self?.replyforVideo(chats: "Video" , user:userNumberKey ,photourl: txtChat ?? "")
+                            
+                            completionHandler(true)
+                        }
+                        action.backgroundColor = .clear
+                        return UISwipeActionsConfiguration(actions: [action])
+                    } else {
+                        print("IOIOIOIOIOIOIs")
+                        let action = UIContextualAction(style: .normal,
+                                                        title: "Reply") { [weak self] (action, view, completionHandler) in
+                            
+                            self?.replyforVideo(chats: self?.replyChat?["\(self!.phoneid)text"] ?? "" , user:userNumberKey ,photourl: txtChat ?? "")
+                            
+                            completionHandler(true)
+                        }
+                        action.backgroundColor = .clear
+                        return UISwipeActionsConfiguration(actions: [action])
+                    }
+                    
+                }else {
+                    if replyChat?["\(receiverid)text"] == nil || userNumberKey == "\(receiverid)chatVideo" {
+                        let action = UIContextualAction(style: .normal,
+                                                        title: "Reply") { [weak self] (action, view, completionHandler) in
+                            
+                            self?.replyforVideo(chats: "Video" , user:userNumberKey ,photourl: txtChat ?? "")
+                            
+                            completionHandler(true)
+                        }
+                        action.backgroundColor = .clear
+                        return UISwipeActionsConfiguration(actions: [action])
+                    } else {
+                        print("IOIOIOIOIOIOIs")
+                        let action = UIContextualAction(style: .normal,
+                                                        title: "Reply") { [weak self] (action, view, completionHandler) in
+                            
+                            self?.replyforVideo(chats: self?.replyChat?["\(self!.receiverid)text"] ?? "" , user:userNumberKey ,photourl: txtChat ?? "")
+                            
+                            completionHandler(true)
+                        }
+                        action.backgroundColor = .clear
+                        return UISwipeActionsConfiguration(actions: [action])
+                    }
+                }
+            }
+            else {
+            let action = UIContextualAction(style: .normal,
+                                            title: "Reply") { [weak self] (action, view, completionHandler) in
+                
+                self?.handleMarkAsFavourite(chats: txtChat ?? "" , user:userNumberKey)
+                
+                completionHandler(true)
+            }
+            action.backgroundColor = .clear
+            return UISwipeActionsConfiguration(actions: [action])
+            }
             
-            self?.handleMarkAsFavourite(chats: txtChat ?? "" , user:kk)
-            
-            completionHandler(true)
         }
-        action.backgroundColor = .clear
-        return UISwipeActionsConfiguration(actions: [action])
-        
         
         
     }
     
-    func handleMarkAsFavourite(chats:String, user: String){
-        //        chatField.
+    func replyforPhotos(chats:String, user: String,photourl:String){
+        keyBoardStatus = true
+        chatField.becomeFirstResponder()
+        chatTable.tableFooterView = imgReplyFooterView()
+        replyUser?.text = "\(user)"
+        replytxt?.text = "\(chats)"
+        let url = URL(string: photourl  )
+        replyImageView.kf.setImage(with: url)
+    }
+    func replyforVideo(chats:String, user: String,photourl:String){
+        keyBoardStatus = true
+        chatField.becomeFirstResponder()
+        chatTable.tableFooterView = imgReplyFooterView()
+        replyUser?.text = "\(user)"
+        replytxt?.text = "\(chats)"
+        let url = URL(string: photourl)
+        replyImageView.kf.setImage(with: AVAssetImageDataProvider(assetURL: url!, seconds: 1))
+    }
+    func handleMarkAsFavourite(chats:String, user: String) {
         keyBoardStatus = true
         chatField.becomeFirstResponder()
         chatTable.tableFooterView = footerview()
@@ -950,38 +1037,104 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         chatTable.scrollRectToVisible(footerRectInTable, animated: true)
     }
     
-    private func footerview() -> UIView {
+// MARK: - Video Player Controller
+    func videoPlayer(videoUrl:String) {
+        print("Tapped....\(videoUrl)")
+        let Url = URL(string: videoUrl)
+        let player = AVPlayer(url: Url!)
+        let playerController = AVPlayerViewController()
+        playerController.player = player
+        //        let playerLayer =  AVPlayerLayer(player: player)
+        //        playerLayer.frame = self.view.frame
+        //        playerLayer.videoGravity = .resizeAspect
+        //        self.view.layer.addSublayer(playerLayer)
+        player.play()
+        present(playerController, animated: true)
+    }
+    
+// MARK: - Image  Controller
+    func imageShow(url:String) {
+        let vc = storyboard?.instantiateViewController(withIdentifier: "ImageVc") as? ImageVc
+        vc?.str = url
+        present(vc!, animated: true)
+    }
+
+}
+
+//  MARK: - FooterView
+extension ChatConversionCode {
+    
+    private func imgReplyFooterView() -> UIView{
         let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 50))
-        replyUser = UILabel(frame: CGRect(x: 10, y: 0, width: chatTable.frame.width-60, height: 30))
-        replytxt = UILabel(frame: CGRect(x: 20, y: 25, width: chatTable.frame.width-60, height: 20))
-        
+        replyUser = UILabel(frame: CGRect(x: 10, y: 0, width: chatTable.frame.width-150, height: 30))
+        replytxt = UILabel(frame: CGRect(x: 20, y: 25, width: chatTable.frame.width-150, height: 20))
+        replyImageView = UIImageView(frame: CGRect(x: chatTable.frame.width-80, y: 0, width: 50, height: 50))
+        replyImageView.backgroundColor = .brown
         let closebtn = UIButton()
         closebtn.setImage(UIImage(systemName: "clear"), for: .normal)
         closebtn.tintColor = .black
         closebtn.addTarget(self, action: #selector(pressed), for: .touchUpInside)
         closebtn.frame = CGRect(x: chatTable.bounds.width - 40, y: 0, width: 50, height: 50)
-        view.backgroundColor = .red
+        view.backgroundColor = .blue
+        view.addSubview(replyImageView)
         view.addSubview(replyUser!)
         view.addSubview(replytxt!)
         view.addSubview(closebtn)
-        
-        
         return view
     }
     
-    @objc func pressed(sender: UIButton!) {
-        chatTable.tableFooterView = hidefooterview()
-        chatTable.bounces = true
-        oppositeSeenStatus = false
-    }
-    private func hidefooterview() -> UIView {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 0))
-        let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
-        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
-        return view
-    }
+//  MARK: - FooterView For Replying Chats
+        private func footerview() -> UIView {
+            let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 50))
+            replyUser = UILabel(frame: CGRect(x: 10, y: 0, width: chatTable.frame.width-60, height: 30))
+            replytxt = UILabel(frame: CGRect(x: 20, y: 25, width: chatTable.frame.width-60, height: 20))
+            
+            let closebtn = UIButton()
+            closebtn.setImage(UIImage(systemName: "clear"), for: .normal)
+            closebtn.tintColor = .black
+            closebtn.addTarget(self, action: #selector(pressed), for: .touchUpInside)
+            closebtn.frame = CGRect(x: chatTable.bounds.width - 40, y: 0, width: 50, height: 50)
+            view.backgroundColor = .red
+            view.addSubview(replyUser!)
+            view.addSubview(replytxt!)
+            view.addSubview(closebtn)
+            
+            
+            return view
+        }
+        
+        @objc func pressed(sender: UIButton!) {
+            chatTable.tableFooterView = hidefooterview()
+            chatTable.bounces = true
+            oppositeSeenStatus = false
+        }
+        private func hidefooterview() -> UIView {
+            let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 0))
+            let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
+            chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            return view
+        }
+    
+//  MARK: - FooterView For Seen, Delivered Status
+        private func msgsSeenfooterview() -> UIView {
+            let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 30))
+            let seeninmsg = UILabel(frame: CGRect(x: chatTable.frame.width-82, y: 0, width: 80, height: 20))
+            seeninmsg.textAlignment = .right
+            seeninmsg.font = UIFont.systemFont(ofSize: 14)
+            seeninmsg.text = seenStatusLabel
+            seeninmsg.textColor = .black
+            view.backgroundColor = .none
+            view.addSubview(seeninmsg)
+            return view
+        }
+        private func msgsseenfhidefooterview() -> UIView {
+            let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 0))
+            
+            return view
+        }
 }
 
+// MARK: - Loading Progress Indicator
 extension ChatConversionCode {
     func mbProgressHUD(text: String){
         DispatchQueue.main.async {
@@ -990,28 +1143,9 @@ extension ChatConversionCode {
             progressHUD.contentColor = .systemBlue
         }
     }
-    func hideProgress(){
+    func hideProgress() {
         DispatchQueue.main.async {
             MBProgressHUD.hide(for: self.view, animated: false)
         }
-    }
-}
-
-class UILabel : UIKit.UILabel {
-    var insets = UIEdgeInsets.zero {
-        didSet { invalidateIntrinsicContentSize() }
-    }
-    
-    override func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
-        let textRect = super.textRect(forBounds: bounds, limitedToNumberOfLines: numberOfLines)
-        let invertedInsets = UIEdgeInsets(top: -insets.top,
-                                          left: -insets.left,
-                                          bottom: -insets.bottom,
-                                          right: -insets.right)
-        return textRect.inset(by: invertedInsets)
-    }
-    
-    override func drawText(in rect: CGRect) {
-        super.drawText(in: rect.inset(by: insets))
     }
 }
