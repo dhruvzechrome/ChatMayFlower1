@@ -59,9 +59,6 @@ class VideoSentCode: UIViewController {
             var urlpth = ""
             // Check error
             if error == nil && metadata != nil {
-                
-                
-                
                 fileRef.downloadURL {
                     url, error in
                     if let error = error {
@@ -101,15 +98,15 @@ class VideoSentCode: UIViewController {
                             })
                         }
                         
-                        //                                  DataBaseManager.shared.mychatting(with: Message(messagid: mesId, chats: commentField.text!, sender: "ul", uii: uid, chatPhotos: urlpth))
+                        // DataBaseManager.shared.mychatting(with: Message(messagid: mesId, chats: commentField.text!, sender: "ul", uii: uid, chatPhotos: urlpth))
                         
                     }
                     
                 }
-                //                    print("Urllll ---sdsdfsdf-->",urlpth)
+                //  print("Urllll ----->",urlpth)
                 
-                //                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
-                //                    vc?.phones = self.number
+                //  let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
+                //  vc?.phones = self.number
                 
                 
             }

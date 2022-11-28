@@ -22,7 +22,8 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
     @IBOutlet weak var tname: UITextField!
     @IBOutlet weak var tphoneNumber: UITextField!
     @IBOutlet weak var imgProfile: UIImageView!
-    
+    var filename : String?
+    var didselectedImage : UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,29 +65,29 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
                     //                    let cata = snap.key
                     //                    let ques = snap.value!
                     
-                    let gif = snapshot.value! as! [String:String]
-                    if gif["Phone number"] ==  self?.phones{
-                        //                        print("Ppppphhhhh :",gif["Phone number"]!)
+                    let userMap = snapshot.value! as! [String:String]
+                    if userMap["Phone number"] ==  self?.phones{
+                        //                        print("Ppppphhhhh :",userMap["Phone number"]!)
                         
-                        self!.tphoneNumber.text = gif["Phone number"]!
+                        self!.tphoneNumber.text = userMap["Phone number"]!
                         
-                        //                        self!.uphoneno = gif["Phone number"]!
+                        //                        self!.uphoneno = userMap["Phone number"]!
                         
                         
-                        if gif["Name"] != nil {
-                            if gif["Name"] != ""{
-                                self!.tname.text = gif["Name"]!
+                        if userMap["Name"] != nil {
+                            if userMap["Name"] != ""{
+                                self!.tname.text = userMap["Name"]!
                             }
                             else {
 //                                self!.tname.text = "No name available"
                             }
-                            //                            self!.uname = gif["Name"]!
+                            //                            self!.uname = userMap["Name"]!
                         }
                         let image = UIImage(named: "placeholder")
-                        if gif["photo url"] != nil {
-                            if gif["photo url"] != "" {
-                                self!.location = gif["location"]!
-                                self!.urlPath = gif["photo url"]!
+                        if userMap["photo url"] != nil {
+                            if userMap["photo url"] != "" {
+                                self!.location = userMap["location"]!
+                                self!.urlPath = userMap["photo url"]!
                                 print("Photo Url -------- \(self!.urlPath)")
                                 print("Photo location -------- \(self!.location)")
                                 let url = URL(string: self!.urlPath)
@@ -108,7 +109,7 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
     func imageTapped(tapGestureRecognizer : UITapGestureRecognizer)
     {
         print("Image Tapped...!")
-        let ac = UIAlertController(title: "Select Image From", message: "", preferredStyle: .actionSheet)
+        let alertControl = UIAlertController(title: "Select Image From", message: "", preferredStyle: .actionSheet)
         let cameraBtn = UIAlertAction(title: "Camera", style: .default){(_) in
             print("Camera Press")
             self.showImagePicker(selectSource: .camera)
@@ -118,10 +119,10 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
             self.showImagePicker(selectSource: .photoLibrary)
         }
         let cancelBtn = UIAlertAction(title: "Cancel", style: .cancel , handler: nil)
-        ac.addAction(cameraBtn)
-        ac.addAction(libraryBtn)
-        ac.addAction(cancelBtn)
-        self.present(ac, animated: true, completion: nil)
+        alertControl.addAction(cameraBtn)
+        alertControl.addAction(libraryBtn)
+        alertControl.addAction(cancelBtn)
+        self.present(alertControl, animated: true, completion: nil)
     }
     func showImagePicker(selectSource:UIImagePickerController.SourceType)
     {
@@ -135,8 +136,7 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
         imagePickerController.allowsEditing = false
         self.present(imagePickerController, animated: true, completion: nil)
     }
-    var filename : String?
-    var didselectedImage : UIImage?
+
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         if let selectedImage =  info[.originalImage] as? UIImage{

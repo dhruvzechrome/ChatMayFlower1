@@ -12,6 +12,14 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
     var verificationID: String?
     @IBOutlet weak var txtPhoneNumber: UITextField!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationItem.hidesBackButton = true
+        tabBarController?.tabBar.isHidden = true
+        
+        // Do any additional setup after loading the view.
+    }
+    
     @IBAction func sentOtp(_ sender: UIButton) {
         
         var phoneNumber = txtPhoneNumber.text
@@ -57,13 +65,7 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
         
         
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationItem.hidesBackButton = true
-        tabBarController?.tabBar.isHidden = true
-        
-        // Do any additional setup after loading the view.
-    }
+   
 }
 
 

@@ -15,55 +15,49 @@ import MBProgressHUD
 
 class UserDetailsCode: UIViewController {
     
+    var msgkey = [String]()
     var msgstatus = false
-    var ab = ""
+    var usersNumber = ""
     @IBOutlet weak var tabelView: UITableView!
     var phones = ""
     var databaseRef: DatabaseReference!
-    var reg: Int = 0
     var messageId:String?
     var friends = [ChatAppUser]()
-    var dictArray: [[String:String]] = []
-    var array = [String]()
-    var strArray  = [[String:String]]()
-    var arrayDetails = [[String:Any]]()
+    var keyArray = [String]()
+    var usersDetails = [[String:Any]]()
     let storageRef = Storage.storage().reference()
     func getData(){
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded){[weak self](snapshot) in
-//            let key = snapshot.key
-//            //            print("Key",key)
-//            guard let value = snapshot.value as? [String:Any] else {return}
-            
             self!.mbProgressHUD(text: "Loading.")
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
                 
                 for snap in snapshots {
-                    //                    let cata = snap.key
-                    //                    let ques = snap.value!
+                    //   let cata = snap.key
+                    //   let ques = snap.value!
                     
-                    let gif = snapshot.value! as! [String:String]
+                    let infoMap = snapshot.value! as! [String:String]
                     
                     if snapshot.key != self!.phones {
                         
-                        if !self!.array.contains("\(snapshot.key)") {
+                        if !self!.keyArray.contains("\(snapshot.key)") {
                             
-                            self!.array.append("\(snapshot.key)")
-                            print("Aray of number is \(self!.array)")
+                            self!.keyArray.append("\(snapshot.key)")
+                            print("Aray of number is \(self!.keyArray)")
                          
-                            if gif["Name"] != nil {
+                            if infoMap["Name"] != nil {
                                 
-                                if gif["photo url"] != nil {
-                                    self!.arrayDetails.append(["Name" : gif["Name"]! , "Phone number": gif["Phone number"]!, "profilepic": gif["photo url"]!])
-                                    print("ArrayPractise----------->>>\(self!.arrayDetails)")
+                                if infoMap["photo url"] != nil {
+                                    self!.usersDetails.append(["Name" : infoMap["Name"]! , "Phone number": infoMap["Phone number"]!, "profilepic": infoMap["photo url"]!])
+                                    print("usersDetails----------->>>\(self!.usersDetails)")
                                 } else {
-                                    self!.arrayDetails.append(["Name" : gif["Name"]! , "Phone number": gif["Phone number"]!, "profilepic": ""])
-                                    print("ArrayPractise----------->>>\(self!.arrayDetails)")
+                                    self!.usersDetails.append(["Name" : infoMap["Name"]! , "Phone number": infoMap["Phone number"]!, "profilepic": ""])
+                                    print("usersDetails----------->>>\(self!.usersDetails)")
                                 }
                                 
                             } else {
-                                self!.arrayDetails.append(["Name" : "" , "Phone number": gif["Phone number"]!, "profilepic": ""])
-                                print("ArrayPractise----------->>>\(self!.arrayDetails)")
+                                self!.usersDetails.append(["Name" : "" , "Phone number": infoMap["Phone number"]!, "profilepic": ""])
+                                print("usersDetails----------->>>\(self!.usersDetails)")
                             }
                             
                         }
@@ -71,17 +65,13 @@ class UserDetailsCode: UIViewController {
                     
                     
                 }
-                //                sstr.append(snapshot.value)
             }
-            print("Dictionary Array is ",self!.dictArray)
             print("Sbapshot is ", snapshot.value!)
             //            self?.tabelView.reloadData()
-            //            print("key of value is ",self!.array)
-            //            print("dictionary is ",self!.dictArray)
         }
     }
     
-    var msgkey = [String]()
+    
     func getMessageId() {
         databaseRef = Database.database().reference().child("Chats")
         databaseRef.observe(.childAdded){[weak self](snapshot) in
@@ -92,24 +82,16 @@ class UserDetailsCode: UIViewController {
                 return
             }
             
-            
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
-                
                 for snap in snapshots {
                     let cata = key
-//                    let ques = snap.value!
                     self!.msgkey.append("\(cata)")
-                    
-                    //                    self!.dictArray.append([cata : String(describing: ques)])
                 }
-                
             } else {
                 print("No data Found")
             }
             self?.tabelView.reloadData()
             self?.hideProgress()
-            //            print("key of value is ",self!.msgkey)
-            //            print("dictionary is ",self!.dictArray)
         }
     }
     
@@ -145,7 +127,7 @@ class UserDetailsCode: UIViewController {
     
     @objc func refresh(_ sender : Any)
     {
-        array = [String]()
+        keyArray = [String]()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [self] in
             getData()
         }
@@ -178,11 +160,11 @@ class UserDetailsCode: UIViewController {
 
 extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrayDetails.count
+        return usersDetails.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let frd = arrayDetails[indexPath.row]
+        let frd = usersDetails[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TableViewCell
         cell?.userLabel.text = frd["Phone number"] as? String
         print("my image is \(frd["profilepic"]!)")
@@ -199,11 +181,11 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         tabelView.deselectRow(at: indexPath, animated: true)
-        let frd = arrayDetails[indexPath.row]
-        ab = frd["Phone number"]! as! String
+        let frd = usersDetails[indexPath.row]
+        usersNumber = frd["Phone number"]! as! String
         if msgkey.count > 0 {
             for avl in 0...msgkey.count - 1 {
-                if msgkey[avl] == "\(phones)\(ab)" || msgkey[avl] == "\(ab)\(phones)" {
+                if msgkey[avl] == "\(phones)\(usersNumber)" || msgkey[avl] == "\(usersNumber)\(phones)" {
                     messageId = msgkey[avl]
                     //                print("True -----------")
                     msgstatus = true
@@ -212,7 +194,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         }
         mbProgressHUD(text: "Loading..")
         let vc = storyboard?.instantiateViewController(withIdentifier: "ChatConversionCode") as? ChatConversionCode
-        vc?.receiverid = ab
+        vc?.receiverid = usersNumber
         mychat()
         vc?.mid = messageId!
         vc?.phoneid = phones
@@ -225,16 +207,8 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
     
     func mychat() {
         
-        
-        //        DataBaseManager.shared.chatExist(with: messageId!, completion: { exists in
-        //            guard !exists else{
-        //                // user Exists already
-        //            }
-        //            // user not exists
-        //            DataBaseManager.shared.createNewChat(with: Message(messagid: messageId, chats: ""))
-        //        })
         if msgstatus == false {
-            messageId = "\(phones)\(ab)"
+            messageId = "\(phones)\(usersNumber)"
             databaseRef.child("Chat").observeSingleEvent(of: .value, with: { [self] (snapshot) in
                 if snapshot.exists() {
                     print("true rooms exist")

@@ -12,7 +12,7 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
     
     @IBOutlet weak var backgroundSv: UIScrollView!
     var photoUrlPath = ""
-    var iiimg :UIImage?
+    var userImage :UIImage?
     var name = ""
     var number = ""
     @IBOutlet weak var tPhoneNumber: UITextField!
@@ -21,7 +21,7 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        profileImage.image = iiimg
+        profileImage.image = userImage
         tName.text = name
         tPhoneNumber.text = number
         tabBarController?.tabBar.isHidden = true

@@ -12,6 +12,10 @@ import FirebaseDatabase
 import MBProgressHUD
 
 class ImageAndVideoShowCode: UIViewController {
+    
+    @IBOutlet weak var myVIew: UIView!
+    @IBOutlet var stackComet: UIStackView!
+    var keyBoardStatus = false
     var navselectedImage : UIImage?
     @IBOutlet weak var selectedImage: UIImageView!
     @IBOutlet weak var commentField: UITextField!
@@ -20,6 +24,7 @@ class ImageAndVideoShowCode: UIViewController {
     var uid :Int?
     var num = ""
     var videoUrl : String?
+    var keyboardheight = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         if navselectedImage != nil {
@@ -28,8 +33,16 @@ class ImageAndVideoShowCode: UIViewController {
         else {
             
         }
+        
+        commentField.delegate = self
+        commentField.tag = 1
+        initializeHideKeyboard()
         num = FirebaseAuth.Auth.auth().currentUser!.phoneNumber!
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil);
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil);
     }
+ 
     
     @IBAction func sent(_ sender: UIButton) {
         
@@ -51,9 +64,6 @@ class ImageAndVideoShowCode: UIViewController {
      
         let fileRef = storageRef.child(filename)
         print("\(fileRef)")
-        
-        // This is equivalent to creating the full reference
-        // Upload data
         let uploadTask = fileRef.putData(imageData!, metadata: nil) { [self] metadata, error in
             var urlpth = ""
             // Check error
@@ -130,4 +140,77 @@ extension ImageAndVideoShowCode {
       MBProgressHUD.hide(for: self.view, animated: false)
     }
   }
+}
+extension ImageAndVideoShowCode : UITextFieldDelegate {
+    
+    func initializeHideKeyboard(){
+            //Declare a Tap Gesture Recognizer which will trigger our dismissMyKeyboard() function
+            let tap: UITapGestureRecognizer = UITapGestureRecognizer(
+                target: self,
+                action: #selector(dismissMyKeyboard))
+
+            //Add this tap gesture recognizer to the parent view
+            view.addGestureRecognizer(tap)
+        }
+
+        @objc func dismissMyKeyboard(){
+            if keyBoardStatus == true {
+                print("YESSTR")
+                view.endEditing(true)
+            }
+//            stackComet.frame.origin.y = 0
+            //endEditing causes the view (or one of its embedded text fields) to resign the first responder status.
+            //In short- Dismiss the active keyboard.
+            
+        }
+    
+    func subscribeToNotification(_ notification: NSNotification.Name, selector: Selector) {
+        NotificationCenter.default.addObserver(self, selector: selector, name: notification, object: nil)
+    }
+    
+    func unsubscribeFromAllNotifications() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func keyboardWillShow(sender: NSNotification) {
+        // Get required info out of the notification
+        if keyBoardStatus == false {
+            print("yes ")
+            if let keyboardSize = (sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+                //let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+                view.frame.size = CGSize(width: view.bounds.width, height: view.bounds.height - keyboardSize.height+50)
+                
+                myVIew.frame.size = CGSize(width: myVIew.bounds.width, height: myVIew.frame.height - keyboardSize.height)
+                print("\(stackComet.frame)")
+                keyboardheight = Int(keyboardSize.height-50)
+                keyBoardStatus = true
+            }
+        }
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("Text hide called")
+        if keyBoardStatus == true {
+            self.keyBoardStatus = false
+            view.frame.size = CGSize(width: view.bounds.width, height: view.bounds.height + CGFloat(self.keyboardheight))
+            self.myVIew.frame.size = CGSize(width: myVIew.bounds.width, height: myVIew.frame.height + CGFloat(self.keyboardheight))
+            self.view.endEditing(true)
+            return false
+        } else {
+            return true
+        }
+        
+       
+       
+    }
+    
+    
+    @objc func keyboardWillHide(sender: NSNotification) {
+//        stackComet.frame.origin.y = 0
+        if keyBoardStatus == true {
+            self.keyBoardStatus = false
+            view.frame.size = CGSize(width: view.bounds.width, height: view.bounds.height + CGFloat(self.keyboardheight))
+            self.myVIew.frame.size = CGSize(width: myVIew.bounds.width, height: myVIew.frame.height + CGFloat(self.keyboardheight))
+            self.view.endEditing(true)
+        }
+    }
 }

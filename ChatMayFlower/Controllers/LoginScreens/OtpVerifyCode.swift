@@ -14,6 +14,14 @@ class OtpVerifyCode: UIViewController {
     var verification = ""
     var phone = ""
     @IBOutlet weak var txtOtp: UITextField!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tabBarController?.tabBar.isHidden = true
+        
+        
+        // Do any additional setup after loading the view.
+    }
     @IBAction func otpVeri(_ sender: UIButton) {
         print(verification)
         var num = txtOtp.text
@@ -96,13 +104,7 @@ class OtpVerifyCode: UIViewController {
         
         ///
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tabBarController?.tabBar.isHidden = true
-        
-        
-        // Do any additional setup after loading the view.
-    }
+    
     
 }
 

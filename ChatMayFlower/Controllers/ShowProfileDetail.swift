@@ -14,36 +14,35 @@ import FirebaseStorage
 class ShowProfileDetail: UIViewController {
     
     @IBOutlet weak var profileImage: UIImageView!
-    var urlPath = ""
-    var filename = ""
-    var uname = ""
-    var uphoneno = ""
+    var urlPath = ""                    // url of photos
+    var filename = ""                   // path of photo in firebase storage
+    var uname = ""                      // user name
+    var uphoneno = ""                   // user number
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var phoneNumber: UILabel!
     var databaseRef: DatabaseReference!
-    var dictArray: [[String:String]] = []
-    var array = [String]()
     var phones = ""
     var imag : UIImage?
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tabBarController?.tabBar.isHidden = false
-        
-    }
+    var imagearray = [UIImage]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
-        
-        
         // Do any additional setup after loading the view.
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
         phoneNumber.text = phones
         getData()
     }
-    var imagearray = [UIImage]()
+    
     func getData(){
         // Create Firebase Storage Reference
         let storageRef = Storage.storage().reference()
@@ -61,31 +60,30 @@ class ShowProfileDetail: UIViewController {
                     let cata = snap.key
                     let ques = snap.value!
                     
-                    let gif = snapshot.value! as! [String:String]
-                    if gif["Phone number"] ==  self?.phones {
-                        //                        print("Ppppphhhhh :",gif["Phone number"]!)
+                    let userMap = snapshot.value! as! [String:String]
+                    if userMap["Phone number"] ==  self?.phones {
+                        //                        print("Ppppphhhhh :",userMap["Phone number"]!)
                         
-//                        self!.phoneNumber.text = gif["Phone number"]!
+//                        self!.phoneNumber.text = userMap["Phone number"]!
                         
-                        self!.uphoneno = gif["Phone number"]!
+                        self!.uphoneno = userMap["Phone number"]!
                         
                         
-                        if gif["Name"] != nil {
-                            if gif["Name"] != "" {
-                                self!.name.text = gif["Name"]!
-                                self!.uname = gif["Name"]!
+                        if userMap["Name"] != nil {
+                            if userMap["Name"] != "" {
+                                self!.name.text = userMap["Name"]!
+                                self!.uname = userMap["Name"]!
                             }
                             else {
                                 self!.uname = "No name available"
                             }
                         }
-//                        print("my image sssssssss \(gif["photo url"]!)")
                         self!.imag = UIImage(named: "placeholder")
-                        if gif["photo url"] != nil  {
-                            if gif["photo url"] != "" {
-                                self!.filename = gif["location"]!
-                                self!.urlPath = gif["photo url"]!
-                                let url = URL(string: gif["photo url"]!)
+                        if userMap["photo url"] != nil  {
+                            if userMap["photo url"] != "" {
+                                self!.filename = userMap["location"]!
+                                self!.urlPath = userMap["photo url"]!
+                                let url = URL(string: userMap["photo url"]!)
                                 print("URllllllll ----\(url)")
                                 self!.profileImage.kf.setImage(with: url)
                             }
@@ -120,7 +118,7 @@ class ShowProfileDetail: UIViewController {
         
         let vc = storyboard?.instantiateViewController(withIdentifier: "EditProfileInformation") as? EditProfileInformation
         
-        vc?.iiimg = imag
+        vc?.userImage = imag
         vc?.name = uname
         vc?.number = phones
         vc?.photoUrlPath = urlPath

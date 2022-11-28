@@ -142,7 +142,6 @@
 			children = (
 				883EBD4B28F7E0A2000A59BA /* LaunchScreen.storyboard */,
 				883EBD4628F7E09F000A59BA /* Main.storyboard */,
-				882DE2F12928AE5500B8963A /* ImageVc.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -161,6 +160,7 @@
 				88A040C929137F53008FB921 /* AddUserInformation.swift */,
 				882381DF291639BC00786164 /* EditProfileInformation.swift */,
 				88FEF23929275A290019AF02 /* VideoSentCode.swift */,
+				882DE2F12928AE5500B8963A /* ImageVc.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";

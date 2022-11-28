@@ -110,9 +110,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     func status(){
         seen.removeAll()
         arrayStatus.removeAll()
+        counter = 0
         database.child("Chats").child(mid).child("status").observe(.childAdded) {[weak self](snapshot) in
             if let snap = snapshot.value {
-//                print("yes yj \(snapshot.key)")
                 
                 if !(self?.arrayStatus.contains(snapshot.key))! {
                     self?.arrayStatus.append(snapshot.key)
@@ -126,7 +126,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     if  smf != nil && smf == false {
 //                        print("all done")
                         self?.database.child("Chats").child(self!.mid).child("status").setValue(["\(self!.phoneid)":true, "\(self!.receiverid)":true])
-                        //                        self?.chatTable.tableFooterView = self?.hidefooterview()
+                        //    self?.chatTable.tableFooterView = self?.hidefooterview()
                     }
                 }
                 if self!.seen.count == 2{
@@ -139,12 +139,15 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     } else if (aStatus?["\(self!.receiverid)"] == true || aStatus?["\(self!.phoneid)"] == true) && (bStatus?["\(self!.receiverid)"] == true || bStatus?["\(self!.phoneid)"] == true) {
 //                        print("message seen \(apex)")
                         self?.seenStatusLabel = "seen"
-//                        if self?.toggle == false {
+//
 //                            self?.scrollToBottom()
 //                        }
                         if self?.oppositeSeenStatus == false {
                             self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
                             self?.scrollToBottom()
+                            if self?.toggle == true {
+                                self?.oppositeSeenStatus = true
+                            }
                         }
                         
                     }
@@ -157,6 +160,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                         if self?.oppositeSeenStatus == false {
                             self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
                             self?.scrollToBottom()
+                            if self?.toggle == true {
+                                self?.oppositeSeenStatus = true
+                            }
                         }
                         
                         
@@ -168,7 +174,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
             else {
                 print("No data found")
             }
-            print("\(snapshot)")
+//            print("\(snapshot)")
         }
     }
     
@@ -191,9 +197,6 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
    
 // MARK: - Get Chatting from Firebase Database
     func getchat() {
-        //        print("my chatMapKey is this ",chatMapKey)
-        //        print("my dic array is this ",chatMap)
-        //        print("Message id is " ,  mid)
         database.child("Chats").child(mid).child("chatting").observe(.childAdded) {[weak self](snapshot) in
             DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                 guard let value = snapshot.value as? [String:Any] else {return
@@ -290,7 +293,10 @@ extension ChatConversionCode {
     @objc
     func imageTapped()
     {
+        keyBoardStatus = true
+        view.endEditing(true)
         print("Image Tapped...!")
+        
         let ac = UIAlertController(title: "Select Image From", message: "", preferredStyle: .actionSheet)
         let cameraBtn = UIAlertAction(title: "Camera", style: .default){(_) in
             print("Camera Press")
@@ -431,6 +437,7 @@ extension ChatConversionCode {
     
     @objc func keyboardWillHide(sender: NSNotification) {
         if keyBoardStatus  == true{
+            UIView.setAnimationsEnabled(true)
             view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height + CGFloat(keyboardheight))
             backgroundSV.frame.size = CGSize(width: backgroundSV.bounds.width, height: backgroundSV.frame.height + CGFloat(keyboardheight))
             keyBoardStatus = false
@@ -487,6 +494,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
             //            print("MY URL IS ++++ \(txtChat)")
             
         }else if userNumberKey == "\(phoneid)chatPhoto" || userNumberKey == "\(receiverid)chatPhoto" || userNumberKey == "chatPhoto" {
+            keyBoardStatus = true
+            view.endEditing(true)
             imageShow(url:txtChat! as! String)
             //            print("Image Url is \(txtChat)")
         }else {
@@ -1004,29 +1013,31 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
     }
     
     func replyforPhotos(chats:String, user: String,photourl:String){
-        keyBoardStatus = true
+        keyBoardStatus = false
         chatField.becomeFirstResponder()
         chatTable.tableFooterView = imgReplyFooterView()
+        scrollToBottom()
         replyUser?.text = "\(user)"
         replytxt?.text = "\(chats)"
         let url = URL(string: photourl  )
         replyImageView.kf.setImage(with: url)
     }
     func replyforVideo(chats:String, user: String,photourl:String){
-        keyBoardStatus = true
+        keyBoardStatus = false
         chatField.becomeFirstResponder()
         chatTable.tableFooterView = imgReplyFooterView()
+        scrollToBottom()
         replyUser?.text = "\(user)"
         replytxt?.text = "\(chats)"
         let url = URL(string: photourl)
         replyImageView.kf.setImage(with: AVAssetImageDataProvider(assetURL: url!, seconds: 1))
     }
     func handleMarkAsFavourite(chats:String, user: String) {
-        keyBoardStatus = true
+        keyBoardStatus = false
         chatField.becomeFirstResponder()
         chatTable.tableFooterView = footerview()
         scrollToBottom()
-        keyBoardStatus = false
+        
         replyUser?.text = "\(user)"
         replytxt?.text = "\(chats)"
         
@@ -1065,17 +1076,17 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
 extension ChatConversionCode {
     
     private func imgReplyFooterView() -> UIView{
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 50))
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 60))
         replyUser = UILabel(frame: CGRect(x: 10, y: 0, width: chatTable.frame.width-150, height: 30))
         replytxt = UILabel(frame: CGRect(x: 20, y: 25, width: chatTable.frame.width-150, height: 20))
-        replyImageView = UIImageView(frame: CGRect(x: chatTable.frame.width-80, y: 0, width: 50, height: 50))
+        replyImageView = UIImageView(frame: CGRect(x: chatTable.frame.width-80, y: 0, width: 50, height: 60))
         replyImageView.backgroundColor = .brown
         let closebtn = UIButton()
         closebtn.setImage(UIImage(systemName: "clear"), for: .normal)
         closebtn.tintColor = .black
         closebtn.addTarget(self, action: #selector(pressed), for: .touchUpInside)
         closebtn.frame = CGRect(x: chatTable.bounds.width - 40, y: 0, width: 50, height: 50)
-        view.backgroundColor = .blue
+        view.backgroundColor = .darkGray
         view.addSubview(replyImageView)
         view.addSubview(replyUser!)
         view.addSubview(replytxt!)
@@ -1094,7 +1105,7 @@ extension ChatConversionCode {
             closebtn.tintColor = .black
             closebtn.addTarget(self, action: #selector(pressed), for: .touchUpInside)
             closebtn.frame = CGRect(x: chatTable.bounds.width - 40, y: 0, width: 50, height: 50)
-            view.backgroundColor = .red
+            view.backgroundColor = .darkGray
             view.addSubview(replyUser!)
             view.addSubview(replytxt!)
             view.addSubview(closebtn)

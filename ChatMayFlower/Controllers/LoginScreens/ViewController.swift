@@ -9,12 +9,6 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    @IBAction func login(_ sender: UIButton) {
-        
-        let vc = storyboard?.instantiateViewController(withIdentifier: "PhoneVerificationCode") as? PhoneVerificationCode
-        navigationController?.pushViewController(vc!, animated: true)
-        
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
@@ -23,6 +17,14 @@ class ViewController: UIViewController {
         initializeHideKeyboard()
         // Do any additional setup after loading the view.
     }
+    
+    @IBAction func login(_ sender: UIButton) {
+        
+        let vc = storyboard?.instantiateViewController(withIdentifier: "PhoneVerificationCode") as? PhoneVerificationCode
+        navigationController?.pushViewController(vc!, animated: true)
+        
+    }
+    
     
     
 }
