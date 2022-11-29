@@ -54,7 +54,8 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     var oppositeSeenStatus = false              // for not show seen when receiver sent msg
     var counter = 0                             // use for variable like   counter//
     var arrayStatus = [String]()                // s capital
-    var toggle = false
+    var toggle = true
+    var lcb = false
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -69,13 +70,13 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         chatTable.dataSource = self
         keyboardheight = 0
         seenVcStatus = true
-        
+        chatField.delegate = self
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
             
             if seenVcStatus == true {
-               
-                    status()
-               
+                
+                status()
+                
                 
                 if textFieldBtnStatus == true {
                     let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
@@ -124,45 +125,71 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                         self?.counter = 0
                     }
                     if  smf != nil && smf == false {
-//                        print("all done")
+                        //                        print("all done")
                         self?.database.child("Chats").child(self!.mid).child("status").setValue(["\(self!.phoneid)":true, "\(self!.receiverid)":true])
-                        //    self?.chatTable.tableFooterView = self?.hidefooterview()
+                        //    ¸
                     }
                 }
                 if self!.seen.count == 2{
-//                    print("seen \(self?.seen)")
+                    //                    print("seen \(self?.seen)")
                     let aStatus = self?.seen[0]
                     let bStatus = self?.seen[1]
                     if (aStatus?["\(self!.receiverid)"] == true || bStatus?["\(self!.receiverid)"] == true) && ( aStatus?["\(self!.phoneid)"] == false || bStatus?["\(self!.phoneid)"] == false) {
-//                        print("Hide footer \(self!.receiverid)")
+                        //                        print("Hide footer \(self!.receiverid)")
                         self?.chatTable.tableFooterView = self?.msgsseenfhidefooterview()
                     } else if (aStatus?["\(self!.receiverid)"] == true || aStatus?["\(self!.phoneid)"] == true) && (bStatus?["\(self!.receiverid)"] == true || bStatus?["\(self!.phoneid)"] == true) {
-//                        print("message seen \(apex)")
+                        //                        print("message seen \(apex)")
                         self?.seenStatusLabel = "seen"
-//
-//                            self?.scrollToBottom()
-//                        }
+                        //
+                        //                            self?.scrollToBottom()
+                        //                        }
                         if self?.oppositeSeenStatus == false {
-                            self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
-                            self?.scrollToBottom()
+                            print("Show")
+                            self?.lcb = false
                             if self?.toggle == true {
-                                self?.oppositeSeenStatus = true
+                                print("oko")
+                                self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
+                                self?.scrollToBottom()
+//
+                                if self?.seenStatusLabel == "seen" {
+                                    self?.toggle = false
+                                }
+                                
+                            }
+                        }else {
+                            if self?.toggle == true {
+//                                self?.chatTable.tableFooterView = self?.msgsseenfhidefooterview()
+                                print("hide ")
+                                
                             }
                         }
                         
                     }
                     else {
-//                        print("message not seen")
+                        //                        print("message not seen")
                         self?.seenStatusLabel = "delivered"
-//                        if self?.toggle == false {
-////                            self?.scrollToBottom()
-//                        }
+                        //                        if self?.toggle == false {
+                        ////                            self?.scrollToBottom()
+                        //                        }
+                        if self?.lcb == false {
                         if self?.oppositeSeenStatus == false {
-                            self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
-                            self?.scrollToBottom()
+                            print("sh ")
+                            
                             if self?.toggle == true {
-                                self?.oppositeSeenStatus = true
+                                print("yes ")
+                                self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
+                                self?.scrollToBottom()
+//                                self?.toggle = false
+                                if self?.seenStatusLabel == "delivered" {
+//                                    self?.toggle = false
+                                    self?.lcb = true
+                                }
                             }
+                        } else {
+//                            self?.chatTable.tableFooterView = self?.msgsseenfhidefooterview()
+                            print("Hide 1")
+                        }
+                            
                         }
                         
                         
@@ -174,7 +201,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
             else {
                 print("No data found")
             }
-//            print("\(snapshot)")
+            //            print("\(snapshot)")
         }
     }
     
@@ -193,9 +220,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         
     }
     
-
-   
-// MARK: - Get Chatting from Firebase Database
+    
+    
+    // MARK: - Get Chatting from Firebase Database
     func getchat() {
         database.child("Chats").child(mid).child("chatting").observe(.childAdded) {[weak self](snapshot) in
             DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
@@ -215,7 +242,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                             self?.chatMapKey.append("\(cata)")
                             self?.chatTable.reloadData()
                             self?.oppositeSeenStatus = false
-                            self?.toggle = false
+//                            self?.toggle = true
                         }
                         self?.textFieldBtnStatus = true
                     }
@@ -236,13 +263,14 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         }
     }
     
-   // MARK: - Send Chats to Firebase Realtime Database
+    // MARK: - Send Chats to Firebase Realtime Database
     @IBAction func sendChat(_ sender: UIButton) {
-        footerview().isHidden = true
         chatTable.sectionFooterHeight = 0
         if chatField.text != "" {
             ui = ui + 1
             seenStatusLabel = "delivered"
+            oppositeSeenStatus = false
+            lcb = false
             chatTable.tableFooterView = msgsSeenfooterview()
             database.child("Uid").setValue(ui)
             database.child("Chats").child(mid).child("status").setValue(["\(phoneid)":true,"\(receiverid)":false])
@@ -255,7 +283,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     }
                     print("data written seccess")
                     self.oppositeSeenStatus = false
-                    self.toggle = false
+                    self.toggle = true
                 })
                 chatField.text = ""
                 DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
@@ -293,6 +321,7 @@ extension ChatConversionCode {
     @objc
     func imageTapped()
     {
+        
         keyBoardStatus = true
         view.endEditing(true)
         print("Image Tapped...!")
@@ -342,7 +371,7 @@ extension ChatConversionCode {
             //                print("asset -----===== \(asset)")
             //                print("cgImage  ======= \(cgImage)")
             //                print("thumbnail ========= \(thumbnail)")
-            keyboardheight = 0
+            
             let storageRef = Storage.storage().reference()
             let filename = "chatVideo/\(UUID().uuidString).MOV"
             let fileRef = storageRef.child(filename)
@@ -411,14 +440,15 @@ extension ChatConversionCode {
     }
 }
 
- // MARK: - Keyboard handling
-extension ChatConversionCode {
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
+// MARK: - Keyboard handling
+extension ChatConversionCode : UITextFieldDelegate{
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        view.endEditing(true)
+//    }
     @objc func keyboardWillShow(sender: NSNotification) {
         
         if keyBoardStatus == false {
+            keyBoardStatus = true
             if let keyboardSize = (sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
                 //let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
                 view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height - keyboardSize.height)
@@ -430,14 +460,13 @@ extension ChatConversionCode {
             }
             let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
             chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
-            keyBoardStatus = true
+            
         }
         
     }
     
     @objc func keyboardWillHide(sender: NSNotification) {
-        if keyBoardStatus  == true{
-            UIView.setAnimationsEnabled(true)
+        if keyBoardStatus  == true {
             view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height + CGFloat(keyboardheight))
             backgroundSV.frame.size = CGSize(width: backgroundSV.bounds.width, height: backgroundSV.frame.height + CGFloat(keyboardheight))
             keyBoardStatus = false
@@ -445,7 +474,21 @@ extension ChatConversionCode {
         }
     }
     
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("Text hide called")
+        if keyBoardStatus  == true {
+            view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height + CGFloat(keyboardheight))
+            backgroundSV.frame.size = CGSize(width: backgroundSV.bounds.width, height: backgroundSV.frame.height + CGFloat(keyboardheight))
+            keyBoardStatus = false
+            view.endEditing(true)
+            return false
+        } else {
+            return true
+        }
+        
+       
+       
+    }
     
 }
 
@@ -544,9 +587,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         }
                         cell?.selectionStyle = .none
                         if indexPath.row == chatMapKey.count-1 {
-                            chatTable.tableFooterView = msgsseenfhidefooterview()
-                            oppositeSeenStatus = true
-                            toggle = true
+                            if oppositeSeenStatus == false {
+                                chatTable.tableFooterView = msgsseenfhidefooterview()
+                                oppositeSeenStatus = true
+                                toggle = false
+                            }
                         }
                         return cell!
                         
@@ -622,9 +667,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         }
                         cell?.selectionStyle = .none
                         if indexPath.row == chatMapKey.count-1 {
-                            chatTable.tableFooterView = msgsseenfhidefooterview()
-                            oppositeSeenStatus = true
-                            toggle = true
+                            if oppositeSeenStatus == false {
+                                chatTable.tableFooterView = msgsseenfhidefooterview()
+                                oppositeSeenStatus = true
+                                toggle = false
+                            }
                         }
                         return cell!
                         
@@ -684,9 +731,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                     }
                     cell?.selectionStyle = .none
                     if indexPath.row == chatMapKey.count-1 {
-                        chatTable.tableFooterView = msgsseenfhidefooterview()
-                        oppositeSeenStatus = true
-                        toggle = true
+                        if oppositeSeenStatus == false {
+                            chatTable.tableFooterView = msgsseenfhidefooterview()
+                            oppositeSeenStatus = true
+                            toggle = false
+                        }
                     }
                     return cell!
                 }
@@ -724,7 +773,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             if indexPath.row == chatMapKey.count-1 {
                                 chatTable.tableFooterView = msgsseenfhidefooterview()
                                 oppositeSeenStatus = true
-                                toggle = true
+                                toggle = false
                             }
                             return cell!
                         }
@@ -750,9 +799,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             cell?.photos.kf.setImage(with: url)
                             cell?.selectionStyle = .none
                             if indexPath.row == chatMapKey.count-1 {
-                                chatTable.tableFooterView = msgsseenfhidefooterview()
-                                oppositeSeenStatus = true
-                                toggle = true
+                                if oppositeSeenStatus == false {
+                                    chatTable.tableFooterView = msgsseenfhidefooterview()
+                                    oppositeSeenStatus = true
+                                    toggle = false
+                                }
                             }
                             return cell!
                         }
@@ -765,9 +816,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             cell?.confi(videoUrl: txtChat  as! String)
                             cell?.selectionStyle = .none
                             if indexPath.row == chatMapKey.count-1 {
-                                chatTable.tableFooterView = msgsseenfhidefooterview()
-                                oppositeSeenStatus = true
-                                toggle = true
+                                if oppositeSeenStatus == false {
+                                    chatTable.tableFooterView = msgsseenfhidefooterview()
+                                    oppositeSeenStatus = true
+                                    toggle = false
+                                }
                             }
                             return cell!
                         }
@@ -790,9 +843,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             cell?.photos.kf.setImage(with: url)
                             cell?.selectionStyle = .none
                             if indexPath.row == chatMapKey.count-1 {
-                                chatTable.tableFooterView = msgsseenfhidefooterview()
-                                oppositeSeenStatus = true
-                                toggle = true
+                                if oppositeSeenStatus == false {
+                                    chatTable.tableFooterView = msgsseenfhidefooterview()
+                                    oppositeSeenStatus = true
+                                    toggle = false
+                                }
                             }
                             return cell!
                         }
@@ -814,9 +869,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         cell?.selectionStyle = .none
                         
                         if indexPath.row == chatMapKey.count-1 {
-                            chatTable.tableFooterView = msgsseenfhidefooterview()
-                            oppositeSeenStatus = true
-                            toggle = true
+                            if oppositeSeenStatus == false {
+                                chatTable.tableFooterView = msgsseenfhidefooterview()
+                                oppositeSeenStatus = true
+                                toggle = false
+                            }
                         }
                         return cell!
                     }
@@ -846,6 +903,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         //  print("TEXTCHAT IS ///////    \(txtChat)")
         //  print("userNumberKey IS THE \\\\\\  \(userNumberKey)---\(uniqueKey)")
         oppositeSeenStatus = true
+        lcb = false
         chatTable.tableFooterView = msgsseenfhidefooterview()
         if abc?["\(phoneid)"] != nil || abc?["\(receiverid)"] != nil || myyo?["\(phoneid)"] != nil || myyo?["\(receiverid)"] != nil {
             print("reply chat photo")
@@ -898,6 +956,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                 if userNumberKey == "\(phoneid)chatPhoto" {
                     
                     if replyChat?["\(phoneid)text"] == nil{
+                        print("my photo")
                         let action = UIContextualAction(style: .normal,
                                                         title: "Reply") { [weak self] (action, view, completionHandler) in
                             
@@ -908,7 +967,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         action.backgroundColor = .clear
                         return UISwipeActionsConfiguration(actions: [action])
                     } else {
-                        print("IOIOIOIOIOIOIs")
+                        print("my  IOIOIOIOIOIOIs")
+                        
                         let action = UIContextualAction(style: .normal,
                                                         title: "Reply") { [weak self] (action, view, completionHandler) in
                             
@@ -922,6 +982,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                     
                 } else {
                     if replyChat?["\(receiverid)text"] == nil  {
+                        print("rec photo")
                         let action = UIContextualAction(style: .normal,
                                                         title: "Reply") { [weak self] (action, view, completionHandler) in
                             
@@ -932,7 +993,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         action.backgroundColor = .clear
                         return UISwipeActionsConfiguration(actions: [action])
                     } else {
-                        print("IOIOIOIOIOIOIs")
+                        print("rec  IOIOIOIOIOIOIs")
                         let action = UIContextualAction(style: .normal,
                                                         title: "Reply") { [weak self] (action, view, completionHandler) in
                             
@@ -948,6 +1009,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                 if  userNumberKey == "\(phoneid)chatVideo" {
                     
                     if replyChat?["\(phoneid)text"] == nil{
+                        print("my videp")
                         let action = UIContextualAction(style: .normal,
                                                         title: "Reply") { [weak self] (action, view, completionHandler) in
                             
@@ -958,7 +1020,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         action.backgroundColor = .clear
                         return UISwipeActionsConfiguration(actions: [action])
                     } else {
-                        print("IOIOIOIOIOIOIs")
+                        print("my IOIOIOIOIOIOIs")
                         let action = UIContextualAction(style: .normal,
                                                         title: "Reply") { [weak self] (action, view, completionHandler) in
                             
@@ -972,6 +1034,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                     
                 }else {
                     if replyChat?["\(receiverid)text"] == nil || userNumberKey == "\(receiverid)chatVideo" {
+                        print("rec video")
                         let action = UIContextualAction(style: .normal,
                                                         title: "Reply") { [weak self] (action, view, completionHandler) in
                             
@@ -982,7 +1045,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         action.backgroundColor = .clear
                         return UISwipeActionsConfiguration(actions: [action])
                     } else {
-                        print("IOIOIOIOIOIOIs")
+                        print("recc vid IOIOIOIOIOIOIs")
                         let action = UIContextualAction(style: .normal,
                                                         title: "Reply") { [weak self] (action, view, completionHandler) in
                             
@@ -996,15 +1059,15 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                 }
             }
             else {
-            let action = UIContextualAction(style: .normal,
-                                            title: "Reply") { [weak self] (action, view, completionHandler) in
-                
-                self?.handleMarkAsFavourite(chats: txtChat ?? "" , user:userNumberKey)
-                
-                completionHandler(true)
-            }
-            action.backgroundColor = .clear
-            return UISwipeActionsConfiguration(actions: [action])
+                let action = UIContextualAction(style: .normal,
+                                                title: "Reply") { [weak self] (action, view, completionHandler) in
+                    
+                    self?.handleMarkAsFavourite(chats: txtChat ?? "" , user:userNumberKey)
+                    
+                    completionHandler(true)
+                }
+                action.backgroundColor = .clear
+                return UISwipeActionsConfiguration(actions: [action])
             }
             
         }
@@ -1048,7 +1111,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         chatTable.scrollRectToVisible(footerRectInTable, animated: true)
     }
     
-// MARK: - Video Player Controller
+    // MARK: - Video Player Controller
     func videoPlayer(videoUrl:String) {
         print("Tapped....\(videoUrl)")
         let Url = URL(string: videoUrl)
@@ -1063,13 +1126,13 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         present(playerController, animated: true)
     }
     
-// MARK: - Image  Controller
+    // MARK: - Image  Controller
     func imageShow(url:String) {
         let vc = storyboard?.instantiateViewController(withIdentifier: "ImageVc") as? ImageVc
         vc?.str = url
         present(vc!, animated: true)
     }
-
+    
 }
 
 //  MARK: - FooterView
@@ -1094,55 +1157,57 @@ extension ChatConversionCode {
         return view
     }
     
-//  MARK: - FooterView For Replying Chats
-        private func footerview() -> UIView {
-            let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 50))
-            replyUser = UILabel(frame: CGRect(x: 10, y: 0, width: chatTable.frame.width-60, height: 30))
-            replytxt = UILabel(frame: CGRect(x: 20, y: 25, width: chatTable.frame.width-60, height: 20))
-            
-            let closebtn = UIButton()
-            closebtn.setImage(UIImage(systemName: "clear"), for: .normal)
-            closebtn.tintColor = .black
-            closebtn.addTarget(self, action: #selector(pressed), for: .touchUpInside)
-            closebtn.frame = CGRect(x: chatTable.bounds.width - 40, y: 0, width: 50, height: 50)
-            view.backgroundColor = .darkGray
-            view.addSubview(replyUser!)
-            view.addSubview(replytxt!)
-            view.addSubview(closebtn)
-            
-            
-            return view
-        }
+    //  MARK: - FooterView For Replying Chats
+    private func footerview() -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 50))
+        replyUser = UILabel(frame: CGRect(x: 10, y: 0, width: chatTable.frame.width-60, height: 30))
+        replytxt = UILabel(frame: CGRect(x: 20, y: 25, width: chatTable.frame.width-60, height: 20))
         
-        @objc func pressed(sender: UIButton!) {
-            chatTable.tableFooterView = hidefooterview()
-            chatTable.bounces = true
-            oppositeSeenStatus = false
-        }
-        private func hidefooterview() -> UIView {
-            let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 0))
-            let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
-            chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
-            return view
-        }
+        let closebtn = UIButton()
+        closebtn.setImage(UIImage(systemName: "clear"), for: .normal)
+        closebtn.tintColor = .black
+        closebtn.addTarget(self, action: #selector(pressed), for: .touchUpInside)
+        closebtn.frame = CGRect(x: chatTable.bounds.width - 40, y: 0, width: 50, height: 50)
+        view.backgroundColor = .darkGray
+        view.addSubview(replyUser!)
+        view.addSubview(replytxt!)
+        view.addSubview(closebtn)
+        
+        
+        return view
+    }
     
-//  MARK: - FooterView For Seen, Delivered Status
-        private func msgsSeenfooterview() -> UIView {
-            let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 30))
-            let seeninmsg = UILabel(frame: CGRect(x: chatTable.frame.width-82, y: 0, width: 80, height: 20))
-            seeninmsg.textAlignment = .right
-            seeninmsg.font = UIFont.systemFont(ofSize: 14)
-            seeninmsg.text = seenStatusLabel
-            seeninmsg.textColor = .black
-            view.backgroundColor = .none
-            view.addSubview(seeninmsg)
-            return view
-        }
-        private func msgsseenfhidefooterview() -> UIView {
-            let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 0))
-            
-            return view
-        }
+    @objc func pressed(sender: UIButton!) {
+        chatTable.tableFooterView = hidefooterview()
+        chatTable.bounces = true
+        replyChat?.removeAll()
+        oppositeSeenStatus = false
+        lcb = false
+    }
+    private func hidefooterview() -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 0))
+        let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
+        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        return view
+    }
+    
+    //  MARK: - FooterView For Seen, Delivered Status
+    private func msgsSeenfooterview() -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 30))
+        let seeninmsg = UILabel(frame: CGRect(x: chatTable.frame.width-82, y: 0, width: 80, height: 20))
+        seeninmsg.textAlignment = .right
+        seeninmsg.font = UIFont.systemFont(ofSize: 14)
+        seeninmsg.text = seenStatusLabel
+        seeninmsg.textColor = .black
+        view.backgroundColor = .none
+        view.addSubview(seeninmsg)
+        return view
+    }
+    private func msgsseenfhidefooterview() -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 0))
+        
+        return view
+    }
 }
 
 // MARK: - Loading Progress Indicator

@@ -13,6 +13,7 @@ import MBProgressHUD
 
 class ImageAndVideoShowCode: UIViewController {
     
+    @IBOutlet weak var backgroundSV: UIScrollView!
     @IBOutlet weak var myVIew: UIView!
     @IBOutlet var stackComet: UIStackView!
     var keyBoardStatus = false
@@ -175,16 +176,18 @@ extension ImageAndVideoShowCode : UITextFieldDelegate {
     @objc func keyboardWillShow(sender: NSNotification) {
         // Get required info out of the notification
         if keyBoardStatus == false {
-            print("yes ")
+            keyBoardStatus = true
             if let keyboardSize = (sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
                 //let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
-                view.frame.size = CGSize(width: view.bounds.width, height: view.bounds.height - keyboardSize.height+50)
-                
+                view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height - keyboardSize.height+60)
                 myVIew.frame.size = CGSize(width: myVIew.bounds.width, height: myVIew.frame.height - keyboardSize.height)
-                print("\(stackComet.frame)")
-                keyboardheight = Int(keyboardSize.height-50)
-                keyBoardStatus = true
+                keyboardheight = Int(keyboardSize.height-60)
+                
+                backgroundSV.frame.size = CGSize(width: backgroundSV.bounds.width, height: backgroundSV.frame.height - keyboardSize.height)
+                //               print("asdasd" , keyboardheight)
             }
+           
+            
         }
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -193,6 +196,7 @@ extension ImageAndVideoShowCode : UITextFieldDelegate {
             self.keyBoardStatus = false
             view.frame.size = CGSize(width: view.bounds.width, height: view.bounds.height + CGFloat(self.keyboardheight))
             self.myVIew.frame.size = CGSize(width: myVIew.bounds.width, height: myVIew.frame.height + CGFloat(self.keyboardheight))
+            backgroundSV.frame.size = CGSize(width: backgroundSV.bounds.width, height: backgroundSV.frame.height + CGFloat(keyboardheight))
             self.view.endEditing(true)
             return false
         } else {
