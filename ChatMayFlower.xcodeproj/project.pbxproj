@@ -27,6 +27,8 @@
 		889B210B28FD653200189789 /* ChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889B210A28FD653200189789 /* ChatTableViewCell.swift */; };
 		88A040CA29137F53008FB921 /* AddUserInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A040C929137F53008FB921 /* AddUserInformation.swift */; };
 		88A32E0F28F9769D0041B6ED /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A32E0E28F9769D0041B6ED /* DataBaseManager.swift */; };
+		88B4AE742937192A00F65E65 /* GroupCreationCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B4AE732937192A00F65E65 /* GroupCreationCode.swift */; };
+		88B4AE7629372DED00F65E65 /* GroupCreationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B4AE7529372DED00F65E65 /* GroupCreationTableViewCell.swift */; };
 		88FEF23A29275A290019AF02 /* VideoSentCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEF23929275A290019AF02 /* VideoSentCode.swift */; };
 		F92A51A7EF0E9398C747D05B /* Pods_ChatMayFlower.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F378DE097D07AA7FB5C801FD /* Pods_ChatMayFlower.framework */; };
 /* End PBXBuildFile section */
@@ -55,6 +57,8 @@
 		889B210A28FD653200189789 /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
 		88A040C929137F53008FB921 /* AddUserInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserInformation.swift; sourceTree = "<group>"; };
 		88A32E0E28F9769D0041B6ED /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
+		88B4AE732937192A00F65E65 /* GroupCreationCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreationCode.swift; sourceTree = "<group>"; };
+		88B4AE7529372DED00F65E65 /* GroupCreationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreationTableViewCell.swift; sourceTree = "<group>"; };
 		88FEF23929275A290019AF02 /* VideoSentCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSentCode.swift; sourceTree = "<group>"; };
 		C52B43D00632AAB91AC73A6C /* Pods-ChatMayFlower.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatMayFlower.debug.xcconfig"; path = "Target Support Files/Pods-ChatMayFlower/Pods-ChatMayFlower.debug.xcconfig"; sourceTree = "<group>"; };
 		F378DE097D07AA7FB5C801FD /* Pods_ChatMayFlower.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatMayFlower.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -161,6 +165,8 @@
 				882381DF291639BC00786164 /* EditProfileInformation.swift */,
 				88FEF23929275A290019AF02 /* VideoSentCode.swift */,
 				882DE2F12928AE5500B8963A /* ImageVc.swift */,
+				88B4AE732937192A00F65E65 /* GroupCreationCode.swift */,
+				88B4AE7529372DED00F65E65 /* GroupCreationTableViewCell.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -301,12 +307,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				883EBD4528F7E09F000A59BA /* ViewController.swift in Sources */,
+				88B4AE7629372DED00F65E65 /* GroupCreationTableViewCell.swift in Sources */,
 				884E693D29222026005DF15B /* ImageAndVideoShowCode.swift in Sources */,
 				8838834228FA722C0071E6E9 /* TableViewCell.swift in Sources */,
 				883EBD5B28F7FC38000A59BA /* OtpVerifyCode.swift in Sources */,
 				887D10BD291291A50086E251 /* ShowProfileDetail.swift in Sources */,
 				883EBD5D28F8451F000A59BA /* UserDetailsCode.swift in Sources */,
 				883EBD4128F7E09F000A59BA /* AppDelegate.swift in Sources */,
+				88B4AE742937192A00F65E65 /* GroupCreationCode.swift in Sources */,
 				889B210928FD64FA00189789 /* ChatConversionCode.swift in Sources */,
 				882381E0291639BC00786164 /* EditProfileInformation.swift in Sources */,
 				88A32E0F28F9769D0041B6ED /* DataBaseManager.swift in Sources */,

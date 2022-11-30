@@ -14,7 +14,7 @@ import Kingfisher
 import MBProgressHUD
 
 class UserDetailsCode: UIViewController {
-    
+    var forgroupuser = [String]()
     var msgkey = [String]()
     var msgstatus = false
     var usersNumber = ""
@@ -45,6 +45,10 @@ class UserDetailsCode: UIViewController {
                             self!.keyArray.append("\(snapshot.key)")
                             print("Aray of number is \(self!.keyArray)")
                          
+                            if infoMap["group name"] != nil {
+                                
+                                
+                            }
                             if infoMap["Name"] != nil {
                                 
                                 if infoMap["photo url"] != nil {
@@ -55,7 +59,23 @@ class UserDetailsCode: UIViewController {
                                     print("usersDetails----------->>>\(self!.usersDetails)")
                                 }
                                 
-                            } else {
+                            } else if infoMap["group name"] != nil {
+                                self?.forgroupuser.removeAll()
+                                let grps = "\(infoMap["group user"]!)"
+                                let ffhhf = grps.split(separator: "+")
+                                print("=====ffhhf=======\(ffhhf.count)")
+                                for i in 0...ffhhf.count-1 {
+                                    if self!.phones == "+\(ffhhf[i])" {
+                                        self!.usersDetails.append(["group name" : "\(infoMap["group name"]!)" , "Phone number": infoMap["group user"]!, "profilepic": ""])
+                                        break
+                                    } else {
+                                        print("god")
+                                    }
+                                    
+                                }
+                               
+                            }
+                            else {
                                 self!.usersDetails.append(["Name" : "" , "Phone number": infoMap["Phone number"]!, "profilepic": ""])
                                 print("usersDetails----------->>>\(self!.usersDetails)")
                             }
@@ -85,11 +105,14 @@ class UserDetailsCode: UIViewController {
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
                 for snap in snapshots {
                     let cata = key
-                    self!.msgkey.append("\(cata)")
+                    if !(self?.msgkey.contains("\(cata)"))!{
+                        self!.msgkey.append("\(cata)")
+                    }
                 }
             } else {
                 print("No data Found")
             }
+            print("msg key \(self?.msgkey)")
             self?.tabelView.reloadData()
             self?.hideProgress()
         }
@@ -116,6 +139,7 @@ class UserDetailsCode: UIViewController {
         tabelView.delegate = self
         tabelView.dataSource = self
         print(friends)
+        getMessageId()
         getData()
         
         //        let refreshControl = UIRefreshControl()
@@ -139,10 +163,11 @@ class UserDetailsCode: UIViewController {
         
         validAuth()
         print("current User",phones)
-        getMessageId()
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+       
         tabBarController?.tabBar.isHidden = false
         navigationItem.hidesBackButton = true
         tabBarController?.tabBarItem.accessibilityElementIsFocused()
@@ -155,6 +180,15 @@ class UserDetailsCode: UIViewController {
         }
         phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
     }
+    
+    @IBAction func groupNav(_ sender: UIButton) {
+        let vc = storyboard?.instantiateViewController(withIdentifier: "GroupCreationCode") as? GroupCreationCode
+        vc?.usersDetails = usersDetails
+        vc?.phones = phones
+        navigationController?.present(vc!, animated: true, completion: nil)
+        
+    }
+    
 }
 
 
@@ -167,6 +201,11 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         let frd = usersDetails[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TableViewCell
         cell?.userLabel.text = frd["Phone number"] as? String
+        if frd["group name"] == nil {
+            
+        } else {
+            cell?.userLabel.text = frd["group name"] as? String
+        }
         print("my image is \(frd["profilepic"]!)")
         
         if frd["profilepic"] as! String == "" {
@@ -185,7 +224,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         usersNumber = frd["Phone number"]! as! String
         if msgkey.count > 0 {
             for avl in 0...msgkey.count - 1 {
-                if msgkey[avl] == "\(phones)\(usersNumber)" || msgkey[avl] == "\(usersNumber)\(phones)" {
+                if msgkey[avl] == "\(phones)\(usersNumber)" || msgkey[avl] == "\(usersNumber)\(phones)" || msgkey[avl] == "\(usersNumber)" {
                     messageId = msgkey[avl]
                     //                print("True -----------")
                     msgstatus = true
@@ -195,6 +234,12 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         mbProgressHUD(text: "Loading..")
         let vc = storyboard?.instantiateViewController(withIdentifier: "ChatConversionCode") as? ChatConversionCode
         vc?.receiverid = usersNumber
+        if frd["group name"] == nil {
+            
+        } else {
+            vc?.receiverid = frd["group name"] as! String
+            vc?.groupK = "yes"
+        }
         mychat()
         vc?.mid = messageId!
         vc?.phoneid = phones

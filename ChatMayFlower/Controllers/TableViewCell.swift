@@ -34,3 +34,7 @@ class TableViewCell: UITableViewCell {
 //var detail:[Datauser] = [
 //
 //]
+
+
+
+
