@@ -66,6 +66,7 @@ class UserDetailsCode: UIViewController {
                                 print("=====ffhhf=======\(ffhhf.count)")
                                 for i in 0...ffhhf.count-1 {
                                     if self!.phones == "+\(ffhhf[i])" {
+                                        print("yes")
                                         self!.usersDetails.append(["group name" : "\(infoMap["group name"]!)" , "Phone number": infoMap["group user"]!, "profilepic": ""])
                                         break
                                     } else {
@@ -222,12 +223,15 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         tabelView.deselectRow(at: indexPath, animated: true)
         let frd = usersDetails[indexPath.row]
         usersNumber = frd["Phone number"]! as! String
+        print("userNumber is \(usersNumber)")
         if msgkey.count > 0 {
             for avl in 0...msgkey.count - 1 {
+                print("msgkey at index  \(msgkey[avl])")
                 if msgkey[avl] == "\(phones)\(usersNumber)" || msgkey[avl] == "\(usersNumber)\(phones)" || msgkey[avl] == "\(usersNumber)" {
                     messageId = msgkey[avl]
-                    //                print("True -----------")
+                    // print("True -----------")
                     msgstatus = true
+                    break
                 }
             }
         }
