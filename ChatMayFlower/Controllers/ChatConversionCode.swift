@@ -21,13 +21,11 @@ import SwiftUI
 class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
     var groupK = "no"
-    
     var replyImageView:UIImageView = UIImageView()
     @IBOutlet weak var bkview: UIView!
     var keyboardheight : Int = 0
     @IBOutlet weak var backgroundSV: UIScrollView!
     private let database = Database.database().reference()
-    var currentUser = ""
     var phoneid = ""                            // current user
     var receiverid = ""                         // receiver user
     @IBOutlet weak var chatTable: UITableView!  // tableview for showing chats
@@ -38,19 +36,15 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     @IBOutlet weak var titl: UINavigationItem!  // title  of  navigation item
     var textFieldBtnStatus = false              // textFieldBtnStatus for get repeating of call uid
     var timer = Timer()                         // for repeatative
-    
     var chatMapKey = [String]()                 // for store key of data
     var chatMap = [[String:[String:Any]]]()     // map of chatting
     var replyChat :[String:String]?             // reply chat with key in
     var replyText : String?                     //passing chat for reply
     var key = [String]()
     var seen : [[String:Bool]] = []             // for store data which is in map format
-    
     var keyBoardStatus = false                  // for showing keyboard
-    
     var replyUser :UILabel?                     // when we swipe for reply this shows usernumber
     var replytxt : UILabel?                     // when we swipe for reply this shows text for which we give reply
-    
     var seenVcStatus = false                    // use for view controller data calling seenStatus
     var seenStatusLabel = ""                    // seenStatusLabel
     var oppositeSeenStatus = false              // for not show seen when receiver sent msg
@@ -62,7 +56,6 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getdata()
-        currentUser = "\(FirebaseAuth.Auth.auth().currentUser)"
         tabBarController?.tabBar.isHidden = true
     }
     
@@ -78,10 +71,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
             
             if seenVcStatus == true {
-                
                 status()
-                
-                
                 if textFieldBtnStatus == true {
                     let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
                     chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
@@ -99,15 +89,10 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         titl.title = receiverid
         //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         //        addImageVideo.addGestureRecognizer(tapGesture)
-        
-        
-        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil);
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil);
     }
-   
-   
     
     @IBAction func backPopBtn(_ sender: UIButton) {
         seenVcStatus = false
@@ -119,7 +104,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         arrayStatus.removeAll()
         counter = 0
         database.child("Chats").child(mid).child("status").observe(.childAdded) {[weak self](snapshot) in
-            if let snap = snapshot.value {
+            if let _ = snapshot.value {
                 
                 if !(self?.arrayStatus.contains(snapshot.key))! {
                     self?.arrayStatus.append(snapshot.key)
@@ -133,7 +118,6 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     if  smf != nil && smf == false {
                         //                        print("all done")
                         self?.database.child("Chats").child(self!.mid).child("status").setValue(["\(self!.phoneid)":true, "\(self!.receiverid)":true])
-                        //    ¸
                     }
                 }
                 if self!.seen.count == 2{
@@ -141,14 +125,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     let aStatus = self?.seen[0]
                     let bStatus = self?.seen[1]
                     if (aStatus?["\(self!.receiverid)"] == true || bStatus?["\(self!.receiverid)"] == true) && ( aStatus?["\(self!.phoneid)"] == false || bStatus?["\(self!.phoneid)"] == false) {
-                        //                        print("Hide footer \(self!.receiverid)")
                         self?.chatTable.tableFooterView = self?.msgsseenfhidefooterview()
                     } else if (aStatus?["\(self!.receiverid)"] == true || aStatus?["\(self!.phoneid)"] == true) && (bStatus?["\(self!.receiverid)"] == true || bStatus?["\(self!.phoneid)"] == true) {
-                        //                        print("message seen \(apex)")
                         self?.seenStatusLabel = "seen"
-                        //
-                        //                            self?.scrollToBottom()
-                        //                        }
                         if self?.oppositeSeenStatus == false {
                             print("Show")
                             self?.lcb = false
@@ -156,53 +135,42 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                                 print("oko")
                                 self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
                                 self?.scrollToBottom()
-//
                                 if self?.seenStatusLabel == "seen" {
                                     self?.toggle = false
                                 }
-                                
                             }
                         }else {
                             if self?.toggle == true {
-//                                self?.chatTable.tableFooterView = self?.msgsseenfhidefooterview()
+                                //                                self?.chatTable.tableFooterView = self?.msgsseenfhidefooterview()
                                 print("hide ")
-                                
                             }
                         }
-                        
                     }
                     else {
                         //                        print("message not seen")
                         self?.seenStatusLabel = "delivered"
                         //                        if self?.toggle == false {
-                        ////                            self?.scrollToBottom()
+                        //                            self?.scrollToBottom()
                         //                        }
                         if self?.lcb == false {
-                        if self?.oppositeSeenStatus == false {
-                            print("sh ")
-                            
-                            if self?.toggle == true {
-                                print("yes ")
-                                self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
-                                self?.scrollToBottom()
-//                                self?.toggle = false
-                                if self?.seenStatusLabel == "delivered" {
-//                                    self?.toggle = false
-                                    self?.lcb = true
+                            if self?.oppositeSeenStatus == false {
+                                if self?.toggle == true {
+                                    print("yes ")
+                                    self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
+                                    self?.scrollToBottom()
+                                    //                                self?.toggle = false
+                                    if self?.seenStatusLabel == "delivered" {
+                                        //                                    self?.toggle = false
+                                        self?.lcb = true
+                                    }
                                 }
+                            } else {
+                                //                            self?.chatTable.tableFooterView = self?.msgsseenfhidefooterview()
+                                print("Hide 1")
                             }
-                        } else {
-//                            self?.chatTable.tableFooterView = self?.msgsseenfhidefooterview()
-                            print("Hide 1")
                         }
-                            
-                        }
-                        
-                        
                     }
                 }
-                
-                
             }
             else {
                 print("No data found")
@@ -218,37 +186,30 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                 return;
             }
             let userName = snapshot?.value;
-            
             self.ui = userName as! Int
             print(self.ui)
         });
-        
-        
     }
-    
-    
     
     // MARK: - Get Chatting from Firebase Database
     func getchat() {
         database.child("Chats").child(mid).child("chatting").observe(.childAdded) {[weak self](snapshot) in
             DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
-                guard let value = snapshot.value as? [String:Any] else {return
+                guard let _ = snapshot.value as? [String:Any] else {return
                     print("Error")
                 }
-                
                 if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
-                    
                     for snap in snapshots {
                         let cata = snap.key
-                        let ques = snap.value!
-                        let  json = snapshot.value as? [String:Any]
+//                        let ques = snap.value!
+//                        let  json = snapshot.value as? [String:Any]
                         if !(self?.key.contains(snapshot.key))! {
                             self?.chatMap.append([snapshot.key :snapshot.value as! [String:Any]])
                             self?.key.append(snapshot.key)
                             self?.chatMapKey.append("\(cata)")
                             self?.chatTable.reloadData()
                             self?.oppositeSeenStatus = false
-//                            self?.toggle = true
+                            //                            self?.toggle = true
                         }
                         self?.textFieldBtnStatus = true
                     }
@@ -257,7 +218,6 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     print("key is \(self!.key)")
                     print("chatMapKey is \(self!.chatMapKey)")
                 }
-                
             }
         }
     }
@@ -370,7 +330,6 @@ extension ChatConversionCode {
             //                print("asset -----===== \(asset)")
             //                print("cgImage  ======= \(cgImage)")
             //                print("thumbnail ========= \(thumbnail)")
-            
             let storageRef = Storage.storage().reference()
             let filename = "chatVideo/\(UUID().uuidString).MOV"
             let fileRef = storageRef.child(filename)
@@ -385,12 +344,10 @@ extension ChatConversionCode {
                                 self.database.child("Uid").setValue(self.ui)
                                 self.database.child("Chats").child(self.mid).child("chatting").child("\(self.ui)").setValue(["\(self.phoneid)chatVideo": urlpth], withCompletionBlock: { error, _ in
                                     guard error == nil else {
-                                        print("Failed to write data")
-                                        
+                                        print("Failed to write data ")
                                         return
                                     }
-                                    print("data written seccess")
-                                    
+                                    print("data written seccess ")
                                     DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                                         picker.dismiss(animated: true)
                                         hideProgress()
@@ -400,20 +357,17 @@ extension ChatConversionCode {
                                 print("Error for download url \(String(describing: error))")
                             }
                         })
-                        
                     } else {
                         print("Error for uploading \(String(describing: error))-----------")
-                        print("Metadata is >>>>>>>>>>>>> \(metadata)")
+//                        print("Metadata is >>>>>>>>>>>>> \(metadata)")
                     }
                 }
+                _ = uploadTask
             }
-            
-            
             
         } else {
             print("*** Error generating thumbnail: ")
         }
-        
         
         if let selectedImage =  info[.originalImage] as? UIImage{
             print("Selected image ",selectedImage)
@@ -441,9 +395,9 @@ extension ChatConversionCode {
 
 // MARK: - Keyboard handling
 extension ChatConversionCode : UITextFieldDelegate{
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        view.endEditing(true)
-//    }
+    //    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    //        view.endEditing(true)
+    //    }
     @objc func keyboardWillShow(sender: NSNotification) {
         
         if keyBoardStatus == false {
@@ -485,8 +439,8 @@ extension ChatConversionCode : UITextFieldDelegate{
             return true
         }
         
-       
-       
+        
+        
     }
     
 }
@@ -551,7 +505,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
             let chatText = chat[uniqueKey]
             let txtChat = chatText?[userNumberKey]
             let abc = chatText?[userNumberKey]  as? [String : Any]  // Use for replying chats
-//            if groupK == "no" {
+            //            if groupK == "no" {
             
             print("chat ================-------\(chat)")
             print("userNumberKey ================-------\(userNumberKey)")
@@ -597,271 +551,49 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                 }
             }
             
-                if abc?["\(phoneid)"] != nil || abc?["\(receiverid)"] != nil ||  abc?["\(receiverid)chatPhoto"] != nil || abc?["\(phoneid)chatPhoto"] != nil || abc?["\(receiverid)chatVideo"] != nil || abc?["\(phoneid)chatVideo"] != nil {
+            if abc?["\(phoneid)"] != nil || abc?["\(receiverid)"] != nil ||  abc?["\(receiverid)chatPhoto"] != nil || abc?["\(phoneid)chatPhoto"] != nil || abc?["\(receiverid)chatVideo"] != nil || abc?["\(phoneid)chatVideo"] != nil {
+                
+                if abc?["\(receiverid)chatPhoto"] != nil || abc?["\(phoneid)chatPhoto"] != nil {
                     
-                    if abc?["\(receiverid)chatPhoto"] != nil || abc?["\(phoneid)chatPhoto"] != nil {
-                        
-                        if chatText?["\(phoneid)"] == nil {
-                            let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyImageCell") as? ReceiverReplyImageCell
-                            
-                            if groupK == "yes" {
-                                var checking = mid.split(separator: "+")
-                                for i in  0...checking.count-1 {
-                                    if chatText?["+\(checking[i])"] != nil {
-                                        print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
-                                        cell?.receiverreply.text = chatText?["+\(checking[i])"] as? String
-                                        cell?.receiverNumber.text = "+\(checking[i])"
-                                        break
-                                    }
-                                }
-                            } else {
-                                cell?.receiverreply.text = chatText?["\(receiverid)"] as? String
-                            }
-                            if abc?["\(receiverid)chatPhoto"] == nil {
-                                let bar = abc?["\(phoneid)chatPhoto"] as? String
-                                cell?.confi(videoUrl: bar!)
-                                cell?.user.text = "You"
-                            } else {
-                                let bar = abc?["\(receiverid)chatPhoto"] as? String
-                                //                            print("-=-=-=-====-=-= \(bar!)")
-                                cell?.confi(videoUrl: bar!)
-                                cell?.user.text = "\(receiverid)"
-                            }
-                            
-                            if abc?["\(receiverid)text"] == nil {
-                                cell?.receivermsg.text = abc?["\(phoneid)text"] as? String
-                                
-                                if abc?["\(phoneid)text"] == nil {
-                                    cell?.receivermsg.text = "Photo"
-                                }
-                            } else {
-                                cell?.receivermsg.text = abc?["\(receiverid)text"] as? String
-                                
-                                if abc?["\(receiverid)text"] == nil {
-                                    cell?.receivermsg.text = "Photo"
-                                    
+                    if chatText?["\(phoneid)"] == nil {
+                        let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyImageCell") as? ReceiverReplyImageCell
+                        if groupK == "yes" {
+                            let checking = mid.split(separator: "+")
+                            for i in  0...checking.count-1 {
+                                if chatText?["+\(checking[i])"] != nil {
+//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    cell?.receiverreply.text = chatText?["+\(checking[i])"] as? String
+                                    cell?.receiverNumber.text = "+\(checking[i])"
+                                    break
                                 }
                             }
-                            cell?.selectionStyle = .none
-                            if indexPath.row == chatMapKey.count-1 {
-                                if oppositeSeenStatus == false {
-                                    chatTable.tableFooterView = msgsseenfhidefooterview()
-                                    oppositeSeenStatus = true
-                                    toggle = false
-                                }
-                            }
-                            return cell!
-                            
                         } else {
-                            let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyImageCell") as? SenderReplyImageCell
-                            
-                            
-                            if groupK == "yes" {
-                                var checking = mid.split(separator: "+")
-                                for i in  0...checking.count-1 {
-                                    if chatText?["+\(checking[i])"] != nil {
-                                        print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
-                                        cell?.senderreply.text = chatText?["+\(checking[i])"] as? String
-                                        cell?.senderNumber.text = "you"
-                                        break
-                                    }
-                                }
-                            } else {
-                                cell?.senderreply.text = chatText?["\(phoneid)"] as? String
-                            }
-                            
-                            if abc?["\(receiverid)chatPhoto"] == nil {
-                                let bar = abc?["\(phoneid)chatPhoto"] as? String
-                                cell?.confi(videoUrl: bar!)
-                                cell?.user.text = "You"
-                            } else {
-                                let bar = abc?["\(receiverid)chatPhoto"] as? String
-                                print("-=-=-=-====-=-= \(bar!)")
-                                cell?.confi(videoUrl: bar!)
-                                cell?.user.text = "\(receiverid)"
-                            }
-                            
-                            
-                            if abc?["\(receiverid)text"] == nil {
-                                cell?.sendermsg.text = abc?["\(phoneid)text"] as? String
-                                
-                                if abc?["\(phoneid)text"] == nil {
-                                    cell?.sendermsg.text = "Photo"
-                                    print("yahh")
-                                }
-                            } else {
-                                cell?.sendermsg.text = abc?["\(receiverid)text"] as? String
-                                
-                                if abc?["\(receiverid)text"] == nil {
-                                    cell?.sendermsg.text = "Photo"
-                                    
-                                }
-                            }
-                            cell?.selectionStyle = .none
-                            if indexPath.row == chatMapKey.count-1 {
-                                toggle = true
-                            }
-                            return cell!
+                            cell?.receiverreply.text = chatText?["\(receiverid)"] as? String
                         }
-                    } else if abc?["\(receiverid)chatVideo"] != nil || abc?["\(phoneid)chatVideo"] != nil {
-                        
-                        if chatText?["\(phoneid)"] == nil {
-                            let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyImageCell") as? ReceiverReplyImageCell
-                            print("Of course jii \(chatText?["\(receiverid)"])")
-                            
-                            if groupK == "yes" {
-                                var checking = mid.split(separator: "+")
-                                for i in  0...checking.count-1 {
-                                    if chatText?["+\(checking[i])"] != nil {
-                                        print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
-                                        cell?.receiverreply.text = chatText?["+\(checking[i])"] as? String
-                                        cell?.receiverNumber.text = "+\(checking[i])"
-                                        break
-                                    }
-                                }
-                            } else {
-                                cell?.receiverreply.text = chatText?["\(receiverid)"] as? String
-                            }
-                            if abc?["\(receiverid)chatVideo"] == nil {
-                                let bar = abc?["\(phoneid)chatVideo"] as? String
-                                cell?.videocon(videoUrl: bar!)
-                                cell?.user.text = "You"
-                                //                            print("=================\(phoneid)===============================")
-                            } else {
-                                let bar = abc?["\(receiverid)chatVideo"] as? String
-                                //                            print("-=-=-=-====-=-= \(bar!)")
-                                cell?.user.text = "\(receiverid)"
-                                cell?.videocon(videoUrl: bar!)
-                                //                            print("\(receiverid)")
-                            }
-                            
-                            if abc?["\(receiverid)text"] == nil {
-                                cell?.receivermsg.text = abc?["\(phoneid)text"] as? String
-                                
-                                if abc?["\(phoneid)text"] == nil {
-                                    cell?.receivermsg.text = "Video"
-                                }
-                            } else {
-                                cell?.receivermsg.text = abc?["\(receiverid)text"] as? String
-                                
-                                if abc?["\(receiverid)text"] == nil {
-                                    cell?.receivermsg.text = "Video"
-                                    
-                                }
-                            }
-                            cell?.selectionStyle = .none
-                            if indexPath.row == chatMapKey.count-1 {
-                                if oppositeSeenStatus == false {
-                                    chatTable.tableFooterView = msgsseenfhidefooterview()
-                                    oppositeSeenStatus = true
-                                    toggle = false
-                                }
-                            }
-                            return cell!
-                            
-                        } else {
-                            let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyImageCell") as? SenderReplyImageCell
-                            
-                            if groupK == "yes" {
-                                var checking = mid.split(separator: "+")
-                                for i in  0...checking.count-1 {
-                                    if chatText?["+\(checking[i])"] != nil {
-                                        print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
-                                        cell?.senderreply.text = chatText?["+\(checking[i])"] as? String
-                                        cell?.senderNumber.text = "you"
-                                        break
-                                    }
-                                }
-                            } else {
-                                cell?.senderreply.text = chatText?["\(phoneid)"] as? String
-                            }
-                            if abc?["\(receiverid)chatVideo"] == nil {
-                                let bar = abc?["\(phoneid)chatVideo"] as? String
-                                cell?.videocon(videoUrl: bar!)
-                                cell?.user.text = "You"
-                            } else {
-                                let bar = abc?["\(receiverid)chatVideo"] as? String
-                                //                            print("-=-=-=-====-=-= \(bar!)")
-                                cell?.videocon(videoUrl: bar!)
-                                cell?.user.text = "\(receiverid)"
-                            }
-                            
-                            
-                            if abc?["\(receiverid)text"] == nil {
-                                cell?.sendermsg.text = abc?["\(phoneid)text"] as? String
-                                
-                                if abc?["\(phoneid)text"] == nil {
-                                    cell?.sendermsg.text = "Video"
-                                    //                                print("yahh")
-                                }
-                            } else {
-                                cell?.sendermsg.text = abc?["\(receiverid)text"] as? String
-                                
-                                if abc?["\(receiverid)text"] == nil {
-                                    cell?.sendermsg.text = "Video"
-                                    
-                                }
-                            }
-                            cell?.selectionStyle = .none
-                            if indexPath.row == chatMapKey.count-1 {
-                                toggle = true
-                            }
-                            return cell!
-                        }
-                    }
-                    else if chatText?["\(phoneid)"] == nil {
-                                            print("Message Reply of receiver is \(abc?["\(receiverid)"])")
-                        let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyViewCell") as? ReceiverReplyViewCell
-                        if abc?["\(receiverid)"] == nil{
-                            cell?.receiverMessages.text = abc?["\(phoneid)"] as? String
+                        if abc?["\(receiverid)chatPhoto"] == nil {
+                            let bar = abc?["\(phoneid)chatPhoto"] as? String
+                            cell?.confi(videoUrl: bar!)
                             cell?.user.text = "You"
-                            print("yup")
                         } else {
-                            print("yup1   \(chatText?["\(phoneid)"])")
-                            cell?.receiverMessages.text = abc?["\(receiverid)"] as? String
+                            let bar = abc?["\(receiverid)chatPhoto"] as? String
+                            //                            print("-=-=-=-====-=-= \(bar!)")
+                            cell?.confi(videoUrl: bar!)
                             cell?.user.text = "\(receiverid)"
                         }
-                        if chatText?["\(receiverid)"] == nil {
-                            print("nop   \(chatText?["\(phoneid)"])")
-                            
-                            if groupK == "yes" {
-                                var checking = mid.split(separator: "+")
-                                for i in  0...checking.count-1 {
-                                    if chatText?["+\(checking[i])"] != nil {
-                                        print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
-                                        cell?.receiverReply.text = chatText?["+\(checking[i])"] as? String
-                                        cell?.receiverNumber.text = "+\(checking[i])"
-                                        break
-                                    }
-                                }
-                            } else {
-                                cell?.receiverReply.text = chatText?["\(phoneid)"] as? String
-                                if groupK == "yes" {
-                                    cell?.receiverNumber.text = "\(receiverid)"
-                                }
-                            }
-                            
-                        } else {
-                            print("nop1")
-                            if groupK == "yes"{
-                                var checking = mid.split(separator: "+")
-                                for i in  0...checking.count-1 {
-                                    if chatText?["+\(checking[i])"] != nil {
-                                        print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
-                                        cell?.receiverReply.text = chatText?["+\(checking[i])"] as? String
-                                        cell?.receiverNumber.text = "+\(checking[i])"
-                                        break
-                                    }
-                                }
-                            } else {
-                                cell?.receiverReply.text = chatText?["\(receiverid)"] as? String
-                                if groupK == "yes" {
-                                    cell?.receiverNumber.text = "\(receiverid)"
-                                }
-                            }
-                            
-                        }
                         
+                        if abc?["\(receiverid)text"] == nil {
+                            cell?.receivermsg.text = abc?["\(phoneid)text"] as? String
+                            
+                            if abc?["\(phoneid)text"] == nil {
+                                cell?.receivermsg.text = "Photo"
+                            }
+                        } else {
+                            cell?.receivermsg.text = abc?["\(receiverid)text"] as? String
+                            
+                            if abc?["\(receiverid)text"] == nil {
+                                cell?.receivermsg.text = "Photo"
+                            }
+                        }
                         cell?.selectionStyle = .none
                         if indexPath.row == chatMapKey.count-1 {
                             if oppositeSeenStatus == false {
@@ -871,56 +603,137 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             }
                         }
                         return cell!
-                    }
-                    else if chatText?["\(receiverid)"] == nil {
-                                            print("Message Reply of sender is \(abc?["\(phoneid)"])")
-                        let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyViewCell") as? SenderReplyViewCell
-                        if abc?["\(phoneid)"] == nil {
-                            
-                            cell?.senderMessages.text = abc?["\(receiverid)"] as? String
-                            cell?.user.text = "\(receiverid)"
-                        } else {
-                            cell?.senderMessages.text = abc?["\(phoneid)"] as? String
-                            cell?.user.text = "You"
-                            print("\(mid) ================-------\(abc?["\(phoneid)"])")
-                        }
-                        if chatText?["\(phoneid)"] == nil {
-                            if groupK == "yes"{
-                                var checking = mid.split(separator: "+")
-                                for i in  0...checking.count-1 {
-                                    if chatText?["+\(checking[i])"] != nil {
-                                        print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
-                                        cell?.senderReply.text = chatText?["+\(checking[i])"] as? String
-                                        break
-                                    }
-                                }
-                            }else {
-                                cell?.senderReply.text = chatText?["\(receiverid)"] as? String
-                            }
-                            
-                        }
-                        else {
-//                            if groupK == "yes" {
-//                                var kepp = mid.split(separator: "+")
-//                            }
-                            if groupK == "yes"{
-                                var checking = mid.split(separator: "+")
-                                for i in  0...checking.count-1 {
-                                    if chatText?["+\(checking[i])"] != nil {
-                                        print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
-                                        cell?.senderReply.text = chatText?["+\(checking[i])"] as? String
-                                        break
-                                    }
-                                }
-                            }else {
-                                print("\(mid) ================-------\(chatText?["\(phoneid)"])")
-                                cell?.senderReply.text = chatText?["\(phoneid)"] as? String
-                            }
-                            
-                        }
+                    } else {
+                        let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyImageCell") as? SenderReplyImageCell
                         if groupK == "yes" {
-                            cell?.senderNumber.text = "You"
-                           
+                            let checking = mid.split(separator: "+")
+                            for i in  0...checking.count-1 {
+                                if chatText?["+\(checking[i])"] != nil {
+//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    cell?.senderreply.text = chatText?["+\(checking[i])"] as? String
+                                    cell?.senderNumber.text = "you"
+                                    break
+                                }
+                            }
+                        } else {
+                            cell?.senderreply.text = chatText?["\(phoneid)"] as? String
+                        }
+                        if abc?["\(receiverid)chatPhoto"] == nil {
+                            let bar = abc?["\(phoneid)chatPhoto"] as? String
+                            cell?.confi(videoUrl: bar!)
+                            cell?.user.text = "You"
+                        } else {
+                            let bar = abc?["\(receiverid)chatPhoto"] as? String
+                            print("-=-=-=-====-=-= \(bar!)")
+                            cell?.confi(videoUrl: bar!)
+                            cell?.user.text = "\(receiverid)"
+                        }
+                        if abc?["\(receiverid)text"] == nil {
+                            cell?.sendermsg.text = abc?["\(phoneid)text"] as? String
+                            
+                            if abc?["\(phoneid)text"] == nil {
+                                cell?.sendermsg.text = "Photo"
+                                print("yahh")
+                            }
+                        } else {
+                            cell?.sendermsg.text = abc?["\(receiverid)text"] as? String
+                            
+                            if abc?["\(receiverid)text"] == nil {
+                                cell?.sendermsg.text = "Photo"
+                            }
+                        }
+                        cell?.selectionStyle = .none
+                        if indexPath.row == chatMapKey.count-1 {
+                            toggle = true
+                        }
+                        return cell!
+                    }
+                } else if abc?["\(receiverid)chatVideo"] != nil || abc?["\(phoneid)chatVideo"] != nil {
+                    if chatText?["\(phoneid)"] == nil {
+                        let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyImageCell") as? ReceiverReplyImageCell
+//                        print("Of course jii \(chatText?["\(receiverid)"])")
+                        if groupK == "yes" {
+                            let checking = mid.split(separator: "+")
+                            for i in  0...checking.count-1 {
+                                if chatText?["+\(checking[i])"] != nil {
+//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    cell?.receiverreply.text = chatText?["+\(checking[i])"] as? String
+                                    cell?.receiverNumber.text = "+\(checking[i])"
+                                    break
+                                }
+                            }
+                        } else {
+                            cell?.receiverreply.text = chatText?["\(receiverid)"] as? String
+                        }
+                        if abc?["\(receiverid)chatVideo"] == nil {
+                            let bar = abc?["\(phoneid)chatVideo"] as? String
+                            cell?.videocon(videoUrl: bar!)
+                            cell?.user.text = "You"
+                        } else {
+                            let bar = abc?["\(receiverid)chatVideo"] as? String
+                            cell?.user.text = "\(receiverid)"
+                            cell?.videocon(videoUrl: bar!)
+                        }
+                        
+                        if abc?["\(receiverid)text"] == nil {
+                            cell?.receivermsg.text = abc?["\(phoneid)text"] as? String
+                            if abc?["\(phoneid)text"] == nil {
+                                cell?.receivermsg.text = "Video"
+                            }
+                        } else {
+                            cell?.receivermsg.text = abc?["\(receiverid)text"] as? String
+                            if abc?["\(receiverid)text"] == nil {
+                                cell?.receivermsg.text = "Video"
+                                
+                            }
+                        }
+                        cell?.selectionStyle = .none
+                        if indexPath.row == chatMapKey.count-1 {
+                            if oppositeSeenStatus == false {
+                                chatTable.tableFooterView = msgsseenfhidefooterview()
+                                oppositeSeenStatus = true
+                                toggle = false
+                            }
+                        }
+                        return cell!
+                        
+                    } else {
+                        let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyImageCell") as? SenderReplyImageCell
+                        
+                        if groupK == "yes" {
+                            let checking = mid.split(separator: "+")
+                            for i in  0...checking.count-1 {
+                                if chatText?["+\(checking[i])"] != nil {
+//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    cell?.senderreply.text = chatText?["+\(checking[i])"] as? String
+                                    cell?.senderNumber.text = "you"
+                                    break
+                                }
+                            }
+                        } else {
+                            cell?.senderreply.text = chatText?["\(phoneid)"] as? String
+                        }
+                        if abc?["\(receiverid)chatVideo"] == nil {
+                            let bar = abc?["\(phoneid)chatVideo"] as? String
+                            cell?.videocon(videoUrl: bar!)
+                            cell?.user.text = "You"
+                        } else {
+                            let bar = abc?["\(receiverid)chatVideo"] as? String
+                            //                            print("-=-=-=-====-=-= \(bar!)")
+                            cell?.videocon(videoUrl: bar!)
+                            cell?.user.text = "\(receiverid)"
+                        }
+                        if abc?["\(receiverid)text"] == nil {
+                            cell?.sendermsg.text = abc?["\(phoneid)text"] as? String
+                            if abc?["\(phoneid)text"] == nil {
+                                cell?.sendermsg.text = "Video"
+                            }
+                        } else {
+                            cell?.sendermsg.text = abc?["\(receiverid)text"] as? String
+                            
+                            if abc?["\(receiverid)text"] == nil {
+                                cell?.sendermsg.text = "Video"
+                            }
                         }
                         cell?.selectionStyle = .none
                         if indexPath.row == chatMapKey.count-1 {
@@ -929,134 +742,163 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         return cell!
                     }
                 }
-                else {
-                    
-                    if userNumberKey == "\(phoneid)chatPhoto" || userNumberKey == "\(receiverid)chatPhoto" || userNumberKey == "chatPhoto" || (userNumberKey == receiverid && bollk == true) {
-                        print("calleee \(receiverid)")
-                        if userNumberKey == "\(receiverid)chatPhoto" || (userNumberKey == receiverid && bollk == true) {
-                            if txtChat as! String != "" {
-                                let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
-                                cell?.receiverComentImage.text = chatText?["\(receiverid)text"] as? String
-                                if groupK == "yes" {
-                                    cell?.receiverNumber.text = "\(userNumberKey)"
+                else if chatText?["\(phoneid)"] == nil {
+//                    print("Message Reply of receiver is \(abc?["\(receiverid)"])")
+                    let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyViewCell") as? ReceiverReplyViewCell
+                    if abc?["\(receiverid)"] == nil{
+                        cell?.receiverMessages.text = abc?["\(phoneid)"] as? String
+                        cell?.user.text = "You"
+                        print("yup")
+                    } else {
+//                        print("yup1   \(chatText?["\(phoneid)"])")
+                        cell?.receiverMessages.text = abc?["\(receiverid)"] as? String
+                        cell?.user.text = "\(receiverid)"
+                    }
+                    if chatText?["\(receiverid)"] == nil {
+//                        print("nop   \(chatText?["\(phoneid)"])")
+                        if groupK == "yes" {
+                            let checking = mid.split(separator: "+")
+                            for i in  0...checking.count-1 {
+                                if chatText?["+\(checking[i])"] != nil {
+//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    cell?.receiverReply.text = chatText?["+\(checking[i])"] as? String
+                                    cell?.receiverNumber.text = "+\(checking[i])"
+                                    break
                                 }
-                                let url = URL(string: txtChat  as! String)
-                                cell?.photos.kf.setImage(with: url)
-                                cell?.selectionStyle = .none
-                                if indexPath.row == chatMapKey.count-1 {
-                                    chatTable.tableFooterView = msgsseenfhidefooterview()
-                                    oppositeSeenStatus = true
-                                    toggle = false
-                                }
-                                return cell!
+                            }
+                        } else {
+                            cell?.receiverReply.text = chatText?["\(phoneid)"] as? String
+                            if groupK == "yes" {
+                                cell?.receiverNumber.text = "\(receiverid)"
                             }
                         }
-                        else  if userNumberKey == "\(phoneid)chatPhoto" {
-                            if txtChat as! String != "" {
-                                
-                                let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderImageChatCell") as? SenderImageChatCell
-                                cell?.senderImageComment.text = chatText?["\(phoneid)text"] as? String
-                                if groupK == "yes" {
-                                    cell?.senderNumber.text = "You"
+                    } else {
+                        print("nop1")
+                        if groupK == "yes"{
+                            let checking = mid.split(separator: "+")
+                            for i in  0...checking.count-1 {
+                                if chatText?["+\(checking[i])"] != nil {
+//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    cell?.receiverReply.text = chatText?["+\(checking[i])"] as? String
+                                    cell?.receiverNumber.text = "+\(checking[i])"
+                                    break
                                 }
-                                let url = URL(string: txtChat  as! String)
-                                cell?.senderImage.kf.setImage(with: url)
-                                cell?.selectionStyle = .none
-                                if indexPath.row == chatMapKey.count-1 {
-                                    toggle = true
-                                }
-                                return cell!
                             }
-                        }else {
-                            if txtChat as! String != "" {
-                                let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
-                                let url = URL(string: txtChat as! String)
-                                cell?.photos.kf.setImage(with: url)
-                                cell?.selectionStyle = .none
-                                if indexPath.row == chatMapKey.count-1 {
-                                    if oppositeSeenStatus == false {
-                                        chatTable.tableFooterView = msgsseenfhidefooterview()
-                                        oppositeSeenStatus = true
-                                        toggle = false
-                                    }
-                                }
-                                return cell!
-                            }
-                        }
-                        
-                    } else if userNumberKey == "\(phoneid)chatVideo" || userNumberKey == "\(receiverid)chatVideo" || (userNumberKey == receiverid && forfolk == true) {
-                        print("video is colled")
-                        if userNumberKey == "\(receiverid)chatVideo" || (userNumberKey == receiverid && forfolk == true){
-                            if txtChat as! String != "" {
-                                print("\(txtChat)")
-                                let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverVideoCell") as? ReceiverVideoCell
-                                cell?.confi(videoUrl: txtChat  as! String)
-                                if groupK == "yes" {
-                                    cell?.receiverNumber.text = "\(userNumberKey)"
-                                }
-                                cell?.selectionStyle = .none
-                                if indexPath.row == chatMapKey.count-1 {
-                                    if oppositeSeenStatus == false {
-                                        chatTable.tableFooterView = msgsseenfhidefooterview()
-                                        oppositeSeenStatus = true
-                                        toggle = false
-                                    }
-                                }
-                                return cell!
-                            }
-                        }
-                        else  if userNumberKey == "\(phoneid)chatVideo" {
-                            print("Ok my video")
-                            if txtChat as! String != "" {
-                                //                        print("MY VIDEO URL IS -------\(txtChat)")
-                                let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderVideoCell") as? SenderVideoCell
-                                cell?.confi(videoUrl: txtChat  as! String)
-                                if groupK == "yes" {
-                                    cell?.senderNumber.text = "You"
-                                }
-                                cell?.selectionStyle = .none
-                                if indexPath.row == chatMapKey.count-1 {
-                                    toggle = true
-                                }
-                                return cell!
-                            }
-                        }else {
-                            if txtChat as! String != "" {
-                                let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
-                                let url = URL(string: txtChat  as! String)
-                                cell?.photos.kf.setImage(with: url)
-                                cell?.selectionStyle = .none
-                                if indexPath.row == chatMapKey.count-1 {
-                                    if oppositeSeenStatus == false {
-                                        chatTable.tableFooterView = msgsseenfhidefooterview()
-                                        oppositeSeenStatus = true
-                                        toggle = false
-                                    }
-                                }
-                                return cell!
+                        } else {
+                            cell?.receiverReply.text = chatText?["\(receiverid)"] as? String
+                            if groupK == "yes" {
+                                cell?.receiverNumber.text = "\(receiverid)"
                             }
                         }
                     }
+                    cell?.selectionStyle = .none
+                    if indexPath.row == chatMapKey.count-1 {
+                        if oppositeSeenStatus == false {
+                            chatTable.tableFooterView = msgsseenfhidefooterview()
+                            oppositeSeenStatus = true
+                            toggle = false
+                        }
+                    }
+                    return cell!
+                }
+                else if chatText?["\(receiverid)"] == nil {
+//                    print("Message Reply of sender is \(abc?["\(phoneid)"])")
+                    let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyViewCell") as? SenderReplyViewCell
+                    if abc?["\(phoneid)"] == nil {
+                        
+                        cell?.senderMessages.text = abc?["\(receiverid)"] as? String
+                        cell?.user.text = "\(receiverid)"
+                    } else {
+                        cell?.senderMessages.text = abc?["\(phoneid)"] as? String
+                        cell?.user.text = "You"
+//                        print("\(mid) ================-------\(abc?["\(phoneid)"])")
+                    }
+                    if chatText?["\(phoneid)"] == nil {
+                        if groupK == "yes"{
+                            let checking = mid.split(separator: "+")
+                            for i in  0...checking.count-1 {
+                                if chatText?["+\(checking[i])"] != nil {
+//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    cell?.senderReply.text = chatText?["+\(checking[i])"] as? String
+                                    break
+                                }
+                            }
+                        }else {
+                            cell?.senderReply.text = chatText?["\(receiverid)"] as? String
+                        }
+                    }
                     else {
-                        if phoneid == userNumberKey || "\(phoneid)text" == userNumberKey {
-                            let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderViewCell", for: indexPath) as? SenderViewCell
-                            cell?.senderMessage.text = "\(txtChat!)"
+                        //                            if groupK == "yes" {
+                        //                                var kepp = mid.split(separator: "+")
+                        //                            }
+                        if groupK == "yes"{
+                            let checking = mid.split(separator: "+")
+                            for i in  0...checking.count-1 {
+                                if chatText?["+\(checking[i])"] != nil {
+//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    cell?.senderReply.text = chatText?["+\(checking[i])"] as? String
+                                    break
+                                }
+                            }
+                        }else {
+//                            print("\(mid) ================-------\(chatText?["\(phoneid)"])")
+                            cell?.senderReply.text = chatText?["\(phoneid)"] as? String
+                        }
+                    }
+                    if groupK == "yes" {
+                        cell?.senderNumber.text = "You"
+                        
+                    }
+                    cell?.selectionStyle = .none
+                    if indexPath.row == chatMapKey.count-1 {
+                        toggle = true
+                    }
+                    return cell!
+                }
+            }
+            else {
+                if userNumberKey == "\(phoneid)chatPhoto" || userNumberKey == "\(receiverid)chatPhoto" || userNumberKey == "chatPhoto" || (userNumberKey == receiverid && bollk == true) {
+                    print("calleee \(receiverid)")
+                    if userNumberKey == "\(receiverid)chatPhoto" || (userNumberKey == receiverid && bollk == true) {
+                        if txtChat as! String != "" {
+                            let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
+                            cell?.receiverComentImage.text = chatText?["\(receiverid)text"] as? String
+                            if groupK == "yes" {
+                                cell?.receiverNumber.text = "\(userNumberKey)"
+                            }
+                            let url = URL(string: txtChat  as! String)
+                            cell?.photos.kf.setImage(with: url)
                             cell?.selectionStyle = .none
+                            if indexPath.row == chatMapKey.count-1 {
+                                chatTable.tableFooterView = msgsseenfhidefooterview()
+                                oppositeSeenStatus = true
+                                toggle = false
+                            }
+                            return cell!
+                        }
+                    }
+                    else  if userNumberKey == "\(phoneid)chatPhoto" {
+                        if txtChat as! String != "" {
+                            
+                            let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderImageChatCell") as? SenderImageChatCell
+                            cell?.senderImageComment.text = chatText?["\(phoneid)text"] as? String
                             if groupK == "yes" {
                                 cell?.senderNumber.text = "You"
                             }
+                            let url = URL(string: txtChat  as! String)
+                            cell?.senderImage.kf.setImage(with: url)
+                            cell?.selectionStyle = .none
                             if indexPath.row == chatMapKey.count-1 {
                                 toggle = true
                             }
                             return cell!
                         }
-                        else {
-                            let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverViewCell", for: indexPath) as? ReceiverViewCell
-                            cell?.receiverMessages.text = "\(txtChat!)"
+                    }else {
+                        if txtChat as! String != "" {
+                            let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
+                            let url = URL(string: txtChat as! String)
+                            cell?.photos.kf.setImage(with: url)
                             cell?.selectionStyle = .none
-                            if groupK == "yes" {
-                                cell?.receiverNumber.text = "\(userNumberKey)"
-                            }
                             if indexPath.row == chatMapKey.count-1 {
                                 if oppositeSeenStatus == false {
                                     chatTable.tableFooterView = msgsseenfhidefooterview()
@@ -1066,38 +908,92 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                             }
                             return cell!
                         }
-                        //        }
+                    }
+                    
+                } else if userNumberKey == "\(phoneid)chatVideo" || userNumberKey == "\(receiverid)chatVideo" || (userNumberKey == receiverid && forfolk == true) {
+                    print("video is colled")
+                    if userNumberKey == "\(receiverid)chatVideo" || (userNumberKey == receiverid && forfolk == true){
+                        if txtChat as! String != "" {
+//                            print("\(txtChat)")
+                            let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverVideoCell") as? ReceiverVideoCell
+                            cell?.confi(videoUrl: txtChat  as! String)
+                            if groupK == "yes" {
+                                cell?.receiverNumber.text = "\(userNumberKey)"
+                            }
+                            cell?.selectionStyle = .none
+                            if indexPath.row == chatMapKey.count-1 {
+                                if oppositeSeenStatus == false {
+                                    chatTable.tableFooterView = msgsseenfhidefooterview()
+                                    oppositeSeenStatus = true
+                                    toggle = false
+                                }
+                            }
+                            return cell!
+                        }
+                    }
+                    else  if userNumberKey == "\(phoneid)chatVideo" {
+                        print("Ok my video")
+                        if txtChat as! String != "" {
+                            //                        print("MY VIDEO URL IS -------\(txtChat)")
+                            let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderVideoCell") as? SenderVideoCell
+                            cell?.confi(videoUrl: txtChat  as! String)
+                            if groupK == "yes" {
+                                cell?.senderNumber.text = "You"
+                            }
+                            cell?.selectionStyle = .none
+                            if indexPath.row == chatMapKey.count-1 {
+                                toggle = true
+                            }
+                            return cell!
+                        }
+                    }else {
+                        if txtChat as! String != "" {
+                            let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
+                            let url = URL(string: txtChat  as! String)
+                            cell?.photos.kf.setImage(with: url)
+                            cell?.selectionStyle = .none
+                            if indexPath.row == chatMapKey.count-1 {
+                                if oppositeSeenStatus == false {
+                                    chatTable.tableFooterView = msgsseenfhidefooterview()
+                                    oppositeSeenStatus = true
+                                    toggle = false
+                                }
+                            }
+                            return cell!
+                        }
                     }
                 }
-//            }
-//            else {
-//                if abc?["\(phoneid)"] != nil || abc?["\(phoneid)chatPhoto"] != nil || abc?["\(phoneid)chatVideo"] != nil {
-//                    if abc?["\(phoneid)chatPhoto"] != nil {
-//                        if chatText?["\(phoneid)"] != nil {
-//                            let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyImageCell") as? SenderReplyImageCell
-//                            cell?.senderreply.text = chatText?["\(phoneid)"] as? String
-//                            if abc?["\(phoneid)chatPhoto"] != nil {
-//                                let bar = abc?["\(phoneid)chatPhoto"] as? String
-//                                cell?.confi(videoUrl: bar!)
-//                                cell?.user.text = "You"
-//                            }
-//
-//                            if abc?["\(phoneid)text"] != nil {
-//                                cell?.sendermsg.text = abc?["\(phoneid)text"] as? String
-//
-//                                if abc?["\(phoneid)text"] == nil {
-//                                    cell?.sendermsg.text = "Photo"
-//                                    print("yahh")
-//                                }
-//                            }
-//
-//                        }
-//                    }
-//
-//                } else if abc?["\(phoneid)"] != nil || abc?["\(phoneid)chatPhoto"] != nil || abc?["\(phoneid)chatVideo"] != nil {
-//
-//                }
-//            }
+                else {
+                    if phoneid == userNumberKey || "\(phoneid)text" == userNumberKey {
+                        let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderViewCell", for: indexPath) as? SenderViewCell
+                        cell?.senderMessage.text = "\(txtChat!)"
+                        cell?.selectionStyle = .none
+                        if groupK == "yes" {
+                            cell?.senderNumber.text = "You"
+                        }
+                        if indexPath.row == chatMapKey.count-1 {
+                            toggle = true
+                        }
+                        return cell!
+                    }
+                    else {
+                        let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverViewCell", for: indexPath) as? ReceiverViewCell
+                        cell?.receiverMessages.text = "\(txtChat!)"
+                        cell?.selectionStyle = .none
+                        if groupK == "yes" {
+                            cell?.receiverNumber.text = "\(userNumberKey)"
+                        }
+                        if indexPath.row == chatMapKey.count-1 {
+                            if oppositeSeenStatus == false {
+                                chatTable.tableFooterView = msgsseenfhidefooterview()
+                                oppositeSeenStatus = true
+                                toggle = false
+                            }
+                        }
+                        return cell!
+                    }
+                }
+            }
         }
         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderViewCell", for: indexPath) as? SenderViewCell
         cell?.selectionStyle = .none
@@ -1137,12 +1033,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                 replyText = uniqueKey
                 let action = UIContextualAction(style: .normal,
                                                 title: "↩️") { [weak self] (action, view, completionHandler) in
-                    
                     self?.handleMarkAsFavourite(chats: msg , user: self!.receiverid)
-                    
                     completionHandler(true)
                 }
-            
                 action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
                 return UISwipeActionsConfiguration(actions: [action])
             } else {
@@ -1155,14 +1048,10 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                     replyChat = ["\(self.phoneid)" : "\(myyo!["\(self.phoneid)"]!)"]
                     msg = myyo!["\(self.phoneid)"] as! String
                 }
-                
-                
                 replyText = uniqueKey
                 let action = UIContextualAction(style: .normal,
                                                 title: "↩️") { [weak self] (action, view, completionHandler) in
-                    
                     self?.handleMarkAsFavourite(chats: msg , user: self!.phoneid)
-                    
                     completionHandler(true)
                 }
                 action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
@@ -1170,42 +1059,34 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
             }
         } else {
             if userNumberKey == "\(phoneid)chatPhoto" || userNumberKey == "\(receiverid)chatPhoto" {
-                print("my chat photo, \(userNumberKey)------chat \(replyChat)===")
+//                print("my chat photo, \(userNumberKey)------chat \(replyChat)===")
                 if userNumberKey == "\(phoneid)chatPhoto" {
                     
                     if replyChat?["\(phoneid)text"] == nil{
                         print("my photo")
                         let action = UIContextualAction(style: .normal,
                                                         title: "↩️") { [weak self] (action, view, completionHandler) in
-                            
                             self?.replyforPhotos(chats: "Photo" , user:userNumberKey ,photourl: txtChat ?? "")
-                            
                             completionHandler(true)
                         }
                         action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
                         return UISwipeActionsConfiguration(actions: [action])
                     } else {
                         print("my  IOIOIOIOIOIOIs")
-                        
                         let action = UIContextualAction(style: .normal,
                                                         title: "↩️") { [weak self] (action, view, completionHandler) in
-                            
                             self?.replyforPhotos(chats: self?.replyChat?["\(self!.phoneid)text"] ?? "" , user:userNumberKey ,photourl: txtChat ?? "")
-                            
                             completionHandler(true)
                         }
                         action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
                         return UISwipeActionsConfiguration(actions: [action])
                     }
-                    
                 } else {
                     if replyChat?["\(receiverid)text"] == nil  {
                         print("rec photo")
                         let action = UIContextualAction(style: .normal,
                                                         title: "↩️") { [weak self] (action, view, completionHandler) in
-                            
                             self?.replyforPhotos(chats: "" , user:userNumberKey ,photourl: txtChat ?? "")
-                            
                             completionHandler(true)
                         }
                         action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
@@ -1214,9 +1095,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         print("rec  IOIOIOIOIOIOIs")
                         let action = UIContextualAction(style: .normal,
                                                         title: "↩️") { [weak self] (action, view, completionHandler) in
-                            
                             self?.replyforPhotos(chats: self?.replyChat?["\(self!.receiverid)text"] ?? "" , user:userNumberKey ,photourl: txtChat ?? "")
-                            
                             completionHandler(true)
                         }
                         action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)

@@ -27,35 +27,28 @@ class VideoSentCode: UIViewController {
             videoImage.image = navselectedImage
         }
         else {
-            
         }
         num = FirebaseAuth.Auth.auth().currentUser!.phoneNumber!
     }
     
     @IBAction func sent(_ sender: UIButton) {
-        
         guard videoImage != nil else{
             self.navigationController?.popViewController(animated: true)
-            
             return
         }
         mbProgressHUD(text: "Loading..")
         let storageRef = Storage.storage().reference()
-        
         let imageData = navselectedImage?.jpegData(compressionQuality: 0.4)
-        
         guard imageData != nil else {
             return
         }
-        //        var path = ""
         let filename = "chatVideos/\(UUID().uuidString).mov"
         
         let fileRef = storageRef.child(filename)
         print("\(fileRef)")
-        
         // This is equivalent to creating the full reference
         // Upload data
-        let uploadTask = fileRef.putData(imageData!, metadata: nil) { [self] metadata, error in
+        let _ = fileRef.putData(imageData!, metadata: nil) { [self] metadata, error in
             var urlpth = ""
             // Check error
             if error == nil && metadata != nil {
@@ -73,11 +66,9 @@ class VideoSentCode: UIViewController {
                             database.child("Chats").child(mesId).child("chatting").child("\(uid!)").setValue(["\(num)chatPhoto": urlpth], withCompletionBlock: { error, _ in
                                 guard error == nil else {
                                     print("Failed to write data")
-                                    
                                     return
                                 }
                                 print("data written seccess")
-                                
                                 DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                                     navigationController?.popViewController(animated: true)
                                     hideProgress()
@@ -97,37 +88,29 @@ class VideoSentCode: UIViewController {
                                 }
                             })
                         }
-                        
                         // DataBaseManager.shared.mychatting(with: Message(messagid: mesId, chats: commentField.text!, sender: "ul", uii: uid, chatPhotos: urlpth))
-                        
                     }
                     
                 }
                 //  print("Urllll ----->",urlpth)
-                
                 //  let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
                 //  vc?.phones = self.number
-                
-                
             }
-            print("Error ====== \(error)")
+            print("Error ====== \(String(describing: error))")
         }
     }
-    
-    
-    
 }
 extension VideoSentCode {
-  func mbProgressHUD(text: String){
-    DispatchQueue.main.async {
-      let progressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
-      progressHUD.label.text = text
-      progressHUD.contentColor = .systemBlue
+    func mbProgressHUD(text: String){
+        DispatchQueue.main.async {
+            let progressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
+            progressHUD.label.text = text
+            progressHUD.contentColor = .systemBlue
+        }
     }
-  }
-  func hideProgress(){
-    DispatchQueue.main.async {
-      MBProgressHUD.hide(for: self.view, animated: false)
+    func hideProgress(){
+        DispatchQueue.main.async {
+            MBProgressHUD.hide(for: self.view, animated: false)
+        }
     }
-  }
 }

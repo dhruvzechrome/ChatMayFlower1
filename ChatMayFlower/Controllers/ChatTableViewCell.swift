@@ -36,11 +36,11 @@ class SenderVideoCell : UITableViewCell {
         guard let url = URL(string: videoUrl) else { return }
         senderVideo.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
         senderPlay.image = UIImage(systemName: "play")
-//        let  url = URL(string: videoUrl)
-//        getThumbnailFromVideoUrl(url: url!) {(thumbnailImage) in
-//            self.senderVideo.image = thumbnailImage
-//            self.senderPlay.image = UIImage(systemName: "play")
-//        }
+        //        let  url = URL(string: videoUrl)
+        //        getThumbnailFromVideoUrl(url: url!) {(thumbnailImage) in
+        //            self.senderVideo.image = thumbnailImage
+        //            self.senderPlay.image = UIImage(systemName: "play")
+        //        }
     }
     
     func getThumbnailFromVideoUrl(url:URL , completion: @escaping((_ image : UIImage?)->Void)){
@@ -105,34 +105,34 @@ class ReceiverVideoCell : UITableViewCell {
         receiverVideo.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
         receiverPlay.image = UIImage(systemName: "play")
         
-//        let  url = URL(string: videoUrl)
-//        getThumbnailFromVideoUrl(url: url!) {(thumbnailImage) in
-//            self.receiverVideo.image = thumbnailImage
-//            self.receiverPlay.image = UIImage(systemName: "play")
-//        }
+        //        let  url = URL(string: videoUrl)
+        //        getThumbnailFromVideoUrl(url: url!) {(thumbnailImage) in
+        //            self.receiverVideo.image = thumbnailImage
+        //            self.receiverPlay.image = UIImage(systemName: "play")
+        //        }
     }
     
-//    func getThumbnailFromVideoUrl(url:URL , completion: @escaping((_ image : UIImage?)->Void)){
-//        DispatchQueue.global().async {
-//            let asset = AVAsset(url: url)
-//            let avAssetImageGenerator = AVAssetImageGenerator(asset: asset)
-//            avAssetImageGenerator.appliesPreferredTrackTransform = true
-//            let thumbnailTime = CMTimeMake(value: 2, timescale: 2)
-//
-//            do {
-//                let cgThumbImage = try avAssetImageGenerator.copyCGImage(at: thumbnailTime, actualTime: nil)
-//                let thumbImage = UIImage(cgImage: cgThumbImage)
-//                DispatchQueue.main.async {
-//                    completion(thumbImage)
-//                }
-//
-//            }
-//            catch{
-//
-//            }
-//        }
-//
-//    }
+    //    func getThumbnailFromVideoUrl(url:URL , completion: @escaping((_ image : UIImage?)->Void)){
+    //        DispatchQueue.global().async {
+    //            let asset = AVAsset(url: url)
+    //            let avAssetImageGenerator = AVAssetImageGenerator(asset: asset)
+    //            avAssetImageGenerator.appliesPreferredTrackTransform = true
+    //            let thumbnailTime = CMTimeMake(value: 2, timescale: 2)
+    //
+    //            do {
+    //                let cgThumbImage = try avAssetImageGenerator.copyCGImage(at: thumbnailTime, actualTime: nil)
+    //                let thumbImage = UIImage(cgImage: cgThumbImage)
+    //                DispatchQueue.main.async {
+    //                    completion(thumbImage)
+    //                }
+    //
+    //            }
+    //            catch{
+    //
+    //            }
+    //        }
+    //
+    //    }
 }
 
 class SenderReplyViewCell: UITableViewCell {
@@ -171,7 +171,7 @@ class SenderReplyImageCell: UITableViewCell {
     
     @IBOutlet weak var sendermsg: UILabel!
     
-   
+    
     @IBOutlet weak var senderreply: UILabel!
     @IBOutlet weak var imgreplysender: UIImageView!
     override func awakeFromNib() {
@@ -185,17 +185,17 @@ class SenderReplyImageCell: UITableViewCell {
         imgreplysender.kf.setImage(with: url)
         
         // - MARK for videos
-//        guard let url = URL(string: videoUrl) else {
-//            print("error  ")
-//            return
-//        }
-//        imgreplysender.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
+        //        guard let url = URL(string: videoUrl) else {
+        //            print("error  ")
+        //            return
+        //        }
+        //        imgreplysender.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
     }
     func videocon(videoUrl: String){
         guard let url = URL(string: videoUrl) else { return }
         imgreplysender.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
     }
-
+    
 }
 class ReceiverReplyImageCell: UITableViewCell {
     
@@ -222,6 +222,6 @@ class ReceiverReplyImageCell: UITableViewCell {
         guard let url = URL(string: videoUrl) else { return }
         imgreplyreceiver.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
     }
-
+    
 }
 

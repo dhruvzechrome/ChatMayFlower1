@@ -11,7 +11,6 @@ import FirebaseDatabase
 import Kingfisher
 
 
-
 class GroupCreationCode: UIViewController {
     var usersDetails = [[String:Any]]()
     var phones = ""
@@ -35,37 +34,32 @@ class GroupCreationCode: UIViewController {
     }
     
     @IBAction func createGrpButton(_ sender: UIButton) {
+        
         mychat()
         let name = grouptxtField.text
         if grouptxtField.text  != "" && groupName != "" {
-         
             databaseRef.child("Contact List").child("\(name!)").setValue(["group name": "\(name!)","group user":"\(phones)\(groupName)","photo url":"","location" : ""], withCompletionBlock: { error, _ in
                 guard error == nil else {
                     print("Failed to write data")
                     return
                 }
                 print("data written seccess")
-
             })
             databaseRef.child("Chats").child("\(phones)\(groupName)").child("chatting").child("0").setValue(["\(phones)": ""], withCompletionBlock: { error, _ in
                 guard error == nil else {
                     print("Failed to write data")
-                   
+                    
                     return
                 }
+                self.dismiss(animated: true)
                 print("data written seccess")
             })
         }
-    
     }
-    
     
     @IBAction func cancel(_ sender: UIButton) {
-        navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true)
     }
-    
-    
-
 }
 
 extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
@@ -106,17 +100,16 @@ extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
                 break
             }
         }
-        
     }
     
     func mychat() {
         groupName = ""
-        for i in 0...groupUser.count-1 {
+        if groupUser.count > 0 {
+            for i in 0...groupUser.count-1 {
+                groupName = "\(groupName)\(groupUser[i])"
+                print(groupName)
+            }
             
-            groupName = "\(groupName)\(groupUser[i])"
-            print(groupName)
         }
-        
     }
-    
 }

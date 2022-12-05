@@ -37,10 +37,10 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
         
         //Subscribe to a Notification which will fire before the keyboard will hide
         subscribeToNotification(UIResponder.keyboardWillHideNotification, selector: #selector(keyboardWillShowOrHide))
-              
+        
         
     }
-  
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
@@ -50,36 +50,32 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
     
     func getData(){
         // Create Firebase Storage Reference
-        let storageRef = Storage.storage().reference()
+        let _ = Storage.storage().reference()
         
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded){[weak self](snapshot) in
-            let key = snapshot.key
+            let _ = snapshot.key
             //            print("Key",key)
-            guard let value = snapshot.value as? [String:Any] else {return}
+            guard let _ = snapshot.value as? [String:Any] else {return}
             
             
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
                 
-                for snap in snapshots {
+                for _ in snapshots {
                     //                    let cata = snap.key
                     //                    let ques = snap.value!
                     
                     let userMap = snapshot.value! as! [String:String]
                     if userMap["Phone number"] ==  self?.phones{
                         //                        print("Ppppphhhhh :",userMap["Phone number"]!)
-                        
                         self!.tphoneNumber.text = userMap["Phone number"]!
-                        
-                        //                        self!.uphoneno = userMap["Phone number"]!
-                        
                         
                         if userMap["Name"] != nil {
                             if userMap["Name"] != ""{
                                 self!.tname.text = userMap["Name"]!
                             }
                             else {
-//                                self!.tname.text = "No name available"
+                                self!.tname.text = "No name available"
                             }
                             //                            self!.uname = userMap["Name"]!
                         }
@@ -136,7 +132,7 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
         imagePickerController.allowsEditing = false
         self.present(imagePickerController, animated: true, completion: nil)
     }
-
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         if let selectedImage =  info[.originalImage] as? UIImage{
@@ -173,45 +169,42 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
         
         // Create Firebase Storage Reference
         let storageRef = Storage.storage().reference()
-        
-        
         let imageData = didselectedImage!.jpegData(compressionQuality: 0.4)
-        
         guard imageData != nil else {
             return
         }
-        var path = ""
+        //        var path = ""
         // imagesRef still points to "images"
         if urlPath == ""{
             location = "images/\(UUID().uuidString).jpg"
         }else{
-            path = urlPath
+            //            path = urlPath
         }
         let fileRef = storageRef.child(location)
         print("\(fileRef)")
         
         // This is equivalent to creating the full reference
         // Upload data
-        let uploadTask = fileRef.putData(imageData!, metadata: nil) { [self] metadata, error in
+        let _ = fileRef.putData(imageData!, metadata: nil) { [self] metadata, error in
             
             // Check error
             if error == nil && metadata != nil {
                 var urlpth = ""
                 fileRef.downloadURL {
                     url, error in
-                          if let error = error {
-                            // Handle any errors
-                            print(error)
-                          } else {
-                            // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
-                              print("Urllll ----->",url!)
-                              urlpth = "\(url!)"
-                              DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phones,name: tname.text!,profileImage : "\(urlpth)", location: location))
-                          }
-
+                    if let error = error {
+                        // Handle any errors
+                        print(error)
+                    } else {
+                        // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
+                        print("Urllll ----->",url!)
+                        urlpth = "\(url!)"
+                        DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phones,name: tname.text!,profileImage : "\(urlpth)", location: location))
+                    }
+                    
                 }
                 if tname.text != "" && tphoneNumber.text != ""{
-                   
+                    
                     let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
                     vc?.phones = self.phones
                     self.navigationController?.pushViewController(vc!, animated: true)
@@ -264,7 +257,7 @@ extension AddUserInformation {
             
             // Set the scroll view's content inset & scroll indicator to avoid the keyboard
             scrollView.contentInset.bottom = keyboardOverlap
-            scrollView.scrollIndicatorInsets.bottom = keyboardOverlap
+            scrollView.verticalScrollIndicatorInsets.bottom = keyboardOverlap
             
             let duration = (durationValue as AnyObject).doubleValue
             let options = UIView.AnimationOptions(rawValue: UInt((curveValue as AnyObject).integerValue << 16))
@@ -273,5 +266,5 @@ extension AddUserInformation {
             }, completion: nil)
         }
     }
-
+    
 }

@@ -23,12 +23,15 @@
 		884E693B29220A69005DF15B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 884E693A29220A69005DF15B /* GoogleService-Info.plist */; };
 		884E693D29222026005DF15B /* ImageAndVideoShowCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884E693C29222026005DF15B /* ImageAndVideoShowCode.swift */; };
 		887D10BD291291A50086E251 /* ShowProfileDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887D10BC291291A50086E251 /* ShowProfileDetail.swift */; };
+		888FCD1F293DB1D000EE2E49 /* AllUsersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888FCD1E293DB1D000EE2E49 /* AllUsersList.swift */; };
+		888FCD21293DB36B00EE2E49 /* AllUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888FCD20293DB36B00EE2E49 /* AllUserTableViewCell.swift */; };
 		889B210928FD64FA00189789 /* ChatConversionCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889B210828FD64FA00189789 /* ChatConversionCode.swift */; };
 		889B210B28FD653200189789 /* ChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889B210A28FD653200189789 /* ChatTableViewCell.swift */; };
 		88A040CA29137F53008FB921 /* AddUserInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A040C929137F53008FB921 /* AddUserInformation.swift */; };
 		88A32E0F28F9769D0041B6ED /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A32E0E28F9769D0041B6ED /* DataBaseManager.swift */; };
 		88B4AE742937192A00F65E65 /* GroupCreationCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B4AE732937192A00F65E65 /* GroupCreationCode.swift */; };
 		88B4AE7629372DED00F65E65 /* GroupCreationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B4AE7529372DED00F65E65 /* GroupCreationTableViewCell.swift */; };
+		88EA4525293B2AC600D09E1B /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88EA4524293B2AC600D09E1B /* Contacts.framework */; };
 		88FEF23A29275A290019AF02 /* VideoSentCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEF23929275A290019AF02 /* VideoSentCode.swift */; };
 		F92A51A7EF0E9398C747D05B /* Pods_ChatMayFlower.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F378DE097D07AA7FB5C801FD /* Pods_ChatMayFlower.framework */; };
 /* End PBXBuildFile section */
@@ -53,12 +56,15 @@
 		884E693A29220A69005DF15B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		884E693C29222026005DF15B /* ImageAndVideoShowCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAndVideoShowCode.swift; sourceTree = "<group>"; };
 		887D10BC291291A50086E251 /* ShowProfileDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowProfileDetail.swift; sourceTree = "<group>"; };
+		888FCD1E293DB1D000EE2E49 /* AllUsersList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllUsersList.swift; sourceTree = "<group>"; };
+		888FCD20293DB36B00EE2E49 /* AllUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllUserTableViewCell.swift; sourceTree = "<group>"; };
 		889B210828FD64FA00189789 /* ChatConversionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatConversionCode.swift; sourceTree = "<group>"; };
 		889B210A28FD653200189789 /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
 		88A040C929137F53008FB921 /* AddUserInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserInformation.swift; sourceTree = "<group>"; };
 		88A32E0E28F9769D0041B6ED /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
 		88B4AE732937192A00F65E65 /* GroupCreationCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreationCode.swift; sourceTree = "<group>"; };
 		88B4AE7529372DED00F65E65 /* GroupCreationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreationTableViewCell.swift; sourceTree = "<group>"; };
+		88EA4524293B2AC600D09E1B /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		88FEF23929275A290019AF02 /* VideoSentCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSentCode.swift; sourceTree = "<group>"; };
 		C52B43D00632AAB91AC73A6C /* Pods-ChatMayFlower.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatMayFlower.debug.xcconfig"; path = "Target Support Files/Pods-ChatMayFlower/Pods-ChatMayFlower.debug.xcconfig"; sourceTree = "<group>"; };
 		F378DE097D07AA7FB5C801FD /* Pods_ChatMayFlower.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatMayFlower.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,6 +76,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F92A51A7EF0E9398C747D05B /* Pods_ChatMayFlower.framework in Frameworks */,
+				88EA4525293B2AC600D09E1B /* Contacts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +86,7 @@
 		1F0FDB9DE40A8E64543CF8FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				88EA4524293B2AC600D09E1B /* Contacts.framework */,
 				F378DE097D07AA7FB5C801FD /* Pods_ChatMayFlower.framework */,
 			);
 			name = Frameworks;
@@ -167,6 +175,8 @@
 				882DE2F12928AE5500B8963A /* ImageVc.swift */,
 				88B4AE732937192A00F65E65 /* GroupCreationCode.swift */,
 				88B4AE7529372DED00F65E65 /* GroupCreationTableViewCell.swift */,
+				888FCD1E293DB1D000EE2E49 /* AllUsersList.swift */,
+				888FCD20293DB36B00EE2E49 /* AllUserTableViewCell.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -322,7 +332,9 @@
 				882DE2F22928AE5500B8963A /* ImageVc.swift in Sources */,
 				889B210B28FD653200189789 /* ChatTableViewCell.swift in Sources */,
 				88A040CA29137F53008FB921 /* AddUserInformation.swift in Sources */,
+				888FCD1F293DB1D000EE2E49 /* AllUsersList.swift in Sources */,
 				88402BB529234F4F00EC8972 /* ImageTableViewCell.swift in Sources */,
+				888FCD21293DB36B00EE2E49 /* AllUserTableViewCell.swift in Sources */,
 				883EBD5928F7FBB6000A59BA /* PhoneVerificationCode.swift in Sources */,
 				883EBD4328F7E09F000A59BA /* SceneDelegate.swift in Sources */,
 			);

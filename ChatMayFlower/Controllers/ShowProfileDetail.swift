@@ -45,29 +45,20 @@ class ShowProfileDetail: UIViewController {
     
     func getData(){
         // Create Firebase Storage Reference
-        let storageRef = Storage.storage().reference()
-        
+        _ = Storage.storage().reference()
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded){[weak self](snapshot) in
-            let key = snapshot.key
+            _ = snapshot.key
             //            print("Key",key)
-            guard let value = snapshot.value as? [String:Any] else {return}
-            
-            
+            guard let _ = snapshot.value as? [String:Any] else {return}
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
                 
                 for snap in snapshots {
-                    let cata = snap.key
-                    let ques = snap.value!
-                    
+                    let _ = snap.key
+                    let _ = snap.value!
                     let userMap = snapshot.value! as! [String:String]
                     if userMap["Phone number"] ==  self?.phones {
-                        //                        print("Ppppphhhhh :",userMap["Phone number"]!)
-                        
-//                        self!.phoneNumber.text = userMap["Phone number"]!
-                        
                         self!.uphoneno = userMap["Phone number"]!
-                        
                         
                         if userMap["Name"] != nil {
                             if userMap["Name"] != "" {
@@ -84,7 +75,7 @@ class ShowProfileDetail: UIViewController {
                                 self!.filename = userMap["location"]!
                                 self!.urlPath = userMap["photo url"]!
                                 let url = URL(string: userMap["photo url"]!)
-                                print("URllllllll ----\(url)")
+                                print("URllllllll ----\(String(describing: url))")
                                 self!.profileImage.kf.setImage(with: url)
                             }
                             else {
@@ -92,7 +83,6 @@ class ShowProfileDetail: UIViewController {
                             }
                         }
                         else {
-                            
                             self!.profileImage.image = self!.imag
                         }
                     }

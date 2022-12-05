@@ -23,8 +23,6 @@ class TableViewCell: UITableViewCell {
     //    }
     
 }
-
-
 //
 //struct Datauser{
 //    let name: String
@@ -34,7 +32,3 @@ class TableViewCell: UITableViewCell {
 //var detail:[Datauser] = [
 //
 //]
-
-
-
-

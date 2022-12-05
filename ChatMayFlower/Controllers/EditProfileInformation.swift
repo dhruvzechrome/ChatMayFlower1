@@ -18,9 +18,9 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
     @IBOutlet weak var tPhoneNumber: UITextField!
     @IBOutlet weak var tName: UITextField!
     @IBOutlet weak var profileImage: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         profileImage.image = userImage
         tName.text = name
         tPhoneNumber.text = number
@@ -106,8 +106,8 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
                 
                 
                 DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.number,name: tName.text!,profileImage : photoUrlPath, location: filename!))
-//                let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
-//                vc?.phones = self.number
+                //                let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
+                //                vc?.phones = self.number
                 self.navigationController?.popViewController(animated: true)
             }
             return
@@ -122,7 +122,6 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
         guard imageData != nil else {
             return
         }
-        var path = ""
         // imagesRef still points to "images"
         if photoUrlPath == "" {
             filename = "images/\(UUID().uuidString).jpg"
@@ -132,7 +131,7 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
         
         // This is equivalent to creating the full reference
         // Upload data
-        let uploadTask = fileRef.putData(imageData!, metadata: nil) { [self] metadata, error in
+        let _ = fileRef.putData(imageData!, metadata: nil) { [self] metadata, error in
             var urlpth = ""
             // Check error
             if error == nil && metadata != nil {
@@ -141,25 +140,25 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
                     
                     fileRef.downloadURL {
                         url, error in
-                              if let error = error {
-                                // Handle any errors
-                                print(error)
-                              } else {
-                                // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
-                                  urlpth = "\(url!)"
-                                  DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.number,name: tName.text!,profileImage : "\(urlpth)", location: filename!))
-                                  self.navigationController?.popViewController(animated: true)
-                              }
-
+                        if let error = error {
+                            // Handle any errors
+                            print(error)
+                        } else {
+                            // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
+                            urlpth = "\(url!)"
+                            DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.number,name: tName.text!,profileImage : "\(urlpth)", location: filename!))
+                            self.navigationController?.popViewController(animated: true)
+                        }
+                        
                     }
-//                    print("Urllll ---sdsdfsdf-->",urlpth)
+                    //                    print("Urllll ---sdsdfsdf-->",urlpth)
                     
-//                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
-//                    vc?.phones = self.number
+                    //                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
+                    //                    vc?.phones = self.number
                     
                 }
             }
-            print("Error ====== \(error)")
+            print("Error ====== \(String(describing: error))")
         }
         
         
@@ -208,7 +207,7 @@ extension EditProfileInformation {
             
             // Set the scroll view's content inset & scroll indicator to avoid the keyboard
             scrollView.contentInset.bottom = keyboardOverlap
-            scrollView.scrollIndicatorInsets.bottom = keyboardOverlap
+            scrollView.verticalScrollIndicatorInsets.bottom = keyboardOverlap
             
             let duration = (durationValue as AnyObject).doubleValue
             let options = UIView.AnimationOptions(rawValue: UInt((curveValue as AnyObject).integerValue << 16))
@@ -217,5 +216,5 @@ extension EditProfileInformation {
             }, completion: nil)
         }
     }
-
+    
 }

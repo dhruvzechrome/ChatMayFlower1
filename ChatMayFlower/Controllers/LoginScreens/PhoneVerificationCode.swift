@@ -16,14 +16,10 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
         tabBarController?.tabBar.isHidden = true
-        
-        // Do any additional setup after loading the view.
     }
     
     @IBAction func sentOtp(_ sender: UIButton) {
-        
-        var phoneNumber = txtPhoneNumber.text
-        
+        let phoneNumber = txtPhoneNumber.text
         if phoneNumber?.isValidContact != false {
             // Phone authentiacation OTP sent
             Auth.auth().settings?.isAppVerificationDisabledForTesting = false
@@ -42,8 +38,6 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
                     // Sign in using the verificationID and the code sent to the user
                     // ...
                     print("sign in success ", verificationID!)
-           
-                    
                     // Verification id  for OTPverification
                     self.verificationID = UserDefaults.standard.string(forKey: "authVerificationID")
                     let vc = self.storyboard?.instantiateViewController(withIdentifier: "OtpVerifyCode") as? OtpVerifyCode
@@ -51,8 +45,6 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
                     vc!.phone = phoneNumber!
                     self.navigationController?.pushViewController(vc!, animated: true)
                 }
-            
-            
         }
         else {
             let  alert = UIAlertController (title: "Please Enter Valid Number", message: "", preferredStyle: .alert)
@@ -62,10 +54,8 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
             }))
             present(alert, animated: true)
         }
-        
-        
     }
-   
+    
 }
 
 
