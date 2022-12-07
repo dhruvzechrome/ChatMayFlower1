@@ -15,6 +15,8 @@ import MBProgressHUD
 import Contacts
 
 class UserDetailsCode: UIViewController {
+    
+    var newMsg = false
     let storeC = CNContactStore()
     var forgroupuser = [String]()
     var msgkey = [String]()
@@ -57,7 +59,10 @@ class UserDetailsCode: UIViewController {
                 hib = hib.replacingOccurrences(of: "-", with: "")
                 hib = hib.replacingOccurrences(of: "(", with: "")
                 hib = hib.replacingOccurrences(of: ")", with: "")
-                allUser.append(["Name" : con.givenName,"Phone Number": hib])
+                if hib.prefix(3) != "+91" {
+                    hib = "+91\(hib)"
+                }
+                allUser.append(["Name" : con.givenName,"Phone number": hib])
                 print("Name of contact number \(phNO.value.stringValue)")
                 
             }
@@ -245,9 +250,23 @@ class UserDetailsCode: UIViewController {
         print("current User",phones)
         
     }
+    
+    var timer = Timer()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
+            if newMsg == true {
+                print("Yes \(newMsg)")
+                newMsg = false
+                let vc = self.storyboard?.instantiateViewController(withIdentifier: "ChatConversionCode") as? ChatConversionCode
+                vc?.receiverid = self.usersNumber
+                vc?.usersNumber = self.usersNumber
+                vc?.msgIdList = self.msgIdList
+                vc?.phoneid = self.phones
+                self.navigationController?.pushViewController(vc!, animated: true)
+                
+            }
+        })
         tabBarController?.tabBar.isHidden = false
         navigationItem.hidesBackButton = true
         tabBarController?.tabBarItem.accessibilityElementIsFocused()
@@ -263,10 +282,13 @@ class UserDetailsCode: UIViewController {
     
     @IBAction func newChat(_ sender: UIButton) {
         let vc = storyboard?.instantiateViewController(withIdentifier: "AllUsersList") as? AllUsersList
-        vc?.usersDetails = usersDetails
+     
+        vc?.usersDetails = listOfData
+        vc?.allUser = allUser
         vc?.phones = phones
         vc?.msgIdList = msgIdList
-        navigationController?.present(vc!, animated: true, completion: nil)
+        
+        navigationController!.present(vc!, animated:true, completion: nil)
         
     }
     
@@ -285,7 +307,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         cell?.userLabel.text = frd["Phone number"]
         let filt = allUser.filter { user in
             print("user is \(user)")
-            var hib =  user["Phone Number"]
+            var hib =  user["Phone number"]
 //            hib = hib?.replacingOccurrences(of: " ", with: "")
 //            hib = hib?.replacingOccurrences(of: "-", with: "")
 //            hib = hib?.replacingOccurrences(of: "(", with: "")
@@ -333,6 +355,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         mbProgressHUD(text: "Loading..")
         let vc = storyboard?.instantiateViewController(withIdentifier: "ChatConversionCode") as? ChatConversionCode
         vc?.receiverid = usersNumber
+        vc?.usersNumber = usersNumber
         if frd["group name"] == nil {
             
         } else {

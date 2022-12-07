@@ -19,7 +19,11 @@ import FirebaseStorage
 import SwiftUI
 
 class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
-    
+    var databaseRef: DatabaseReference!
+    var usersNumber = ""
+    var msgIdList = [String]()
+    var msgstatus = false
+    var messageId:String?
     var groupK = "no"
     var replyImageView:UIImageView = UIImageView()
     @IBOutlet weak var bkview: UIView!
@@ -56,36 +60,49 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getdata()
+        
         tabBarController?.tabBar.isHidden = true
     }
+    
     
     override func viewDidLoad() {
         print("view didload call")
         super.viewDidLoad()
         chatTable.delegate = self
         chatTable.dataSource = self
+        if usersNumber.prefix(3) != "+91" {
+            print("+91\(usersNumber) ----")
+            usersNumber = "+91\(usersNumber)"
+            receiverid = "+91\(receiverid)"
+        }
+        codeFlex()
+        print("\(usersNumber)")
         keyboardheight = 0
         seenVcStatus = true
-        print("\(mid)!!!!!!!!!!!!!!!!!!!!")
+        print("\(mid)!!! \(receiverid)---- \(usersNumber)====\(phoneid)-----\(msgIdList)")
         chatField.delegate = self
-        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
-            
-            if seenVcStatus == true {
-                status()
-                if textFieldBtnStatus == true {
-                    let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
-                    chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
-                    // scrollToBottom()
-                    getdata()
-                    textFieldBtnStatus = false
-                } else {
-                    hideProgress()
+        if mid != "" {
+        
+            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
+                
+                if seenVcStatus == true {
+                    status()
+                    if textFieldBtnStatus == true {
+                        let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
+                        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                        // scrollToBottom()
+                        getdata()
+                        textFieldBtnStatus = false
+                    } else {
+                        hideProgress()
+                    }
                 }
-            }
-        })
-        getchat()
-        status()
-        mbProgressHUD(text: "Loading")
+            })
+            getchat()
+            status()
+        }
+            mbProgressHUD(text: "Loading")
+        
         titl.title = receiverid
         //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         //        addImageVideo.addGestureRecognizer(tapGesture)
@@ -222,11 +239,38 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         }
     }
     
+    func codeFlex(){
+        if msgIdList.count > 0 {
+            for avl in 0...msgIdList.count - 1 {
+                print("msgkey at index  \(msgIdList[avl])")
+                if msgIdList[avl] == "\(phoneid)\(usersNumber)" || msgIdList[avl] == "\(usersNumber)\(phoneid)" || msgIdList[avl] == "\(usersNumber)" {
+                    mid = msgIdList[avl]
+                    // print("True -----------")
+                    msgstatus = true
+                    break
+                }else {
+                    msgstatus = false
+                }
+            }
+        }
+//        mychat()
+    }
+    func mychat() {
+        if msgstatus == false {
+            
+            mid = "\(phoneid)\(usersNumber)"
+                    DataBaseManager.shared.createNewChat(with: Message( messagid: self.mid, chats: "", sender: "",uii: 0, chatPhotos: ""))
+        }
+    }
+    
     // MARK: - Send Chats to Firebase Realtime Database
     @IBAction func sendChat(_ sender: UIButton) {
         chatTable.sectionFooterHeight = 0
         if chatField.text != "" {
             ui = ui + 1
+            if mid == "" {
+                mychat()
+            }
             seenStatusLabel = "delivered"
             oppositeSeenStatus = false
             lcb = false
@@ -247,8 +291,11 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                 chatField.text = ""
                 DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                     self.chatTable.reloadData()
-                    let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
-                    chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                    if chatMap.count > 16 {
+                        let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
+                        chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                    }
+                    
                 }
             } else {
                 database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(phoneid)": chatField.text!,replyText:replyChat as Any], withCompletionBlock: { [self] error, _ in
@@ -1322,3 +1369,5 @@ extension ChatConversionCode {
         }
     }
 }
+
+

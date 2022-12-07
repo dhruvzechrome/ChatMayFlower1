@@ -12,7 +12,7 @@ import Kingfisher
 
 
 class GroupCreationCode: UIViewController {
-    var usersDetails = [[String:Any]]()
+    var usersList = [[String:String]]()
     var phones = ""
     var databaseRef = Database.database().reference()
     var groupUser = [String]()
@@ -24,20 +24,20 @@ class GroupCreationCode: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         userTable.delegate = self
         userTable.dataSource = self
         self.userTable.isEditing = true
         self.userTable.allowsMultipleSelectionDuringEditing = true
-        if usersDetails.count > 0 {
+        if usersList.count > 0 {
             userTable.reloadData()
         }
     }
     
     @IBAction func createGrpButton(_ sender: UIButton) {
-        
         mychat()
         let name = grouptxtField.text
-        if grouptxtField.text  != "" && groupName != "" {
+        if grouptxtField.text  != "" && groupName != "" && groupUser.count > 2 {
             databaseRef.child("Contact List").child("\(name!)").setValue(["group name": "\(name!)","group user":"\(phones)\(groupName)","photo url":"","location" : ""], withCompletionBlock: { error, _ in
                 guard error == nil else {
                     print("Failed to write data")
@@ -51,7 +51,7 @@ class GroupCreationCode: UIViewController {
                     
                     return
                 }
-                self.dismiss(animated: true)
+                self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
                 print("data written seccess")
             })
         }
@@ -64,26 +64,26 @@ class GroupCreationCode: UIViewController {
 
 extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return usersDetails.count
+        return usersList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let frd = usersDetails[indexPath.row]
+        let frd = usersList[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupCreationTableViewCell", for: indexPath) as? GroupCreationTableViewCell
-        cell?.userTitle.text = frd["Phone number"] as? String
-        print("my image is \(frd["profilepic"]!)")
+        cell?.userTitle.text = frd["Phone number"]
+//        print("my image is \(frd["profilepic"]!)")
         
-        if frd["profilepic"] as! String == "" {
+        if frd["profilepic"] == nil {
             cell?.userProfile.image = UIImage(named: "person")
         } else {
-            let url = URL(string: frd["profilepic"]! as! String)
+            let url = URL(string: frd["profilepic"]! )
             cell?.userProfile.kf.setImage(with: url)
         }
         return cell!
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let frd = usersDetails[indexPath.row]
-        let num = (frd["Phone number"] as? String)!
+        let frd = usersList[indexPath.row]
+        let num = (frd["Phone number"])!
         if !groupUser.contains(num) {
             groupUser.append(num)
         }
@@ -91,8 +91,8 @@ extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
         print("\(groupUser)")
     }
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let frd = usersDetails[indexPath.row]
-        let num = (frd["Phone number"] as? String)!
+        let frd = usersList[indexPath.row]
+        let num = (frd["Phone number"])!
         print("\(groupUser)")
         for i in 0...groupUser.count-1 {
             if num == groupUser[i] {

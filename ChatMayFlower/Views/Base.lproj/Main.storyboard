@@ -321,7 +321,7 @@
                     <connections>
                         <outlet property="tabelView" destination="O18-9F-IlY" id="X0n-Fg-4n3"/>
                         <segue destination="LJS-1B-QlY" kind="show" id="4wH-vw-9DK"/>
-                        <segue destination="bDz-kS-jeu" kind="show" id="epB-ln-inu"/>
+                        <segue destination="bDz-kS-jeu" kind="show" id="g4q-Tt-fMZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ej8-Sf-sxZ" sceneMemberID="firstResponder"/>
@@ -2101,10 +2101,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zHJ-tQ-bHo">
-                                <rect key="frame" x="20" y="144" width="374" height="548"/>
+                                <rect key="frame" x="20" y="144" width="374" height="428"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r71-Zg-nvs">
-                                <rect key="frame" x="20" y="792" width="374" height="50"/>
+                                <rect key="frame" x="20" y="672" width="374" height="50"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CQ2-rC-cuo">
                                         <rect key="frame" x="0.0" y="0.0" width="328.5" height="50"/>
@@ -2130,7 +2130,7 @@
                                 </constraints>
                             </stackView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="IMb-62-dq3">
-                                <rect key="frame" x="87" y="344" width="240" height="148"/>
+                                <rect key="frame" x="87" y="344" width="240" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="OJY-jY-ska"/>
                                 </constraints>
@@ -2309,7 +2309,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a06-vl-WHi" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5029" y="-680"/>
+            <point key="canvasLocation" x="5939.130434782609" y="-680.35714285714278"/>
         </scene>
         <!--AllUsersList-->
         <scene sceneID="jiy-FM-Ric">
@@ -2320,7 +2320,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Coz-K7-UhD">
-                                <rect key="frame" x="0.0" y="88" width="414" height="715"/>
+                                <rect key="frame" x="0.0" y="205" width="414" height="598"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AllUserTableViewCell" rowHeight="97" id="4Gb-XE-ElM" customClass="AllUserTableViewCell" customModule="ChatMayFlower" customModuleProvider="target">
@@ -2370,12 +2370,64 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="53W-2E-jor">
+                                <rect key="frame" x="0.0" y="98" width="414" height="97"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OCX-WZ-pdq">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="31"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vQf-QG-4tI">
+                                                <rect key="frame" x="0.0" y="0.0" width="100" height="31"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="rbO-UF-eaZ"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Cancel"/>
+                                                <connections>
+                                                    <action selector="cancelButton:" destination="bDz-kS-jeu" eventType="touchUpInside" id="HqB-Uo-k4E"/>
+                                                </connections>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Chats" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lXW-RI-YM2">
+                                                <rect key="frame" x="100" y="0.0" width="214" height="31"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SKo-jL-E1e">
+                                                <rect key="frame" x="314" y="0.0" width="100" height="31"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="aAf-Ev-5m7"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain"/>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="ttO-4x-nqx">
+                                        <rect key="frame" x="0.0" y="46" width="414" height="51"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </searchBar>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="OCX-WZ-pdq" firstAttribute="top" secondItem="53W-2E-jor" secondAttribute="top" id="6Ee-zv-tSm"/>
+                                    <constraint firstAttribute="trailing" secondItem="ttO-4x-nqx" secondAttribute="trailing" id="B23-C8-zaL"/>
+                                    <constraint firstItem="OCX-WZ-pdq" firstAttribute="leading" secondItem="53W-2E-jor" secondAttribute="leading" id="N6C-bG-0TR"/>
+                                    <constraint firstAttribute="bottom" secondItem="ttO-4x-nqx" secondAttribute="bottom" id="YkQ-kM-J5z"/>
+                                    <constraint firstAttribute="leading" secondItem="OCX-WZ-pdq" secondAttribute="leading" id="fOc-J0-W4p"/>
+                                    <constraint firstAttribute="trailing" secondItem="OCX-WZ-pdq" secondAttribute="trailing" id="hic-U5-uC7"/>
+                                    <constraint firstItem="ttO-4x-nqx" firstAttribute="leading" secondItem="53W-2E-jor" secondAttribute="leading" id="kIX-jt-ceE"/>
+                                    <constraint firstItem="ttO-4x-nqx" firstAttribute="top" secondItem="OCX-WZ-pdq" secondAttribute="bottom" constant="15" id="yLf-sO-Zxw"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="SaQ-QR-R59"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Coz-K7-UhD" firstAttribute="top" secondItem="SaQ-QR-R59" secondAttribute="top" id="09c-A4-QjC"/>
+                            <constraint firstItem="SaQ-QR-R59" firstAttribute="trailing" secondItem="53W-2E-jor" secondAttribute="trailing" id="4O5-wN-G0P"/>
+                            <constraint firstItem="53W-2E-jor" firstAttribute="leading" secondItem="SaQ-QR-R59" secondAttribute="leading" id="NBn-i7-zy7"/>
                             <constraint firstItem="Coz-K7-UhD" firstAttribute="leading" secondItem="SaQ-QR-R59" secondAttribute="leading" id="Nwc-pk-Sds"/>
+                            <constraint firstItem="Coz-K7-UhD" firstAttribute="top" secondItem="53W-2E-jor" secondAttribute="bottom" constant="10" id="Vi1-ks-EBr"/>
+                            <constraint firstItem="53W-2E-jor" firstAttribute="top" secondItem="SaQ-QR-R59" secondAttribute="top" constant="10" id="iqd-zk-KI5"/>
                             <constraint firstItem="SaQ-QR-R59" firstAttribute="trailing" secondItem="Coz-K7-UhD" secondAttribute="trailing" id="nun-MQ-NIc"/>
                             <constraint firstItem="SaQ-QR-R59" firstAttribute="bottom" secondItem="Coz-K7-UhD" secondAttribute="bottom" constant="10" id="xa5-yI-Fr3"/>
                         </constraints>
@@ -2391,14 +2443,18 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="tableView" destination="Coz-K7-UhD" id="zXd-5M-fCY"/>
+                        <outlet property="tableViewCell" destination="Coz-K7-UhD" id="IIg-92-goH"/>
+                        <segue destination="LJS-1B-QlY" kind="push" id="51h-r9-oOk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fF4-aK-Wgw" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4284" y="-680"/>
+            <point key="canvasLocation" x="5192.753623188406" y="-680.35714285714278"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="51h-r9-oOk"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="Group (1)" width="106.66666412353516" height="18"/>
         <image name="Phone Verification" width="108.66666412353516" height="10"/>
