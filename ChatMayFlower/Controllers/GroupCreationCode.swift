@@ -34,7 +34,7 @@ class GroupCreationCode: UIViewController {
         }
     }
     
-    @IBAction func createGrpButton(_ sender: UIButton) {
+    @IBAction func createGrpButton(_ sender: UIBarButtonItem) {
         mychat()
         let name = grouptxtField.text
         if grouptxtField.text  != "" && groupName != "" && groupUser.count > 2 {
@@ -57,7 +57,7 @@ class GroupCreationCode: UIViewController {
         }
     }
     
-    @IBAction func cancel(_ sender: UIButton) {
+    @IBAction func cancel(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true)
     }
 }

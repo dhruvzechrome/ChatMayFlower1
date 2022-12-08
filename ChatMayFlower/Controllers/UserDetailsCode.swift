@@ -14,7 +14,54 @@ import Kingfisher
 import MBProgressHUD
 import Contacts
 
-class UserDetailsCode: UIViewController {
+class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        listOfData = []
+        let searchText = searchController.searchBar.text
+        if searchText == "" {
+            listOfData =  searchList
+        }
+        for cnt in 0...searchList.count-1 {
+            let frd = searchList[cnt]
+            let name = frd["Name"]
+            let number = frd["Phone number"]
+            let groupName = frd["group name"]
+            
+            let splitnumber = number?.split(separator: "+")
+            if splitnumber?.count == 1 {
+                if name != nil {
+                    if name!.lowercased().contains(searchText!.lowercased()) {
+                        listOfData.append(frd)
+                    }
+                }
+                if number != nil {
+                    if number!.contains(searchText!) {
+                        listOfData.append(frd)
+                    }
+                }
+                if groupName != nil {
+                    if groupName!.lowercased().contains(searchText!.lowercased()) {
+                        listOfData.append(frd)
+                    }
+                }
+            } else {
+                if groupName != nil {
+                    if groupName!.lowercased().contains(searchText!.lowercased()) {
+                        listOfData.append(frd)
+                    }
+                }
+            }
+            
+            
+
+        }
+        self.tabelView.reloadData()
+        
+        
+    }
+    
+    
+    
     
     var newMsg = false
     let storeC = CNContactStore()
@@ -30,6 +77,8 @@ class UserDetailsCode: UIViewController {
     var friends = [ChatAppUser]()
     var keyArray = [String]()
     var usersDetails = [[String:String]]()
+    var allUserOfFirebase = [[String:String]]()
+    var searchList = [[String:String]]()
     var allUser = [[String:String]]()
     let storageRef = Storage.storage().reference()
     
@@ -63,7 +112,7 @@ class UserDetailsCode: UIViewController {
                     hib = "+91\(hib)"
                 }
                 allUser.append(["Name" : con.givenName,"Phone number": hib])
-                print("Name of contact number \(phNO.value.stringValue)")
+//                print("Name of contact number \(phNO.value.stringValue)")
                 
             }
         }
@@ -74,7 +123,7 @@ class UserDetailsCode: UIViewController {
         
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded){[weak self](snapshot) in
-            self!.mbProgressHUD(text: "Loading.")
+//            self!.mbProgressHUD(text: "Loading.")
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
                 
                 for _ in snapshots {
@@ -89,11 +138,8 @@ class UserDetailsCode: UIViewController {
                             
                             self!.keyArray.append("\(snapshot.key)")
                             print("Aray of number is \(self!.keyArray)")
+                            self!.allUserOfFirebase.append(infoMap)
                             
-                            if infoMap["group name"] != nil {
-                                
-                                
-                            }
                             if infoMap["Name"] != nil {
                                 
                                 if infoMap["photo url"] != nil {
@@ -105,7 +151,6 @@ class UserDetailsCode: UIViewController {
                                 }
                                 
                             } else if infoMap["group name"] != nil {
-                                self?.forgroupuser.removeAll()
                                 let grps = "\(infoMap["group user"]!)"
                                 let ffhhf = grps.split(separator: "+")
                                 print("=====ffhhf=======\(ffhhf.count)")
@@ -156,7 +201,7 @@ class UserDetailsCode: UIViewController {
                     }
                     if !(self?.msgkey.contains("\(cata)"))!{
                         
-                        var splt = cata.split(separator: "+")
+                        let splt = cata.split(separator: "+")
                         if splt.count == 2 {
                             for i in 0...splt.count-1 {
                                 if self!.phones == "+\(splt[i])" {
@@ -171,6 +216,8 @@ class UserDetailsCode: UIViewController {
                                         if "+\(splt[op])" == fhg?["Phone number"] {
                                             print("fhg is \(fhg?["Phone number"])=====\(splt[op])")
                                             self?.listOfData.append(fhg!)
+                                            self?.hideProgress()
+
                                             break
                                         }
                                             
@@ -188,6 +235,8 @@ class UserDetailsCode: UIViewController {
                                     if !(self?.listOfData.contains(fhg!))!{
                                         self!.msgkey.append("\(cata)")
                                         self?.listOfData.append(fhg!)
+                                        self?.hideProgress()
+
                                     }
                                     break
                                 }
@@ -198,9 +247,9 @@ class UserDetailsCode: UIViewController {
             } else {
                 print("No data Found")
             }
-            print("UserDetais \(self?.msgkey)--------\(self?.listOfData)")
-            self?.tabelView.reloadData()
-            self?.hideProgress()
+//            print("UserDetais \(self?.msgkey)--------\(self?.listOfData)")
+            self?.searchList = self!.listOfData
+                        self?.tabelView.reloadData()
         }
     }
     
@@ -216,30 +265,35 @@ class UserDetailsCode: UIViewController {
             print("Error signing out: %@", signOutError)
         }
     }
-    
+    let searchController = UISearchController()
     override func viewDidLoad() {
         super.viewDidLoad()
         getContact()
         mbProgressHUD(text: "Loading..")
         tabelView.delegate = self
         tabelView.dataSource = self
+        
         print(friends)
         getMessageId()
         getData()
         
-        //        let refreshControl = UIRefreshControl()
-        //        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
-        //           self.tabelView.refreshControl = refreshControl
+            searchController.searchResultsUpdater = self
+            searchController.searchBar.sizeToFit()
+        tabelView.tableHeaderView = searchController.searchBar
+        tabelView.contentOffset = CGPoint(x: 0, y: searchController.searchBar.frame.height);
+
+        
+//                let refreshControl = UIRefreshControl()
+//                refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+//                   self.tabelView.refreshControl = refreshControl
         
         // Do any additional setup after loading the view.
     }
     
     @objc func refresh(_ sender : Any)
     {
-        keyArray = [String]()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [self] in
-            getData()
-        }
+//        tabelView.tableHeaderView = headerView()
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -280,14 +334,14 @@ class UserDetailsCode: UIViewController {
         phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
     }
     
-    @IBAction func newChat(_ sender: UIButton) {
+    @IBAction func newChat(_ sender: UIBarButtonItem) {
         let vc = storyboard?.instantiateViewController(withIdentifier: "AllUsersList") as? AllUsersList
      
         vc?.usersDetails = listOfData
         vc?.allUser = allUser
         vc?.phones = phones
         vc?.msgIdList = msgIdList
-        
+        vc?.msgKey = msgkey
         navigationController!.present(vc!, animated:true, completion: nil)
         
     }
@@ -305,16 +359,11 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TableViewCell
         
         cell?.userLabel.text = frd["Phone number"]
-        let filt = allUser.filter { user in
-            print("user is \(user)")
-            var hib =  user["Phone number"]
-//            hib = hib?.replacingOccurrences(of: " ", with: "")
-//            hib = hib?.replacingOccurrences(of: "-", with: "")
-//            hib = hib?.replacingOccurrences(of: "(", with: "")
-//            hib = hib?.replacingOccurrences(of: ")", with: "")
-            print("Hib is +91\(hib!)")
+        _ = allUser.filter { user in
+//            print("user is \(user)")
+            let hib =  user["Phone number"]
             
-            if hib == frd["Phone number"] || "+91\(hib!)" == frd["Phone number"]{
+            if hib == frd["Phone number"] {
                 cell?.userLabel.text = user["Name"]
             }
             return true
@@ -352,14 +401,13 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
                 }
             }
         }
-        mbProgressHUD(text: "Loading..")
         let vc = storyboard?.instantiateViewController(withIdentifier: "ChatConversionCode") as? ChatConversionCode
         vc?.receiverid = usersNumber
         vc?.usersNumber = usersNumber
         if frd["group name"] == nil {
             
         } else {
-            vc?.receiverid = frd["group name"] as! String
+            vc?.receiverid = frd["group name"]!
             vc?.groupK = "yes"
         }
         mychat()
