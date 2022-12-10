@@ -18,18 +18,16 @@ class GroupCreationCode: UIViewController {
     var groupUser = [String]()
     var groupName = ""
     var uid = ""
-    
     @IBOutlet weak var grouptxtField: UITextField!
     @IBOutlet weak var userTable: UITableView!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         userTable.delegate = self
         userTable.dataSource = self
         self.userTable.isEditing = true
         self.userTable.allowsMultipleSelectionDuringEditing = true
         if usersList.count > 0 {
+            print("Users list \(usersList)")
             userTable.reloadData()
         }
     }
@@ -70,14 +68,24 @@ extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let frd = usersList[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupCreationTableViewCell", for: indexPath) as? GroupCreationTableViewCell
-        cell?.userTitle.text = frd["Phone number"]
-//        print("my image is \(frd["profilepic"]!)")
         
+//        print("my image is \(frd["profilepic"]!)")
+        if frd["Name"] == nil {
+            cell?.userTitle.text = frd["Phone number"]
+        } else {
+            cell?.userTitle.text = frd["Name"]
+            if frd["Name"] == "" {
+                cell?.userTitle.text = frd["Phone number"]
+            }
+        }
         if frd["profilepic"] == nil {
-            cell?.userProfile.image = UIImage(named: "person")
+            cell?.userProfile.image = UIImage(systemName:  "person.circle.fill")
         } else {
             let url = URL(string: frd["profilepic"]! )
             cell?.userProfile.kf.setImage(with: url)
+            if frd["profilepic"] == "" {
+                cell?.userProfile.image = UIImage(systemName: "person.circle.fill")
+            }
         }
         return cell!
     }

@@ -44,6 +44,7 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
+        tabBarController?.tabBarItem.accessibilityElementIsFocused()
         navigationItem.hidesBackButton = true
         getData()
     }
@@ -160,6 +161,9 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
         guard didselectedImage != nil else{
             if tname.text != "" && tphoneNumber.text != ""{
                 DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phones,name: tname.text!,profileImage : urlPath, location: location))
+                
+            
+                
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
                 vc?.phones = self.phones
                 self.navigationController?.pushViewController(vc!, animated: true)

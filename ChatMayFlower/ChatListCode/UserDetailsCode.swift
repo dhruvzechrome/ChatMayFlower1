@@ -51,18 +51,9 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                     }
                 }
             }
-            
-            
-
         }
         self.tabelView.reloadData()
-        
-        
     }
-    
-    
-    
-    
     var newMsg = false
     let storeC = CNContactStore()
     var forgroupuser = [String]()
@@ -97,10 +88,10 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
     
     func getContactList() {
         let predicate = CNContact.predicateForContactsInContainer(withIdentifier: storeC.defaultContainerIdentifier())
-        let contct = try! storeC.unifiedContacts(matching: predicate, keysToFetch: [CNContactPhoneNumbersKey as CNKeyDescriptor,CNContactGivenNameKey as CNKeyDescriptor])
+        let contct = try! storeC.unifiedContacts(matching: predicate, keysToFetch: [CNContactPhoneNumbersKey as CNKeyDescriptor,CNContactGivenNameKey as CNKeyDescriptor,CNContactMiddleNameKey as CNKeyDescriptor,CNContactFamilyNameKey as CNKeyDescriptor])
         
         for con in contct {
-            print("*Name of contact number \(con.givenName)")
+            print("*Name of contact number ")
             
             for phNO in con.phoneNumbers {
                 var hib =  phNO.value.stringValue
@@ -111,19 +102,18 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                 if hib.prefix(3) != "+91" {
                     hib = "+91\(hib)"
                 }
-                allUser.append(["Name" : con.givenName,"Phone number": hib])
-//                print("Name of contact number \(phNO.value.stringValue)")
+                allUser.append(["Name" : "\(con.givenName) \(con.middleName) \(con.familyName)","Phone number": hib])
                 
             }
         }
         print("List of all user \(allUser)")
     }
     
-    func getData(){
+    func getData() {
         
         databaseRef = Database.database().reference().child("Contact List")
-        databaseRef.observe(.childAdded){[weak self](snapshot) in
-//            self!.mbProgressHUD(text: "Loading.")
+        databaseRef.observe(.childAdded) {[weak self](snapshot) in
+            //            self!.mbProgressHUD(text: "Loading.")
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
                 
                 for _ in snapshots {
@@ -138,16 +128,54 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                             
                             self!.keyArray.append("\(snapshot.key)")
                             print("Aray of number is \(self!.keyArray)")
-                            self!.allUserOfFirebase.append(infoMap)
+                            
+                            
+                            for i in 0...self!.allUser.count-1 {
+                                let frd = self!.allUser[i]
+                                if frd["Phone number"] == infoMap["Phone number"] {
+                                    if infoMap["Name"] != nil {
+                                        
+                                        if infoMap["photo url"] != nil {
+                                            self!.allUserOfFirebase.append(["Name" : infoMap["Name"]! , "Phone number": infoMap["Phone number"]!, "profilepic": infoMap["photo url"]!])
+                                            //                                    print("usersDetails----------->>>\(self!.usersDetails)")
+                                        } else {
+                                            self!.allUserOfFirebase.append(["Name" : infoMap["Name"]! , "Phone number": infoMap["Phone number"]!, "profilepic": ""])
+                                            //                                    print("usersDetails----------->>>\(self!.usersDetails)")
+                                        }
+                                        break
+                                    } else if infoMap["group name"] != nil {
+                                        let grps = "\(infoMap["group user"]!)"
+                                        let ffhhf = grps.split(separator: "+")
+                                        print("=====ffhhf=======\(ffhhf.count)")
+                                        //                                        for i in 0...ffhhf.count-1 {
+                                        //                                            if self!.phones == "+\(ffhhf[i])" {
+                                        //                                                print("yes")
+                                        //                                                self!.allUserOfFirebase.append(["group name" : "\(infoMap["group name"]!)" , "Phone number": infoMap["group user"]!, "profilepic": ""])
+                                        //                                                break
+                                        //                                            } else {
+                                        //                                                print("god")
+                                        //                                            }
+                                        //
+                                        //                                        }
+                                        break
+                                    }
+                                    else {
+                                        self!.allUserOfFirebase.append(["Name" : "" , "Phone number": infoMap["Phone number"]!, "profilepic": ""])
+                                        print("usersDetails----------->>>\(self!.usersDetails)")
+                                        break
+                                    }
+                                    break
+                                }
+                            }
                             
                             if infoMap["Name"] != nil {
                                 
                                 if infoMap["photo url"] != nil {
                                     self!.usersDetails.append(["Name" : infoMap["Name"]! , "Phone number": infoMap["Phone number"]!, "profilepic": infoMap["photo url"]!])
-//                                    print("usersDetails----------->>>\(self!.usersDetails)")
+                                    //                                    print("usersDetails----------->>>\(self!.usersDetails)")
                                 } else {
                                     self!.usersDetails.append(["Name" : infoMap["Name"]! , "Phone number": infoMap["Phone number"]!, "profilepic": ""])
-//                                    print("usersDetails----------->>>\(self!.usersDetails)")
+                                    //                                    print("usersDetails----------->>>\(self!.usersDetails)")
                                 }
                                 
                             } else if infoMap["group name"] != nil {
@@ -186,7 +214,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
     func getMessageId() {
         print("My Chats \(usersDetails)")
         databaseRef = Database.database().reference().child("Chats")
-        databaseRef.observe(.childAdded){[weak self](snapshot) in
+        databaseRef.observe(.childAdded) {[weak self](snapshot) in
             let key = snapshot.key
             //            print("Key",key)
             guard let _ = snapshot.value as? [String:Any] else {
@@ -196,10 +224,10 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
                 for _ in snapshots {
                     let cata = key
-                    if !(self?.msgIdList.contains("\(cata)"))!{
+                    if !(self?.msgIdList.contains("\(cata)"))! {
                         self?.msgIdList.append("\(cata)")
                     }
-                    if !(self?.msgkey.contains("\(cata)"))!{
+                    if !(self?.msgkey.contains("\(cata)"))! {
                         
                         let splt = cata.split(separator: "+")
                         if splt.count == 2 {
@@ -211,15 +239,18 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                                         let fhg = self?.usersDetails[int]
                                         print("int \(int)]]]]] ")
                                         
-                                        for op in 0...splt.count-1{
+                                        for op in 0...splt.count-1 {
                                             
-                                        if "+\(splt[op])" == fhg?["Phone number"] {
-                                            print("fhg is \(fhg?["Phone number"])=====\(splt[op])")
-                                            self?.listOfData.append(fhg!)
-                                            self?.hideProgress()
-
-                                            break
-                                        }
+                                            if "+\(splt[op])" == fhg?["Phone number"] {
+                                                print("fhg is \(fhg?["Phone number"])=====\(splt[op])")
+                                                self?.listOfData.append(fhg!)
+                                                if !self!.allUserOfFirebase.contains(fhg!) {
+                                                    self?.allUserOfFirebase.append(fhg!)
+                                                }
+                                                self?.hideProgress()
+                                                
+                                                break
+                                            }
                                             
                                         }
                                         
@@ -232,11 +263,11 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                             for int in 0...self!.usersDetails.count-1 {
                                 let fhg = self?.usersDetails[int]
                                 if cata == fhg?["Phone number"] {
-                                    if !(self?.listOfData.contains(fhg!))!{
+                                    if !(self?.listOfData.contains(fhg!))! {
                                         self!.msgkey.append("\(cata)")
                                         self?.listOfData.append(fhg!)
                                         self?.hideProgress()
-
+                                        
                                     }
                                     break
                                 }
@@ -247,9 +278,9 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
             } else {
                 print("No data Found")
             }
-//            print("UserDetais \(self?.msgkey)--------\(self?.listOfData)")
+            //            print("UserDetais \(self?.msgkey)--------\(self?.listOfData)")
             self?.searchList = self!.listOfData
-                        self?.tabelView.reloadData()
+            self?.tabelView.reloadData()
         }
     }
     
@@ -277,37 +308,37 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         getMessageId()
         getData()
         
-            searchController.searchResultsUpdater = self
-            searchController.searchBar.sizeToFit()
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.sizeToFit()
         tabelView.tableHeaderView = searchController.searchBar
-        tabelView.contentOffset = CGPoint(x: 0, y: searchController.searchBar.frame.height);
-
         
-//                let refreshControl = UIRefreshControl()
-//                refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
-//                   self.tabelView.refreshControl = refreshControl
+        
+        
+        //                let refreshControl = UIRefreshControl()
+        //                refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        //                   self.tabelView.refreshControl = refreshControl
         
         // Do any additional setup after loading the view.
     }
     
-    @objc func refresh(_ sender : Any)
-    {
-//        tabelView.tableHeaderView = headerView()
+    @objc func refresh(_ sender : Any) {
+        //        tabelView.tableHeaderView = headerView()
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        
         validAuth()
+        tabBarController?.tabBar.isHidden = false
+        tabBarController?.tabBarItem.accessibilityElementIsFocused()
         print("current User",phones)
         
     }
-    
+    var receiverName = ""
     var timer = Timer()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        tabelView.contentOffset = CGPoint(x: 0, y: searchController.searchBar.frame.height);
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
             if newMsg == true {
                 print("Yes \(newMsg)")
@@ -317,13 +348,13 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                 vc?.usersNumber = self.usersNumber
                 vc?.msgIdList = self.msgIdList
                 vc?.phoneid = self.phones
+                vc?.receiverName = receiverName
                 self.navigationController?.pushViewController(vc!, animated: true)
-                
             }
         })
-        tabBarController?.tabBar.isHidden = false
+        
         navigationItem.hidesBackButton = true
-        tabBarController?.tabBarItem.accessibilityElementIsFocused()
+        
     }
     func validAuth(){
         if FirebaseAuth.Auth.auth().currentUser == nil {
@@ -336,12 +367,12 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
     
     @IBAction func newChat(_ sender: UIBarButtonItem) {
         let vc = storyboard?.instantiateViewController(withIdentifier: "AllUsersList") as? AllUsersList
-     
         vc?.usersDetails = listOfData
         vc?.allUser = allUser
         vc?.phones = phones
         vc?.msgIdList = msgIdList
         vc?.msgKey = msgkey
+        vc?.allUserOfFirebase = allUserOfFirebase
         navigationController!.present(vc!, animated:true, completion: nil)
         
     }
@@ -360,7 +391,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         
         cell?.userLabel.text = frd["Phone number"]
         _ = allUser.filter { user in
-//            print("user is \(user)")
+            //            print("user is \(user)")
             let hib =  user["Phone number"]
             
             if hib == frd["Phone number"] {
@@ -402,26 +433,37 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
             }
         }
         let vc = storyboard?.instantiateViewController(withIdentifier: "ChatConversionCode") as? ChatConversionCode
+        if frd["Name"] != "" {
+            vc?.receiverName = frd["Phone number"]!
+            _ = allUser.filter { user in
+                //            print("user is \(user)")
+                let hib =  user["Phone number"]
+                if hib == frd["Phone number"] {
+                    vc?.receiverName = user["Name"]!
+                }
+                return true
+            }
+        } else {
+            vc?.receiverName = usersNumber
+        }
         vc?.receiverid = usersNumber
         vc?.usersNumber = usersNumber
         if frd["group name"] == nil {
-            
         } else {
             vc?.receiverid = frd["group name"]!
+            vc?.receiverName = frd["group name"]!
+            vc?.allUserOfContact = allUser
             vc?.groupK = "yes"
         }
         mychat()
         vc?.mid = messageId!
         vc?.phoneid = phones
-        
         navigationController?.pushViewController(vc!, animated: true)
         hideProgress()
-        //        friends = [ChatAppUser]()
     }
     
     
     func mychat() {
-        
         if msgstatus == false {
             messageId = "\(phones)\(usersNumber)"
             databaseRef.child("Chat").observeSingleEvent(of: .value, with: { [self] (snapshot) in
@@ -434,18 +476,17 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
             })
         }
     }
-    
 }
 
 extension UserDetailsCode {
-    func mbProgressHUD(text: String){
+    func mbProgressHUD(text: String) {
         DispatchQueue.main.async {
             let progressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
             progressHUD.label.text = text
             progressHUD.contentColor = .systemBlue
         }
     }
-    func hideProgress(){
+    func hideProgress() {
         DispatchQueue.main.async {
             MBProgressHUD.hide(for: self.view, animated: false)
         }
