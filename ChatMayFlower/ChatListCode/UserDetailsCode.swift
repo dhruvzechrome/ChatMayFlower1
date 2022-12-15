@@ -129,7 +129,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                             self!.keyArray.append("\(snapshot.key)")
                             print("Aray of number is \(self!.keyArray)")
                             
-                            
+                            if self!.allUser.count > 1 {
                             for i in 0...self!.allUser.count-1 {
                                 let frd = self!.allUser[i]
                                 if frd["Phone number"] == infoMap["Phone number"] {
@@ -166,7 +166,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                                     }
                                     break
                                 }
-                            }
+                            }}
                             
                             if infoMap["Name"] != nil {
                                 
@@ -260,6 +260,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                             }
                         }
                         else {
+                            if self!.usersDetails.count > 1 {
                             for int in 0...self!.usersDetails.count-1 {
                                 let fhg = self?.usersDetails[int]
                                 if cata == fhg?["Phone number"] {
@@ -271,7 +272,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                                     }
                                     break
                                 }
-                            }
+                            }}
                         }
                     }
                 }
@@ -446,13 +447,21 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         } else {
             vc?.receiverName = usersNumber
         }
+        
+        vc?.urlPath = frd["profilepic"] ?? ""
         vc?.receiverid = usersNumber
         vc?.usersNumber = usersNumber
         if frd["group name"] == nil {
         } else {
-            vc?.receiverid = frd["group name"]!
+            print("group user id \(frd["Phone number"])")
+            vc?.receiverid = frd["Phone number"]!
             vc?.receiverName = frd["group name"]!
-            vc?.allUserOfContact = allUser
+            
+            vc?.usersDetails = listOfData
+            vc?.allUser = allUser
+            vc?.phones = phones
+            vc?.msgIdList = msgIdList
+            vc?.allUserOfFirebase = allUserOfFirebase
             vc?.groupK = "yes"
         }
         mychat()

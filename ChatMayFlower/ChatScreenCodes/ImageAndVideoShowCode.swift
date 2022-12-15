@@ -78,6 +78,7 @@ class ImageAndVideoShowCode: UIViewController {
                         urlpth = "\(url!)"
                         uid = uid! + 1
                         database.child("Uid").setValue(uid)
+//                        database.child("Chats").child(mesId).child("status").setValue(["\(num)":true,"\(num)":false])
                         if commentField.text == "" {
                             database.child("Chats").child(mesId).child("chatting").child("\(uid!)").setValue(["\(num)chatPhoto": urlpth], withCompletionBlock: { error, _ in
                                 guard error == nil else {

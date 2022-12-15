@@ -22,6 +22,8 @@
 		88402BB529234F4F00EC8972 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88402BB429234F4F00EC8972 /* ImageTableViewCell.swift */; };
 		884E693B29220A69005DF15B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 884E693A29220A69005DF15B /* GoogleService-Info.plist */; };
 		884E693D29222026005DF15B /* ImageAndVideoShowCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884E693C29222026005DF15B /* ImageAndVideoShowCode.swift */; };
+		885F4A51294ADEF300279586 /* ReceiverProfileViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885F4A50294ADEF300279586 /* ReceiverProfileViewCell.swift */; };
+		885F4A53294AF31000279586 /* ReceiverEditCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885F4A52294AF31000279586 /* ReceiverEditCode.swift */; };
 		887D10BD291291A50086E251 /* ShowProfileDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887D10BC291291A50086E251 /* ShowProfileDetail.swift */; };
 		888FCD1F293DB1D000EE2E49 /* AllUsersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888FCD1E293DB1D000EE2E49 /* AllUsersList.swift */; };
 		888FCD21293DB36B00EE2E49 /* AllUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888FCD20293DB36B00EE2E49 /* AllUserTableViewCell.swift */; };
@@ -55,6 +57,8 @@
 		88402BB429234F4F00EC8972 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
 		884E693A29220A69005DF15B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		884E693C29222026005DF15B /* ImageAndVideoShowCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAndVideoShowCode.swift; sourceTree = "<group>"; };
+		885F4A50294ADEF300279586 /* ReceiverProfileViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiverProfileViewCell.swift; sourceTree = "<group>"; };
+		885F4A52294AF31000279586 /* ReceiverEditCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiverEditCode.swift; sourceTree = "<group>"; };
 		887D10BC291291A50086E251 /* ShowProfileDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowProfileDetail.swift; sourceTree = "<group>"; };
 		888FCD1E293DB1D000EE2E49 /* AllUsersList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllUsersList.swift; sourceTree = "<group>"; };
 		888FCD20293DB36B00EE2E49 /* AllUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllUserTableViewCell.swift; sourceTree = "<group>"; };
@@ -97,6 +101,8 @@
 			children = (
 				8838834128FA722C0071E6E9 /* TableViewCell.swift */,
 				883EBD5C28F8451E000A59BA /* UserDetailsCode.swift */,
+				885F4A52294AF31000279586 /* ReceiverEditCode.swift */,
+				885F4A50294ADEF300279586 /* ReceiverProfileViewCell.swift */,
 			);
 			path = ChatListCode;
 			sourceTree = "<group>";
@@ -149,7 +155,7 @@
 				883666C02943364300D32556 /* ChatListCode */,
 				88A32E0D28F976240041B6ED /* LoginScreens */,
 				88A32E0C28F976080041B6ED /* Controllers */,
-				88A32E0B28F975F70041B6ED /* Views */,
+				88A32E0B28F975F70041B6ED /* Storyboard */,
 				88A32E0A28F975EA0041B6ED /* Models */,
 				88A32E0928F975D50041B6ED /* ViewModels */,
 				88A32E0828F975B50041B6ED /* Resources */,
@@ -183,13 +189,13 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		88A32E0B28F975F70041B6ED /* Views */ = {
+		88A32E0B28F975F70041B6ED /* Storyboard */ = {
 			isa = PBXGroup;
 			children = (
-				883EBD4B28F7E0A2000A59BA /* LaunchScreen.storyboard */,
 				883EBD4628F7E09F000A59BA /* Main.storyboard */,
+				883EBD4B28F7E0A2000A59BA /* LaunchScreen.storyboard */,
 			);
-			path = Views;
+			path = Storyboard;
 			sourceTree = "<group>";
 		};
 		88A32E0C28F976080041B6ED /* Controllers */ = {
@@ -353,6 +359,7 @@
 				882381E0291639BC00786164 /* EditProfileInformation.swift in Sources */,
 				88A32E0F28F9769D0041B6ED /* DataBaseManager.swift in Sources */,
 				88FEF23A29275A290019AF02 /* VideoSentCode.swift in Sources */,
+				885F4A53294AF31000279586 /* ReceiverEditCode.swift in Sources */,
 				882DE2F22928AE5500B8963A /* ImageVc.swift in Sources */,
 				889B210B28FD653200189789 /* ChatTableViewCell.swift in Sources */,
 				88A040CA29137F53008FB921 /* AddUserInformation.swift in Sources */,
@@ -361,6 +368,7 @@
 				888FCD21293DB36B00EE2E49 /* AllUserTableViewCell.swift in Sources */,
 				883EBD5928F7FBB6000A59BA /* PhoneVerificationCode.swift in Sources */,
 				883EBD4328F7E09F000A59BA /* SceneDelegate.swift in Sources */,
+				885F4A51294ADEF300279586 /* ReceiverProfileViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

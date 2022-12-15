@@ -84,11 +84,11 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
             print("Selected image ",selectedImage)
             profileImage.image = selectedImage
             didselectedImage = selectedImage
-            let localPath = info[.imageURL] as? NSURL
-            _ = info[.imageURL] as? URL
-            print("Local Path  > ",localPath!)
+//            let localPath = info[.imageURL] as? NSURL
+//            _ = info[.imageURL] as? URL
+//            print("Local Path  > ",localPath!)
             
-            print("Name of Image --->>> ",filename!)
+//            print("Name of Image --->>> ",filename!)
             picker.dismiss(animated: true, completion: nil)
             
         }
@@ -98,7 +98,7 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
         
     }
     
-    @IBAction func submit(_ sender: UIButton) {
+    @IBAction func submit(_ sender: UIBarButtonItem) {
         
         guard didselectedImage != nil else{
             if tName.text != "" && tPhoneNumber.text != ""{

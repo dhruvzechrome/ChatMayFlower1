@@ -12,20 +12,28 @@ import Kingfisher
 
 
 class GroupCreationCode: UIViewController {
+    var name = ""
     var usersList = [[String:String]]()
     var phones = ""
     var databaseRef = Database.database().reference()
     var groupUser = [String]()
+    var groupUserSelected = [String]()
     var groupName = ""
-    var uid = ""
+    var uid :Int?
     @IBOutlet weak var grouptxtField: UITextField!
     @IBOutlet weak var userTable: UITableView!
+    let searchController = UISearchController()
     override func viewDidLoad() {
         super.viewDidLoad()
+        if groupName != "" {
+            grouptxtField.text = name
+        }
+        groupUserSelected = groupUser
         userTable.delegate = self
         userTable.dataSource = self
         self.userTable.isEditing = true
         self.userTable.allowsMultipleSelectionDuringEditing = true
+        userTable.tableHeaderView = searchController.searchBar
         if usersList.count > 0 {
             print("Users list \(usersList)")
             userTable.reloadData()
@@ -33,7 +41,7 @@ class GroupCreationCode: UIViewController {
     }
     
     @IBAction func createGrpButton(_ sender: UIBarButtonItem) {
-        mychat()
+        
         let name = grouptxtField.text
         if grouptxtField.text  != "" && groupName != "" && groupUser.count > 2 {
             databaseRef.child("Contact List").child("\(name!)").setValue(["group name": "\(name!)","group user":"\(phones)\(groupName)","photo url":"","location" : ""], withCompletionBlock: { error, _ in
@@ -52,6 +60,10 @@ class GroupCreationCode: UIViewController {
                 self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
                 print("data written seccess")
             })
+        } else {
+            let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -68,8 +80,17 @@ extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let frd = usersList[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupCreationTableViewCell", for: indexPath) as? GroupCreationTableViewCell
-        
 //        print("my image is \(frd["profilepic"]!)")
+        if groupUserSelected.count > 0 {
+            _ = groupUserSelected.filter { list in
+                
+                if list == frd["Phone number"] {
+                    tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                }
+            return true
+            }
+        }
+        
         if frd["Name"] == nil {
             cell?.userTitle.text = frd["Phone number"]
         } else {
@@ -94,6 +115,7 @@ extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
         let num = (frd["Phone number"])!
         if !groupUser.contains(num) {
             groupUser.append(num)
+            mychat()
         }
         
         print("\(groupUser)")
@@ -101,13 +123,14 @@ extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let frd = usersList[indexPath.row]
         let num = (frd["Phone number"])!
-        print("\(groupUser)")
         for i in 0...groupUser.count-1 {
             if num == groupUser[i] {
                 groupUser.remove(at: i)
+                mychat()
                 break
             }
         }
+        print("\(groupUser)")
     }
     
     func mychat() {
@@ -117,7 +140,7 @@ extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
                 groupName = "\(groupName)\(groupUser[i])"
                 print(groupName)
             }
-            
         }
+        print("\(groupName)")
     }
 }

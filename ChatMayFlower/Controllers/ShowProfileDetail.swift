@@ -25,22 +25,29 @@ class ShowProfileDetail: UIViewController {
     var imag : UIImage?
     var imagearray = [UIImage]()
     
+    @IBOutlet weak var logoutoutlet: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.hidesBackButton = true
+        navigationController?.navigationBar.gestureRecognizers?.removeAll()
+            phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
+            phoneNumber.text = phones
+            getData()
+        
+        
         // Do any additional setup after loading the view.
     }
-    
+    @objc func handleTap(_ sender: UITapGestureRecognizer) {
+         print("Hello World ")
+        
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tabBarController?.tabBar.isHidden = false
+            tabBarController?.tabBar.isHidden = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
-        phoneNumber.text = phones
-        getData()
+       
     }
     
     func getData(){
@@ -104,7 +111,7 @@ class ShowProfileDetail: UIViewController {
         }
     }
     
-    @IBAction func editProfile(_ sender: UIButton) {
+    @IBAction func editProfile(_ sender: UIBarButtonItem) {
         
         let vc = storyboard?.instantiateViewController(withIdentifier: "EditProfileInformation") as? EditProfileInformation
         
