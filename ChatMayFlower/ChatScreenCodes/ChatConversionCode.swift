@@ -25,7 +25,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     var allUser = [[String:String]]()
     var allUserOfFirebase = [[String:String]]()
     var phones = ""
-    
+    var groupMsgId = ""
     var urlPath = ""
     var databaseRef: DatabaseReference!
     var usersNumber = ""
@@ -84,6 +84,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         vc?.nav = "NavM"
         vc?.uid = ui
         vc?.allUserOfFirebase = allUserOfFirebase
+        vc?.groupMsgId = groupMsgId
         vc?.groupK = groupK
         hideProgress()
         navigationController?.pushViewController(vc!, animated: true)
@@ -384,7 +385,13 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     
     // MARK: - Get Chatting from Firebase Database
     func getchat() {
-        database.child("Chats").child(mid).child("chatting").observe(.childAdded) {[weak self](snapshot) in
+        var mymid = ""
+        if groupK == "yes" {
+            mymid = groupMsgId
+        } else {
+            mymid = mid
+        }
+        database.child("Chats").child(mymid).child("chatting").observe(.childAdded) {[weak self](snapshot) in
             DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                 guard let _ = snapshot.value as? [String:Any] else {return
                     print("Error")
@@ -445,15 +452,21 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
             if mid == "" {
                 mychat()
             }
+            var mymid = ""
+            if groupK == "yes" {
+                mymid = groupMsgId
+            } else {
+                mymid = mid
+            }
             seenStatusLabel = "delivered"
             oppositeSeenStatus = false
             lcb = false
             chatTable.tableFooterView = msgsSeenfooterview()
             database.child("Uid").setValue(ui)
-            database.child("Chats").child(mid).child("status").setValue(["\(phoneid)":true,"\(receiverid)":false])
+            database.child("Chats").child(mymid).child("status").setValue(["\(phoneid)":true,"\(receiverid)":false])
             
             if replyChat == nil {
-                database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(phoneid)": chatField.text!], withCompletionBlock: { error, _ in
+                database.child("Chats").child(mymid).child("chatting").child("\(ui)").setValue(["\(phoneid)": chatField.text!], withCompletionBlock: { error, _ in
                     guard error == nil else {
                         print("Failed to write data")
                         return
@@ -472,7 +485,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     
                 }
             } else {
-                database.child("Chats").child(mid).child("chatting").child("\(ui)").setValue(["\(phoneid)": chatField.text!,replyText:replyChat as Any], withCompletionBlock: { [self] error, _ in
+                database.child("Chats").child(mymid).child("chatting").child("\(ui)").setValue(["\(phoneid)": chatField.text!,replyText:replyChat as Any], withCompletionBlock: { [self] error, _ in
                     guard error == nil else {
                         print("Failed to write data")
                         return
@@ -636,9 +649,10 @@ extension ChatConversionCode : UITextFieldDelegate{
                 backgroundSV.frame.size = CGSize(width: backgroundSV.bounds.width, height: backgroundSV.frame.height - keyboardSize.height)
                 //               print("asdasd" , keyboardheight)
             }
-            let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
-            chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
-            
+            if chatMapKey.count > 0 {
+                let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
+                chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            }
         }
         
     }

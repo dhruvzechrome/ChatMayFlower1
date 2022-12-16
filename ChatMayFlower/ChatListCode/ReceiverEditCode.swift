@@ -10,7 +10,7 @@ import FirebaseDatabase
 import FirebaseAuth
 import Kingfisher
 class ReceiverEditCode: UIViewController {
-
+    var groupMsgId = ""
     var uid : Int?
     var currentUser = ""
     @IBOutlet weak var receITableView: UITableView!
@@ -37,7 +37,7 @@ class ReceiverEditCode: UIViewController {
             receITableView.delegate = self
             receITableView.dataSource = self
             if groupK == "yes" {
-                edit.title = "Add Member"
+                edit.title = "Edit Group"
                 arrayList = phones.split(separator: "+")
                 print("count \(arrayList.count)")
                 receITableView.reloadData()
@@ -70,6 +70,7 @@ class ReceiverEditCode: UIViewController {
             vc?.uid = uid
             vc?.groupName = phones
             vc?.name = uname
+            vc?.groupMsgId = groupMsgId
             self.present(vc!, animated: true)
         }
         
@@ -105,12 +106,14 @@ extension ReceiverEditCode : UITableViewDelegate, UITableViewDataSource {
                 return cell!
             } else {
                 let frd = groupUser[int]
-                int += 1
-                if int == groupUser.count-1 {
-                    int = 0
-                }
+                print("user \(frd)")
+               
                 let cell = receITableView.dequeueReusableCell(withIdentifier: "GroupUserCell", for: indexPath) as? GroupUserCell
                 cell?.groupUserName.text = "\(frd)"
+                int += 1
+                if int == groupUser.count {
+                    int = 0
+                }
                 return cell!
             }
 

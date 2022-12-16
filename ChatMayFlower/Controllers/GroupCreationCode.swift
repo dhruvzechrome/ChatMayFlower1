@@ -12,6 +12,7 @@ import Kingfisher
 
 
 class GroupCreationCode: UIViewController {
+    var groupMsgId = ""
     var name = ""
     var usersList = [[String:String]]()
     var phones = ""
@@ -41,29 +42,59 @@ class GroupCreationCode: UIViewController {
     }
     
     @IBAction func createGrpButton(_ sender: UIBarButtonItem) {
-        
-        let name = grouptxtField.text
-        if grouptxtField.text  != "" && groupName != "" && groupUser.count > 2 {
-            databaseRef.child("Contact List").child("\(name!)").setValue(["group name": "\(name!)","group user":"\(phones)\(groupName)","photo url":"","location" : ""], withCompletionBlock: { error, _ in
-                guard error == nil else {
-                    print("Failed to write data")
-                    return
-                }
-                print("data written seccess")
-            })
-            databaseRef.child("Chats").child("\(phones)\(groupName)").child("chatting").child("0").setValue(["\(phones)": ""], withCompletionBlock: { error, _ in
-                guard error == nil else {
-                    print("Failed to write data")
-                    
-                    return
-                }
-                self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
-                print("data written seccess")
-            })
+        if name == "" {
+            print("Yes")
+            let name = grouptxtField.text
+            if grouptxtField.text  != "" && groupName != "" && groupUser.count > 1 {
+                let str = "group\(UUID().uuidString)"
+                databaseRef.child("Contact List").child("\(name!)").setValue(["uniqueid": "\(str)","admin":"\(phones)" , "group name": "\(name!)" , "group user":"\(phones)\(groupName)" , "photo url":"","location" : ""] , withCompletionBlock: { error, _ in
+                    guard error == nil else {
+                        print("Failed to write data")
+                        return
+                    }
+                    print("data written seccess")
+                })
+                databaseRef.child("Chats").child("\(str)").setValue(["groupMesId":"\(phones)\(groupName)"])
+                databaseRef.child("Chats").child("\(str)").child("chatting").child("0").setValue(["\(phones)": ""], withCompletionBlock: { error, _ in
+                    guard error == nil else {
+                        print("Failed to write data")
+                        
+                        return
+                    }
+                    self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+                    print("data written seccess")
+                })
+            } else {
+                let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
         } else {
-            let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            print("No")
+            let name = grouptxtField.text
+            if grouptxtField.text  != "" && groupName != "" && groupUser.count > 1 {
+                databaseRef.child("Contact List").child("\(name!)").setValue(["uniqueid": "\(groupMsgId)","admin":"\(phones)" , "group name": "\(name!)" , "group user":"\(groupName)" , "photo url":"","location" : ""] , withCompletionBlock: { error, _ in
+                    guard error == nil else {
+                        print("Failed to write data")
+                        return
+                    }
+                    print("data written seccess")
+                })
+                databaseRef.child("Chats").child("\(groupMsgId)").setValue(["groupMesId":"\(groupName)"])
+                //                databaseRef.child("Chats").child("\(groupMsgId)").child("chatting").child("0").setValue(["\(phones)": ""], withCompletionBlock: { error, _ in
+                //                    guard error == nil else {
+                //                        print("Failed to write data")
+                //
+                //                        return
+                //                    }
+                //                    self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+                //                    print("data written seccess")
+                //                })
+            } else {
+                let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
         }
     }
     

@@ -106,7 +106,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                 
             }
         }
-        print("List of all user \(allUser)")
+        print("List of all user ===========  \(allUser)")
     }
     
     func getData() {
@@ -185,7 +185,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                                 for i in 0...ffhhf.count-1 {
                                     if self!.phones == "+\(ffhhf[i])" {
                                         print("yes")
-                                        self!.usersDetails.append(["group name" : "\(infoMap["group name"]!)" , "Phone number": infoMap["group user"]!, "profilepic": ""])
+                                        self!.usersDetails.append(["group name" : "\(infoMap["group name"]!)" , "Phone number": infoMap["group user"]!, "profilepic": "","admin": "\(infoMap["admin"]!)","uniqueid": "\(infoMap["uniqueid"]!)"])
                                         break
                                     } else {
                                         print("god")
@@ -196,7 +196,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                             }
                             else {
                                 self!.usersDetails.append(["Name" : "" , "Phone number": infoMap["Phone number"]!, "profilepic": ""])
-                                print("usersDetails----------->>>\(self!.usersDetails)")
+                                
                             }
                             
                         }
@@ -205,7 +205,8 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                     
                 }
             }
-            print("Sbapshot is ", snapshot.value!)
+//            print("Sbapshot is ", snapshot.value!)
+//            print("usersDetails----------->>>\(self!.usersDetails)")
             //            self?.tabelView.reloadData()
         }
     }
@@ -217,32 +218,43 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         databaseRef.observe(.childAdded) {[weak self](snapshot) in
             let key = snapshot.key
             //            print("Key",key)
+            
+            let infoMap = snapshot.value as? [String:Any]
             guard let _ = snapshot.value as? [String:Any] else {
                 print("No data Found")
                 return
             }
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
-                for _ in snapshots {
-                    let cata = key
+                for data in snapshots {
+                    var cata = key
+                    if cata.prefix(3) != "+91" {
+                        cata = "\(infoMap!["groupMesId"]!)"
+                        print("Key cata = \(cata)")
+                    }
                     if !(self?.msgIdList.contains("\(cata)"))! {
                         self?.msgIdList.append("\(cata)")
+                        print("key ================-== \(cata)")
+                        
+                        
                     }
+                   
                     if !(self?.msgkey.contains("\(cata)"))! {
+                      
                         
                         let splt = cata.split(separator: "+")
                         if splt.count == 2 {
                             for i in 0...splt.count-1 {
                                 if self!.phones == "+\(splt[i])" {
-                                    print("iii \(i)")
+//                                    print("iii \(i)")
                                     self!.msgkey.append("\(cata)")
                                     for int in 0...self!.usersDetails.count-1 {
                                         let fhg = self?.usersDetails[int]
-                                        print("int \(int)]]]]] ")
+//                                        print("int \(int)]]]]] ")
                                         
                                         for op in 0...splt.count-1 {
                                             
                                             if "+\(splt[op])" == fhg?["Phone number"] {
-                                                print("fhg is \(fhg?["Phone number"])=====\(splt[op])")
+//                                                print("fhg is \(fhg?["Phone number"])=====\(splt[op])")
                                                 self?.listOfData.append(fhg!)
                                                 if !self!.allUserOfFirebase.contains(fhg!) {
                                                     self?.allUserOfFirebase.append(fhg!)
@@ -279,8 +291,9 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
             } else {
                 print("No data Found")
             }
-            //            print("UserDetais \(self?.msgkey)--------\(self?.listOfData)")
+//                        print("msg \(self?.msgkey)--------\(self?.listOfData)")
             self?.searchList = self!.listOfData
+            print("List of data      \(self?.msgIdList)")
             self?.tabelView.reloadData()
         }
     }
@@ -451,6 +464,8 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         vc?.urlPath = frd["profilepic"] ?? ""
         vc?.receiverid = usersNumber
         vc?.usersNumber = usersNumber
+        mychat()
+        vc?.mid = messageId!
         if frd["group name"] == nil {
         } else {
             print("group user id \(frd["Phone number"])")
@@ -460,12 +475,12 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
             vc?.usersDetails = listOfData
             vc?.allUser = allUser
             vc?.phones = phones
+            vc?.groupMsgId = frd["uniqueid"]!
             vc?.msgIdList = msgIdList
             vc?.allUserOfFirebase = allUserOfFirebase
             vc?.groupK = "yes"
         }
-        mychat()
-        vc?.mid = messageId!
+       
         vc?.phoneid = phones
         navigationController?.pushViewController(vc!, animated: true)
         hideProgress()
