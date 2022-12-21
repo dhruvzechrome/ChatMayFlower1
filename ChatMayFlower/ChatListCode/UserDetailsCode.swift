@@ -471,13 +471,14 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
             print("group user id \(frd["Phone number"])")
             vc?.receiverid = frd["Phone number"]!
             vc?.receiverName = frd["group name"]!
-            
+            vc?.groupAdmin = frd["admin"] ?? ""
             vc?.usersDetails = listOfData
             vc?.allUser = allUser
             vc?.phones = phones
             vc?.groupMsgId = frd["uniqueid"]!
             vc?.msgIdList = msgIdList
             vc?.allUserOfFirebase = allUserOfFirebase
+            vc?.allUserOfContact = allUser
             vc?.groupK = "yes"
         }
        

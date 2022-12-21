@@ -28,6 +28,7 @@ class ReceiverEditCode: UIViewController {
     var arrayList = [String.SubSequence]()
     var allUserOfFirebase = [[String:String]]()
     var groupUser = [String]()
+    var groupAdmin = ""
     override func viewDidLoad() {
         super.viewDidLoad()
      //   navigationController?.navigationBar.gestureRecognizers?.removeAll()
@@ -37,14 +38,16 @@ class ReceiverEditCode: UIViewController {
             receITableView.delegate = self
             receITableView.dataSource = self
             if groupK == "yes" {
+                
+                
                 edit.title = "Edit Group"
                 arrayList = phones.split(separator: "+")
-                print("count \(arrayList.count)")
+//                print("count \(arrayList.count)")
                 receITableView.reloadData()
                 for i in 0...arrayList.count-1 {
                     groupUser.append("+\(arrayList[i])")
                 }
-                print("Group Users \(groupUser)")
+//                print("Group Users \(groupUser)")
             }
             receITableView.reloadData()
         }
@@ -57,8 +60,17 @@ class ReceiverEditCode: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         currentUser = (FirebaseAuth.Auth.auth().currentUser?.phoneNumber)!
+        print(currentUser)
+        if groupAdmin != currentUser  && groupK == "yes" && currentUser != "" {
+            print("Current user \(currentUser) --- Group Admin \(groupAdmin)")
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
+            self.navigationItem.rightBarButtonItem?.tintColor = .clear
+        }
     }
     
+    @IBAction func rightBar(_ sender: Any) {
+    }
+    @IBOutlet weak var navigationBar: UINavigationItem!
     
     @IBAction func editButton(_ sender: Any) {
         
@@ -72,6 +84,7 @@ class ReceiverEditCode: UIViewController {
             vc?.name = uname
             vc?.groupMsgId = groupMsgId
             self.present(vc!, animated: true)
+            
         }
         
     }
@@ -106,7 +119,7 @@ extension ReceiverEditCode : UITableViewDelegate, UITableViewDataSource {
                 return cell!
             } else {
                 let frd = groupUser[int]
-                print("user \(frd)")
+//                print("user \(frd)")
                
                 let cell = receITableView.dequeueReusableCell(withIdentifier: "GroupUserCell", for: indexPath) as? GroupUserCell
                 cell?.groupUserName.text = "\(frd)"

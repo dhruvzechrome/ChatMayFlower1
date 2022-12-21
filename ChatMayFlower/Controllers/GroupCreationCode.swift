@@ -14,6 +14,7 @@ import Kingfisher
 class GroupCreationCode: UIViewController {
     var groupMsgId = ""
     var name = ""
+    var groupAdmin = ""
     var usersList = [[String:String]]()
     var phones = ""
     var databaseRef = Database.database().reference()
@@ -80,16 +81,15 @@ class GroupCreationCode: UIViewController {
                     }
                     print("data written seccess")
                 })
-                databaseRef.child("Chats").child("\(groupMsgId)").setValue(["groupMesId":"\(groupName)"])
-                //                databaseRef.child("Chats").child("\(groupMsgId)").child("chatting").child("0").setValue(["\(phones)": ""], withCompletionBlock: { error, _ in
-                //                    guard error == nil else {
-                //                        print("Failed to write data")
-                //
-                //                        return
-                //                    }
-                //                    self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
-                //                    print("data written seccess")
-                //                })
+                let ref = databaseRef.child("Chats").child("\(groupMsgId)")
+                ref.updateChildValues(["groupMesId":"\(groupName)"]) { error, _ in
+                    guard error == nil else {
+                        print("Failedt Update")
+                        return
+                    }
+                    print("Update Successfully")
+                    self.dismiss(animated: true)
+                }
             } else {
                 let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))

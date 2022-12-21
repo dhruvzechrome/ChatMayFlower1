@@ -2588,7 +2588,7 @@
                     <navigationItem key="navigationItem" title="Profile" id="sGQ-md-XJ0">
                         <barButtonItem key="rightBarButtonItem" title="Edit" style="plain" id="tG5-ml-VwH">
                             <connections>
-                                <action selector="editButton:" destination="dgw-eF-e8n" id="T0T-0O-I0X"/>
+                                <action selector="editButton:" destination="dgw-eF-e8n" id="LZL-kw-A9O"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

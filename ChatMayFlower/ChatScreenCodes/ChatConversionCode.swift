@@ -67,6 +67,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     var lcb = false
     var receiverName = ""
     var receiverUserid = ""
+    var groupAdmin = ""
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getdata()
@@ -83,6 +84,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         vc?.uname = receiverName
         vc?.nav = "NavM"
         vc?.uid = ui
+        vc?.groupAdmin = groupAdmin
         vc?.allUserOfFirebase = allUserOfFirebase
         vc?.groupMsgId = groupMsgId
         vc?.groupK = groupK
@@ -97,7 +99,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         titl.title = receiverName
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         receiverUserid = receiverid
-        
+        print("All user of contact is \(allUserOfContact)")
 //        titl.titleView?.addGestureRecognizer(tap)
         navigationController?.navigationBar.addGestureRecognizer(tap)
         if usersNumber.prefix(3) != "+91" {
@@ -109,7 +111,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         print("\(usersNumber)")
         keyboardheight = 0
         seenVcStatus = true
-//        print("all user \(allUserOfContact)")
+        print("all user \(allUserOfContact)")
 //        print("\(mid)!!! \(receiverid)---- \(usersNumber)====\(phoneid)-----\(msgIdList)")
         chatField.delegate = self
         if mid != "" {
@@ -1514,14 +1516,15 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverViewCell", for: indexPath) as? ReceiverViewCell
                         cell?.receiverMessages.text = "\(txtChat!)"
                         cell?.selectionStyle = .none
+                        
                         if groupK == "yes" {
                             cell?.receiverNumber.text = "\(userNumberKey)"
                             _ = allUserOfContact.filter {user in
                                 let str = user["Phone number"]
-                                
+                                print("Reciever user \(str)")
                                 if userNumberKey == str {
                                     nameString = user["Name"]!
-//                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                     if user["Name"] != ""  {
 //                                        print("Yes ")
                                         cell?.receiverNumber.text = "\(nameString)"
