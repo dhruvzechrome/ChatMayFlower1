@@ -26,7 +26,10 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     var allUserOfFirebase = [[String:String]]()
     var phones = ""
     var groupMsgId = ""
+    
     var urlPath = ""
+    var fileName = ""
+    
     var databaseRef: DatabaseReference!
     var usersNumber = ""
     var msgIdList = [String]()
@@ -79,7 +82,8 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
          print("Hello World - \(receiverid) - \(receiverName)")
         let vc = storyboard?.instantiateViewController(withIdentifier: "ReceiverEditCode") as? ReceiverEditCode
         vc?.urlPath = urlPath
-        print("receiver id is \(receiverUserid) -- \(receiverName) - \(urlPath) -- \(allUserOfContact)")
+        vc?.fileName = fileName
+        print("receiver id is \(receiverUserid) -- \(receiverName) - \(urlPath) -- \(fileName)")
         vc?.phones = receiverUserid
         vc?.uname = receiverName
         vc?.nav = "NavM"
@@ -107,6 +111,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
             usersNumber = "+91\(usersNumber)"
             receiverid = "+91\(receiverid)"
         }
+        
         codeFlex()
         print("\(usersNumber)")
         keyboardheight = 0
@@ -119,14 +124,16 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
                 
                 if seenVcStatus == true {
-//                    if groupK != "yes" {
-                        status()
-//                    }
+                    //                    if groupK != "yes" {
+                    status()
+                    //                    }
+                   
                     if textFieldBtnStatus == true {
                         let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
                         chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
                         // scrollToBottom()
                         getdata()
+                        
                         textFieldBtnStatus = false
                     } else {
                         hideProgress()
@@ -134,11 +141,16 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                 }
             })
             getchat()
-//            if groupK != "yes" {
-                status()
-//            }
+            //            if groupK != "yes" {
+            status()
+            //            }
         }
-            mbProgressHUD(text: "Loading")
+        mbProgressHUD(text: "Loading")
+        DispatchQueue.main.asyncAfter(deadline: .now()+1, execute: { [self] in
+            if chatMap.count == 0 {
+                hideProgress()
+            }
+        })
         
         
         //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))

@@ -16,6 +16,8 @@ class ReceiverEditCode: UIViewController {
     @IBOutlet weak var receITableView: UITableView!
     var nav = ""
     var groupK = "no"
+    
+    var fileName = ""
     var urlPath = ""                    // url of photos
     var filename = ""                   // path of photo in firebase storage
     var uname = ""                      // user name
@@ -42,7 +44,6 @@ class ReceiverEditCode: UIViewController {
                 
                 edit.title = "Edit Group"
                 arrayList = phones.split(separator: "+")
-//                print("count \(arrayList.count)")
                 receITableView.reloadData()
                 for i in 0...arrayList.count-1 {
                     groupUser.append("+\(arrayList[i])")
@@ -68,9 +69,6 @@ class ReceiverEditCode: UIViewController {
         }
     }
     
-    @IBAction func rightBar(_ sender: Any) {
-    }
-    @IBOutlet weak var navigationBar: UINavigationItem!
     
     @IBAction func editButton(_ sender: Any) {
         
@@ -83,7 +81,12 @@ class ReceiverEditCode: UIViewController {
             vc?.groupName = phones
             vc?.name = uname
             vc?.groupMsgId = groupMsgId
-            self.present(vc!, animated: true)
+            vc?.groupAdmin = currentUser
+            vc?.photoUrlPth = urlPath
+            vc?.fileName = fileName
+            print("Url path of Photo of group ----------- \(fileName)")
+            let newVc = UINavigationController(rootViewController: vc!)
+            self.present(newVc, animated: true)
             
         }
         
@@ -122,6 +125,10 @@ extension ReceiverEditCode : UITableViewDelegate, UITableViewDataSource {
 //                print("user \(frd)")
                
                 let cell = receITableView.dequeueReusableCell(withIdentifier: "GroupUserCell", for: indexPath) as? GroupUserCell
+                
+                if groupAdmin == frd {
+                    cell?.admin.text = "Admin"
+                }
                 cell?.groupUserName.text = "\(frd)"
                 int += 1
                 if int == groupUser.count {

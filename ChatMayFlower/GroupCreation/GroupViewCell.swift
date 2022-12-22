@@ -1,18 +1,16 @@
 //
-//  AllUserTableViewCell.swift
+//  GroupViewCell.swift
 //  ChatMayFlower
 //
-//  Created by iMac on 05/12/22.
+//  Created by iMac on 21/12/22.
 //
 
 import UIKit
 
-class AllUserTableViewCell: UITableViewCell {
-    
-    @IBOutlet weak var profileImage: UIImageView!
+class GroupViewCell: UITableViewCell {
+
     @IBOutlet weak var name: UILabel!
-    @IBOutlet weak var otherUser: UILabel!
-    
+    @IBOutlet weak var profileImage: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

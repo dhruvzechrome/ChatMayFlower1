@@ -185,7 +185,8 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                                 for i in 0...ffhhf.count-1 {
                                     if self!.phones == "+\(ffhhf[i])" {
                                         print("yes")
-                                        self!.usersDetails.append(["group name" : "\(infoMap["group name"]!)" , "Phone number": infoMap["group user"]!, "profilepic": "","admin": "\(infoMap["admin"]!)","uniqueid": "\(infoMap["uniqueid"]!)"])
+                                        let photo = infoMap["photo url"] ?? ""
+                                        self!.usersDetails.append(["group name" : "\(infoMap["group name"]!)" , "Phone number": infoMap["group user"]!, "profilepic": "\(photo)","admin": "\(infoMap["admin"]!)","uniqueid": "\(infoMap["uniqueid"]! )", "fileName":"\(infoMap["location"] ?? "")"])
                                         break
                                     } else {
                                         print("god")
@@ -298,18 +299,6 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         }
     }
     
-    @IBAction func logout(_ sender: UIBarButtonItem) {
-        
-        let firebaseAuth = Auth.auth()
-        do {
-            try firebaseAuth.signOut()
-            let vc = storyboard?.instantiateViewController(withIdentifier: "PhoneVerificationCode") as? PhoneVerificationCode
-            navigationController?.pushViewController(vc!, animated: true)
-            print("Sign out success")
-        } catch let signOutError as NSError {
-            print("Error signing out: %@", signOutError)
-        }
-    }
     let searchController = UISearchController()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -339,6 +328,8 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         //        tabelView.tableHeaderView = headerView()
         
     }
+    
+    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -387,7 +378,8 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         vc?.msgIdList = msgIdList
         vc?.msgKey = msgkey
         vc?.allUserOfFirebase = allUserOfFirebase
-        navigationController!.present(vc!, animated:true, completion: nil)
+        let navVC = UINavigationController(rootViewController: vc!)
+        self.present(navVC, animated:true, completion: nil)
         
     }
     
@@ -462,13 +454,14 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         }
         
         vc?.urlPath = frd["profilepic"] ?? ""
+        vc?.fileName = frd["fileName"] ?? ""
         vc?.receiverid = usersNumber
         vc?.usersNumber = usersNumber
         mychat()
         vc?.mid = messageId!
         if frd["group name"] == nil {
         } else {
-            print("group user id \(frd["Phone number"])")
+            print("group user id \(frd["fileName"])")
             vc?.receiverid = frd["Phone number"]!
             vc?.receiverName = frd["group name"]!
             vc?.groupAdmin = frd["admin"] ?? ""

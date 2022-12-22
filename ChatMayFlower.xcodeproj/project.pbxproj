@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		882381E0291639BC00786164 /* EditProfileInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882381DF291639BC00786164 /* EditProfileInformation.swift */; };
 		882DE2F22928AE5500B8963A /* ImageVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882DE2F12928AE5500B8963A /* ImageVc.swift */; };
+		883600DE295326BD006C9482 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883600DD295326BD006C9482 /* GroupViewController.swift */; };
+		883600E029532703006C9482 /* GroupViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883600DF29532703006C9482 /* GroupViewCell.swift */; };
 		8838834228FA722C0071E6E9 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8838834128FA722C0071E6E9 /* TableViewCell.swift */; };
 		883EBD4128F7E09F000A59BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EBD4028F7E09F000A59BA /* AppDelegate.swift */; };
 		883EBD4328F7E09F000A59BA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EBD4228F7E09F000A59BA /* SceneDelegate.swift */; };
@@ -42,6 +44,8 @@
 		2DC5EE7365248C3F824D13CC /* Pods-ChatMayFlower.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatMayFlower.release.xcconfig"; path = "Target Support Files/Pods-ChatMayFlower/Pods-ChatMayFlower.release.xcconfig"; sourceTree = "<group>"; };
 		882381DF291639BC00786164 /* EditProfileInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileInformation.swift; sourceTree = "<group>"; };
 		882DE2F12928AE5500B8963A /* ImageVc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageVc.swift; sourceTree = "<group>"; };
+		883600DD295326BD006C9482 /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
+		883600DF29532703006C9482 /* GroupViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewCell.swift; sourceTree = "<group>"; };
 		8838834128FA722C0071E6E9 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		883EBD3D28F7E09F000A59BA /* ChatMayFlower.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatMayFlower.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		883EBD4028F7E09F000A59BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -94,6 +98,17 @@
 				F378DE097D07AA7FB5C801FD /* Pods_ChatMayFlower.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		883600DC2953268B006C9482 /* GroupCreation */ = {
+			isa = PBXGroup;
+			children = (
+				88B4AE732937192A00F65E65 /* GroupCreationCode.swift */,
+				88B4AE7529372DED00F65E65 /* GroupCreationTableViewCell.swift */,
+				883600DD295326BD006C9482 /* GroupViewController.swift */,
+				883600DF29532703006C9482 /* GroupViewCell.swift */,
+			);
+			path = GroupCreation;
 			sourceTree = "<group>";
 		};
 		883666C02943364300D32556 /* ChatListCode */ = {
@@ -150,6 +165,7 @@
 		883EBD3F28F7E09F000A59BA /* ChatMayFlower */ = {
 			isa = PBXGroup;
 			children = (
+				883600DC2953268B006C9482 /* GroupCreation */,
 				883666C22943373C00D32556 /* AllUserForNewChat */,
 				883666C12943367100D32556 /* ChatScreenCodes */,
 				883666C02943364300D32556 /* ChatListCode */,
@@ -204,8 +220,6 @@
 				887D10BC291291A50086E251 /* ShowProfileDetail.swift */,
 				882381DF291639BC00786164 /* EditProfileInformation.swift */,
 				88A32E0E28F9769D0041B6ED /* DataBaseManager.swift */,
-				88B4AE732937192A00F65E65 /* GroupCreationCode.swift */,
-				88B4AE7529372DED00F65E65 /* GroupCreationTableViewCell.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -346,6 +360,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				883600DE295326BD006C9482 /* GroupViewController.swift in Sources */,
 				883EBD4528F7E09F000A59BA /* ViewController.swift in Sources */,
 				88B4AE7629372DED00F65E65 /* GroupCreationTableViewCell.swift in Sources */,
 				884E693D29222026005DF15B /* ImageAndVideoShowCode.swift in Sources */,
@@ -353,6 +368,7 @@
 				883EBD5B28F7FC38000A59BA /* OtpVerifyCode.swift in Sources */,
 				887D10BD291291A50086E251 /* ShowProfileDetail.swift in Sources */,
 				883EBD5D28F8451F000A59BA /* UserDetailsCode.swift in Sources */,
+				883600E029532703006C9482 /* GroupViewCell.swift in Sources */,
 				883EBD4128F7E09F000A59BA /* AppDelegate.swift in Sources */,
 				88B4AE742937192A00F65E65 /* GroupCreationCode.swift in Sources */,
 				889B210928FD64FA00189789 /* ChatConversionCode.swift in Sources */,

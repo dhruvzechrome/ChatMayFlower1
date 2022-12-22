@@ -9,7 +9,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 
-class AllUsersList: UIViewController, UISearchBarDelegate, UISearchResultsUpdating{
+class AllUsersList: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UISearchControllerDelegate{
     
     var databaseRef: DatabaseReference!
     var usersNumber = ""
@@ -29,11 +29,11 @@ class AllUsersList: UIViewController, UISearchBarDelegate, UISearchResultsUpdati
         super.viewDidLoad()
         tableViewCell.delegate = self
         tableViewCell.dataSource = self
+        searchController.delegate = self
         searchController.searchResultsUpdater = self
-        searchController.searchBar.sizeToFit()
-        tableViewCell.tableHeaderView = searchController.searchBar
+        navigationItem.searchController = searchController
         title = "New Chat"
-        print("user count = \(allUserOfFirebase)   all count \(allUserOfFirebase.count)")
+       
         if allUser.count > 0 {
             let UserList = usersDetails
             usersDetails.removeAll()
@@ -109,6 +109,7 @@ class AllUsersList: UIViewController, UISearchBarDelegate, UISearchResultsUpdati
             let list = [["Name" : "Create Group"]]
             usersLists = list + allUserOfFirebase + allUserList
             allUser = allUserOfFirebase + allUserList
+            print("user count = \(allUserOfFirebase)   all count \(allUserOfFirebase.count)")
             tableViewCell.reloadData()
         }
     }
@@ -136,6 +137,20 @@ extension AllUsersList : UITableViewDelegate , UITableViewDataSource {
             }
         }
         
+        for i in 0...allUserOfFirebase.count-1 {
+            let chekFrd = allUserOfFirebase[i]
+            
+            if frd["Phone number"] == chekFrd["Phone number"] {
+                cell?.otherUser.text = ""
+                break
+            }
+            else {
+                cell?.otherUser.text = "invite"
+            }
+        }
+        if frd["Name"] == "Create Group" {
+            cell?.otherUser.text = ""
+        }
         if frd["profilepic"] == nil {
             cell?.profileImage.image = UIImage(systemName: "person.circle.fill")
             
@@ -159,17 +174,20 @@ extension AllUsersList : UITableViewDelegate , UITableViewDataSource {
         if frd["Phone number"] == nil {
             let vc = storyboard?.instantiateViewController(withIdentifier: "GroupCreationCode") as? GroupCreationCode
             vc?.usersList = allUserOfFirebase
+            vc?.selecetdUser = []
             vc?.phones = phones
             //            self.dismiss(animated: true, completion: nil)
-            self.present(vc!, animated: true, completion: nil)
+            self.navigationController?.pushViewController(vc!, animated: true)
+//            self.present(vc!, animated: true, completion: nil)
         } else {
             usersNumber = frd["Phone number"]!
-            print("userNumber is \(usersNumber)")
+            print("userNumber is \(allUserOfFirebase)")
             var counter = 0
-            _ = usersDetails.filter { user in
+            _ = allUserOfFirebase.filter { user in
                 let hib =  user["Phone number"]
+                print("Phonne number   \(hib)")
                 if hib == frd["Phone number"] {
-                    print("Phonne number   \(hib)")
+                    
                     if let vc = self.presentingViewController as? UITabBarController {
                         if let pv = vc.viewControllers?.first as? UINavigationController {
                             if let pvc = pv.viewControllers.first as? UserDetailsCode {
@@ -190,11 +208,12 @@ extension AllUsersList : UITableViewDelegate , UITableViewDataSource {
                 } else {
                     print("No number register in app")
                     counter += 1
-                    if counter == usersDetails.count {
+                    if counter == allUserOfFirebase.count {
                         let alert = UIAlertController(title: "Alert", message: "User is not registered", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
                         self.present(alert, animated: true, completion: nil)
                     }
+                    
                 }
                 return true
             }

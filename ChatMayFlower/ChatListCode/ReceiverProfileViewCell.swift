@@ -34,5 +34,6 @@ class GroupUserCell : UITableViewCell {
     
     @IBOutlet weak var groupUserName: UILabel!
     
+    @IBOutlet weak var admin: UILabel!
     
 }
