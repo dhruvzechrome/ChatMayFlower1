@@ -109,6 +109,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         print("List of all user ===========  \(allUser)")
     }
     
+    var currentUserData : [String:String] = [:]
     func getData() {
         
         databaseRef = Database.database().reference().child("Contact List")
@@ -121,6 +122,12 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                     //   let ques = snap.value!
                     
                     let infoMap = snapshot.value! as! [String:String]
+                    
+                    if snapshot.key == self!.phones {
+                        self?.currentUserData["Name"] = "\(infoMap["Name"] ?? "")"
+                        self?.currentUserData["Phone number"] = "\(infoMap["Phone number"] ?? "")"
+                        self?.currentUserData["profilepic"] = "\(infoMap["photo url"] ?? "")"
+                    }
                     
                     if snapshot.key != self!.phones {
                         
@@ -164,7 +171,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                                         print("usersDetails----------->>>\(self!.usersDetails)")
                                         break
                                     }
-                                    break
+//                                    break
                                 }
                             }}
                             
@@ -216,7 +223,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
     func getMessageId() {
         print("My Chats \(usersDetails)")
         databaseRef = Database.database().reference().child("Chats")
-        databaseRef.observe(.childAdded) {[weak self](snapshot) in
+        databaseRef.observe(.childAdded) { [weak self](snapshot) in
             let key = snapshot.key
             //            print("Key",key)
             
@@ -226,6 +233,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                 return
             }
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
+                if (self?.usersDetails.count)! > 0 {
                 for data in snapshots {
                     var cata = key
                     if cata.prefix(3) != "+91" {
@@ -288,7 +296,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                             }}
                         }
                     }
-                }
+                }}
             } else {
                 print("No data Found")
             }
@@ -308,8 +316,8 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         tabelView.dataSource = self
         
         print(friends)
-        getMessageId()
-        getData()
+        
+       
         
         searchController.searchResultsUpdater = self
         searchController.searchBar.sizeToFit()
@@ -333,7 +341,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        validAuth()
+        
         tabBarController?.tabBar.isHidden = false
         tabBarController?.tabBarItem.accessibilityElementIsFocused()
         print("current User",phones)
@@ -343,6 +351,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
     var timer = Timer()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        validAuth()
         tabelView.contentOffset = CGPoint(x: 0, y: searchController.searchBar.frame.height);
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
             if newMsg == true {
@@ -366,8 +375,12 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
             let vc = storyboard?.instantiateViewController(withIdentifier: "ViewController") as? ViewController
             navigationController?.pushViewController(vc!, animated: true)
             hideProgress()
+        }else {
+            getMessageId()
+            getData()
+            phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
         }
-        phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
+        
     }
     
     @IBAction func newChat(_ sender: UIBarButtonItem) {
@@ -461,7 +474,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         vc?.mid = messageId!
         if frd["group name"] == nil {
         } else {
-            print("group user id \(frd["fileName"])")
+            print("group user id \(listOfData)")
             vc?.receiverid = frd["Phone number"]!
             vc?.receiverName = frd["group name"]!
             vc?.groupAdmin = frd["admin"] ?? ""
@@ -472,6 +485,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
             vc?.msgIdList = msgIdList
             vc?.allUserOfFirebase = allUserOfFirebase
             vc?.allUserOfContact = allUser
+            vc?.currentUserData = currentUserData
             vc?.groupK = "yes"
         }
        

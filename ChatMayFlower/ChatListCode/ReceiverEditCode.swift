@@ -31,6 +31,7 @@ class ReceiverEditCode: UIViewController {
     var allUserOfFirebase = [[String:String]]()
     var groupUser = [String]()
     var groupAdmin = ""
+    var currentUserData : [String:String] = [:]
     override func viewDidLoad() {
         super.viewDidLoad()
      //   navigationController?.navigationBar.gestureRecognizers?.removeAll()
@@ -46,9 +47,11 @@ class ReceiverEditCode: UIViewController {
                 arrayList = phones.split(separator: "+")
                 receITableView.reloadData()
                 for i in 0...arrayList.count-1 {
-                    groupUser.append("+\(arrayList[i])")
+                    if !groupUser.contains("+\(arrayList[i])") {
+                        groupUser.append("+\(arrayList[i])")
+                    }
                 }
-//                print("Group Users \(groupUser)")
+                print("Group Users \(allUserOfFirebase)")
             }
             receITableView.reloadData()
         }
@@ -105,7 +108,11 @@ extension ReceiverEditCode : UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {[self] in
+            receITableView.deselectRow(at: indexPath, animated: true)
+        }
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("\(indexPath.row)")
         if groupK == "yes" {
@@ -126,10 +133,34 @@ extension ReceiverEditCode : UITableViewDelegate, UITableViewDataSource {
                
                 let cell = receITableView.dequeueReusableCell(withIdentifier: "GroupUserCell", for: indexPath) as? GroupUserCell
                 
+                if frd == currentUserData["Phone number"] {
+                    cell?.groupUserName.text = "You"
+                    if currentUserData["profilepic"] != "" {
+                        let url = URL(string: "\(currentUserData["profilepic"]!)")
+                        cell?.groupUserProfile.kf.setImage(with: url)
+                    }
+                }
+                
+                else {
+                    cell?.groupUserName.text = "\(frd)"
+                    _ = allUserOfFirebase.filter {user in
+                        let number = user["Phone number"]
+                        
+                        if number == frd {
+                            if user["Name"] != "" {
+                                cell?.groupUserName.text = "\(user["Name"]!)"
+                            }
+                            if user["profilepic"] != "" {
+                                let url = URL(string: "\(user["profilepic"]!)")
+                                cell?.groupUserProfile.kf.setImage(with: url)
+                            }
+                        }
+                        return true
+                    }
+                }
                 if groupAdmin == frd {
                     cell?.admin.text = "Admin"
                 }
-                cell?.groupUserName.text = "\(frd)"
                 int += 1
                 if int == groupUser.count {
                     int = 0

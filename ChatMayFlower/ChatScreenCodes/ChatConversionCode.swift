@@ -71,13 +71,18 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     var receiverName = ""
     var receiverUserid = ""
     var groupAdmin = ""
+    var currentUserData : [String:String] = [:]
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getdata()
+        print("yes")
         navigationItem.backButtonTitle = ""
         tabBarController?.tabBar.isHidden = true
     }
-    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("true")
+    }
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
          print("Hello World - \(receiverid) - \(receiverName)")
         let vc = storyboard?.instantiateViewController(withIdentifier: "ReceiverEditCode") as? ReceiverEditCode
@@ -92,8 +97,19 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         vc?.allUserOfFirebase = allUserOfFirebase
         vc?.groupMsgId = groupMsgId
         vc?.groupK = groupK
+        vc?.currentUserData = currentUserData
         hideProgress()
         navigationController?.pushViewController(vc!, animated: true)
+    }
+    
+    @objc func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        if keyBoardStatus  == true {
+            view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height + CGFloat(keyboardheight))
+            backgroundSV.frame.size = CGSize(width: backgroundSV.bounds.width, height: backgroundSV.frame.height + CGFloat(keyboardheight))
+            keyBoardStatus = false
+            view.endEditing(true)
+        }
     }
     override func viewDidLoad() {
         print("view didload call")
@@ -153,13 +169,19 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         })
         
         
+        
         //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         //        addImageVideo.addGestureRecognizer(tapGesture)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil);
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil);
         
-        
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+
+            //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
+            //tap.cancelsTouchesInView = false
+        backgroundSV.addGestureRecognizer(tap1)
+//        chatTable.addGestureRecognizer(tap1)
         if allUser.count > 0 {
             let UserList = usersDetails
             usersDetails.removeAll()
@@ -213,9 +235,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         }
         
     }
-    
     override func viewWillDisappear(_ animated: Bool) {
         seenVcStatus = false
+//        view.endEditing(true)
     }
     var jist = false
     var myBoolStatus = [Bool]()
@@ -250,7 +272,6 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                             self?.database.child("Chats").child(self!.mid).child("status").setValue(["\(self!.phoneid)":true, "\(self!.receiverid.replacingOccurrences(of: "chatPhoto", with: ""))":true])
                             
                         }
-                       
                         if (self?.myBoolStatus.count)! > 1 && (self?.arrayStatus.count)! > 1 {
 //                            print("not found \(self!.myBoolStatus) -- \(self!.arrayStatus) -- \(self!.phoneid)")
                             if self?.arrayStatus[0] == "\(self!.phoneid)" {

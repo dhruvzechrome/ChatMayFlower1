@@ -121,6 +121,7 @@ class AllUsersList: UIViewController, UISearchBarDelegate, UISearchResultsUpdati
 }
 
 extension AllUsersList : UITableViewDelegate , UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return usersLists.count
     }
