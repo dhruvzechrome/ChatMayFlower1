@@ -1660,6 +1660,109 @@
             </objects>
             <point key="canvasLocation" x="4305.7971014492759" y="-696.42857142857144"/>
         </scene>
+        <!--CameraAndLibraryController-->
+        <scene sceneID="hFR-uq-89O">
+            <objects>
+                <viewController storyboardIdentifier="CameraAndLibraryController" title="CameraAndLibraryController" modalPresentationStyle="overFullScreen" id="0lS-Kp-YU0" customClass="CameraAndLibraryController" customModule="ChatMayFlower" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="l3v-Cg-tfI">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="Hgt-oR-odc"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bPG-sm-qvd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4943" y="-696"/>
+        </scene>
+        <!--StatusSentCode-->
+        <scene sceneID="H7n-pC-k2p">
+            <objects>
+                <viewController storyboardIdentifier="StatusSentCode" title="StatusSentCode" modalPresentationStyle="overFullScreen" id="01g-eZ-nM9" customClass="StatusSentCode" customModule="ChatMayFlower" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="L0b-RS-p4q">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="U6I-d0-sOw">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6AQ-Xv-3UM">
+                                <rect key="frame" x="10" y="54" width="58" height="45.5"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain">
+                                    <imageReference key="image" image="xmark" catalog="system" symbolScale="large"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="26" scale="large"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="dismiss:" destination="01g-eZ-nM9" eventType="touchUpInside" id="CdW-YF-b98"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dcE-Tx-InK">
+                                <rect key="frame" x="20" y="802" width="374" height="50"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mgu-ox-chT">
+                                        <rect key="frame" x="0.0" y="0.0" width="32" height="50"/>
+                                        <color key="backgroundColor" red="1" green="0.83234566450000003" blue="0.47320586440000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="InF-16-6zE">
+                                        <rect key="frame" x="320.5" y="0.0" width="53.5" height="50"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" image="arrow.forward" catalog="system">
+                                            <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="20"/>
+                                        </buttonConfiguration>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="25"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="sentStatus:" destination="01g-eZ-nM9" eventType="touchUpInside" id="HzH-6J-RmH"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="mgu-ox-chT" secondAttribute="bottom" id="1ZD-yY-zyb"/>
+                                    <constraint firstItem="mgu-ox-chT" firstAttribute="top" secondItem="dcE-Tx-InK" secondAttribute="top" id="5us-Jf-ez5"/>
+                                    <constraint firstItem="mgu-ox-chT" firstAttribute="leading" secondItem="dcE-Tx-InK" secondAttribute="leading" id="6xz-Os-HdN"/>
+                                    <constraint firstAttribute="trailing" secondItem="InF-16-6zE" secondAttribute="trailing" id="9gx-KE-c1o"/>
+                                    <constraint firstAttribute="bottom" secondItem="InF-16-6zE" secondAttribute="bottom" id="Sd4-Ba-4qP"/>
+                                    <constraint firstItem="InF-16-6zE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="mgu-ox-chT" secondAttribute="trailing" constant="20" id="X5O-wU-3i0"/>
+                                    <constraint firstItem="InF-16-6zE" firstAttribute="top" secondItem="dcE-Tx-InK" secondAttribute="top" id="XPe-2l-YKf"/>
+                                    <constraint firstAttribute="height" constant="50" id="jhk-IN-WiH"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="IWC-aP-vdA"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="dcE-Tx-InK" firstAttribute="leading" secondItem="IWC-aP-vdA" secondAttribute="leading" constant="20" id="8Gk-tz-BpR"/>
+                            <constraint firstItem="U6I-d0-sOw" firstAttribute="top" secondItem="IWC-aP-vdA" secondAttribute="top" id="LgG-g2-kfL"/>
+                            <constraint firstItem="IWC-aP-vdA" firstAttribute="trailing" secondItem="U6I-d0-sOw" secondAttribute="trailing" id="SOe-gd-dfg"/>
+                            <constraint firstItem="U6I-d0-sOw" firstAttribute="leading" secondItem="IWC-aP-vdA" secondAttribute="leading" id="WY0-CP-5Fb"/>
+                            <constraint firstItem="IWC-aP-vdA" firstAttribute="bottom" secondItem="dcE-Tx-InK" secondAttribute="bottom" constant="10" id="dYC-0O-dTI"/>
+                            <constraint firstItem="IWC-aP-vdA" firstAttribute="bottom" secondItem="U6I-d0-sOw" secondAttribute="bottom" id="eOg-bo-flf"/>
+                            <constraint firstItem="6AQ-Xv-3UM" firstAttribute="top" secondItem="IWC-aP-vdA" secondAttribute="top" constant="10" id="h7N-2p-voV"/>
+                            <constraint firstItem="6AQ-Xv-3UM" firstAttribute="leading" secondItem="IWC-aP-vdA" secondAttribute="leading" constant="10" id="i45-NM-318"/>
+                            <constraint firstItem="IWC-aP-vdA" firstAttribute="trailing" secondItem="dcE-Tx-InK" secondAttribute="trailing" constant="20" id="xG1-f6-8QL"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="U6I-d0-sOw" id="M8v-T0-1Eb"/>
+                        <outlet property="textField" destination="mgu-ox-chT" id="z7t-yT-MpW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KyW-wB-4nW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5650.7246376811599" y="-697.09821428571422"/>
+        </scene>
         <!--Chats-->
         <scene sceneID="g6D-Mp-3hf">
             <objects>
@@ -2901,6 +3004,7 @@
         <image name="status (1)" width="170.66667175292969" height="170.66667175292969"/>
         <image name="status1" width="170.66667175292969" height="170.66667175292969"/>
         <image name="x.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -20,6 +20,7 @@ class StatusVCViewController: UIViewController {
     let storeC = CNContactStore()
     var allUser = [[String:String]]()
     var statusData = [[String:String]]()
+    var details = [[[String:String]](),[[String:String]]()]
     var key = [String]()
     var currentUserData : [String:String] = [:]
     override func viewDidLoad() {
@@ -96,11 +97,12 @@ class StatusVCViewController: UIViewController {
                     if !key.contains(snapshot.key) {
                         print("data of all firebase user \(snapshots)")
                         if snapshot.key != currentUser {
-                            key.append(snapshot.key)
+                            
                             if userMap["status"] != nil {
                                 _ = allUser.filter {user in
                                     let frd = user["Phone number"]
-                                    if frd == snapshot.key {
+                                    if frd == snapshot.key && userMap["status"] != nil{
+                                        key.append(snapshot.key)
                                         statusData.append(["Name": "\(user["Name"] ?? "")","Phone number":"\(userMap["Phone number"] ?? "")","status":"\(userMap["status"] ?? "")"])
                                     }
                                     return true
@@ -112,8 +114,9 @@ class StatusVCViewController: UIViewController {
                     
                 }
             }
-            let iioio = [[currentUserData], statusData]
-            print("All user of firebase \(iioio)")
+            details = [[currentUserData], statusData]
+            statusTableView.reloadData()
+            print("All user of firebase \(details)")
         }
     }
     
@@ -125,8 +128,16 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
         DispatchQueue.main.asyncAfter(deadline: .now()+0.1) { [self] in
             statusTableView.deselectRow(at: indexPath, animated: true)
         }
+        if indexPath.section == 0 {
+            let vc = storyboard?.instantiateViewController(withIdentifier: "CameraAndLibraryController") as? CameraAndLibraryController
+            vc?.modalPresentationStyle = .fullScreen
+//            navigationController?.show(vc!, sender: nil)
+            vc?.currentUserData = currentUserData
+            vc?.currentUser = currentUser 
+            navigationController?.present(vc!, animated: true, completion: nil)
+        }
     }
-    
+
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return self.section[section]
     }
@@ -135,12 +146,11 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
         return section.count
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return usersDetail[section].count
+        return details[section].count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let frd = statusData[indexPath.section]
-        print("datas    --- --- ---    \(frd)")
+        print("indexPath of section \(indexPath.section) \(indexPath.row)")
         if indexPath.section == 0 {
             let cell = statusTableView.dequeueReusableCell(withIdentifier: "StatusPutCell") as? StatusPutCell
             if currentUserData["profilepic"] != "" {
@@ -150,6 +160,8 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             cell?.profileImage.image = UIImage(systemName: "person.circle.fill")
             return cell!
         }else {
+            let frd = details[indexPath.section][indexPath.row]
+            print("datas    --- --- ---    \(frd)")
             let cell = statusTableView.dequeueReusableCell(withIdentifier: "StatusViewCell") as? StatusViewCell
             cell?.statusImage.image = UIImage(systemName: "circle")
             return cell!

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		882381E0291639BC00786164 /* EditProfileInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882381DF291639BC00786164 /* EditProfileInformation.swift */; };
+		88253215295969CE007B16BE /* CameraAndLibraryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88253214295969CE007B16BE /* CameraAndLibraryController.swift */; };
 		882DE2F22928AE5500B8963A /* ImageVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882DE2F12928AE5500B8963A /* ImageVc.swift */; };
 		883600DE295326BD006C9482 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883600DD295326BD006C9482 /* GroupViewController.swift */; };
 		883600E029532703006C9482 /* GroupViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883600DF29532703006C9482 /* GroupViewCell.swift */; };
@@ -37,6 +38,7 @@
 		88A32E0F28F9769D0041B6ED /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A32E0E28F9769D0041B6ED /* DataBaseManager.swift */; };
 		88B4AE742937192A00F65E65 /* GroupCreationCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B4AE732937192A00F65E65 /* GroupCreationCode.swift */; };
 		88B4AE7629372DED00F65E65 /* GroupCreationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B4AE7529372DED00F65E65 /* GroupCreationTableViewCell.swift */; };
+		88DF6EB12959C5FD00B830C9 /* StatusSentCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DF6EB02959C5FD00B830C9 /* StatusSentCode.swift */; };
 		88EA4525293B2AC600D09E1B /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88EA4524293B2AC600D09E1B /* Contacts.framework */; };
 		88FEF23A29275A290019AF02 /* VideoSentCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEF23929275A290019AF02 /* VideoSentCode.swift */; };
 		F92A51A7EF0E9398C747D05B /* Pods_ChatMayFlower.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F378DE097D07AA7FB5C801FD /* Pods_ChatMayFlower.framework */; };
@@ -45,6 +47,7 @@
 /* Begin PBXFileReference section */
 		2DC5EE7365248C3F824D13CC /* Pods-ChatMayFlower.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatMayFlower.release.xcconfig"; path = "Target Support Files/Pods-ChatMayFlower/Pods-ChatMayFlower.release.xcconfig"; sourceTree = "<group>"; };
 		882381DF291639BC00786164 /* EditProfileInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileInformation.swift; sourceTree = "<group>"; };
+		88253214295969CE007B16BE /* CameraAndLibraryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAndLibraryController.swift; sourceTree = "<group>"; };
 		882DE2F12928AE5500B8963A /* ImageVc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageVc.swift; sourceTree = "<group>"; };
 		883600DD295326BD006C9482 /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
 		883600DF29532703006C9482 /* GroupViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewCell.swift; sourceTree = "<group>"; };
@@ -76,6 +79,7 @@
 		88A32E0E28F9769D0041B6ED /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
 		88B4AE732937192A00F65E65 /* GroupCreationCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreationCode.swift; sourceTree = "<group>"; };
 		88B4AE7529372DED00F65E65 /* GroupCreationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreationTableViewCell.swift; sourceTree = "<group>"; };
+		88DF6EB02959C5FD00B830C9 /* StatusSentCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusSentCode.swift; sourceTree = "<group>"; };
 		88EA4524293B2AC600D09E1B /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		88FEF23929275A290019AF02 /* VideoSentCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSentCode.swift; sourceTree = "<group>"; };
 		C52B43D00632AAB91AC73A6C /* Pods-ChatMayFlower.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatMayFlower.debug.xcconfig"; path = "Target Support Files/Pods-ChatMayFlower/Pods-ChatMayFlower.debug.xcconfig"; sourceTree = "<group>"; };
@@ -190,6 +194,8 @@
 			children = (
 				888662DD2955E59400B2E82F /* StatusVCViewController.swift */,
 				888662DF2955E5E200B2E82F /* StatusViewCell.swift */,
+				88253214295969CE007B16BE /* CameraAndLibraryController.swift */,
+				88DF6EB02959C5FD00B830C9 /* StatusSentCode.swift */,
 			);
 			path = StatusCodes;
 			sourceTree = "<group>";
@@ -358,6 +364,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88253215295969CE007B16BE /* CameraAndLibraryController.swift in Sources */,
 				883600DE295326BD006C9482 /* GroupViewController.swift in Sources */,
 				883EBD4528F7E09F000A59BA /* ViewController.swift in Sources */,
 				88B4AE7629372DED00F65E65 /* GroupCreationTableViewCell.swift in Sources */,
@@ -385,6 +392,7 @@
 				883EBD5928F7FBB6000A59BA /* PhoneVerificationCode.swift in Sources */,
 				883EBD4328F7E09F000A59BA /* SceneDelegate.swift in Sources */,
 				885F4A51294ADEF300279586 /* ReceiverProfileViewCell.swift in Sources */,
+				88DF6EB12959C5FD00B830C9 /* StatusSentCode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
