@@ -9,7 +9,7 @@ import UIKit
 import AVFoundation
 import SwiftUI
 
-class CameraAndLibraryController: UIViewController {
+class CameraAndLibraryController: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     var currentUser = ""
     //Capture session
     var session : AVCaptureSession?
@@ -64,14 +64,84 @@ class CameraAndLibraryController: UIViewController {
         checkCameraPermissions()
         cancelButton.addTarget(self, action: #selector(dismissScreen), for: .touchUpInside)
         sutterButton.addTarget(self, action: #selector(didTapTakePhoto), for: .touchUpInside)
-//        pickimage.addTarget(self, action: #selector(imagepicker), for: .touchUpInside)
+        pickImage.addTarget(self, action: #selector(imageTapped), for: .touchUpInside)
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(onDrag(_:))))
         // Do any additional setup after loading the view.
     }
+    
+    @objc
+    func imageTapped()
+    {
+        print("Image Tapped...!")
+//        let ac = UIAlertController(title: "Select Image From", message: "", preferredStyle: .actionSheet)
+//        let cameraBtn = UIAlertAction(title: "Camera", style: .default){(_) in
+//            print("Camera Press")
+//            self.showImagePicker(selectSource: .camera)
+//        }
+//        let libraryBtn = UIAlertAction(title: "Library", style: .default){(_) in
+            print("Library Press")
+            self.showImagePicker(selectSource: .photoLibrary)
+//        }
+//        let cancelBtn = UIAlertAction(title: "Cancel", style: .cancel , handler: nil)
+//        ac.addAction(cameraBtn)
+//        ac.addAction(libraryBtn)
+//        ac.addAction(cancelBtn)
+//        self.present(ac, animated: true, completion: nil)
+    }
+    
+    func showImagePicker(selectSource:UIImagePickerController.SourceType)
+    {
+        guard UIImagePickerController.isSourceTypeAvailable(selectSource) else{
+            print("Selected Source not available")
+            return
+        }
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = selectSource
+        imagePickerController.modalPresentationStyle = .fullScreen
+        imagePickerController.allowsEditing = false
+        self.present(imagePickerController, animated: true, completion: nil)
+    }
+    var filename : String?
+    var didselectedImage : UIImage?
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        if let selectedImage =  info[.originalImage] as? UIImage{
+            print("Selected image ",selectedImage)
+//            profileImage.image = selectedImage
+            didselectedImage = selectedImage
+//            let localPath = info[.imageURL] as? NSURL
+//            _ = info[.imageURL] as? URL
+//            print("Local Path  > ",localPath!)
+            picker.dismiss(animated: true) {
+                if let vc = self.presentingViewController as? UITabBarController {
+                    if let pv = vc.viewControllers?.last as? UINavigationController {
+                        if let pvc = pv.viewControllers.first as? StatusVCViewController {
+                            //                  pvc.receiverid = usersNumber
+                            pvc.statusImage = selectedImage
+                            self.dismiss(animated: true)
+                        }
+                    }
+                }
+            }
+            
+//
+            
+
+//            print("Name of Image --->>> ",filename!)
+//
+            
+        }
+        else{
+            print("Image not found...!")
+        }
+        
+    }
+    
     public let percentThresholdDismiss: CGFloat = 0.3
-        public var velocityDismiss: CGFloat = 300
-        public var axis: NSLayoutConstraint.Axis = .vertical
-//    public var backgroundDismissColor: UIColor = .clear {
+    public var velocityDismiss: CGFloat = 300
+    public var axis: NSLayoutConstraint.Axis = .vertical
+    //    public var backgroundDismissColor: UIColor = .clear {
 //            didSet {
 //                navigationController?.view.backgroundColor = backgroundDismissColor
 //            }
@@ -202,8 +272,10 @@ extension CameraAndLibraryController : AVCapturePhotoCaptureDelegate {
         let image = UIImage(data: data)
         
         session?.stopRunning()
-        let vc = storyboard?.instantiateViewController(withIdentifier: "") as? StatusSentCode
+        let vc = storyboard?.instantiateViewController(withIdentifier: "StatusSentCode") as? StatusSentCode
         vc?.image = image!
+        vc?.currentUser = currentUser
+        vc?.currentUserData = currentUserData
         vc?.modalPresentationStyle = .fullScreen
         navigationController?.present(vc!, animated: true, completion: nil)
         

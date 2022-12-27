@@ -121,7 +121,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                     //   let cata = snap.key
                     //   let ques = snap.value!
                     
-                    let infoMap = snapshot.value! as! [String:String]
+                    let infoMap = snapshot.value! as! [String:Any]
                     
                     if snapshot.key == self!.phones {
                         self?.currentUserData["Name"] = "\(infoMap["Name"] ?? "")"
@@ -139,14 +139,14 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                             if self!.allUser.count > 1 {
                             for i in 0...self!.allUser.count-1 {
                                 let frd = self!.allUser[i]
-                                if frd["Phone number"] == infoMap["Phone number"] {
+                                if frd["Phone number"] == infoMap["Phone number"] as? String {
                                     if infoMap["Name"] != nil {
                                         
                                         if infoMap["photo url"] != nil {
-                                            self!.allUserOfFirebase.append(["Name" : infoMap["Name"]! , "Phone number": infoMap["Phone number"]!, "profilepic": infoMap["photo url"]!])
+                                            self!.allUserOfFirebase.append(["Name" : "\(infoMap["Name"]!)" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": "\(infoMap["photo url"]!)"])
                                             //                                    print("usersDetails----------->>>\(self!.usersDetails)")
                                         } else {
-                                            self!.allUserOfFirebase.append(["Name" : infoMap["Name"]! , "Phone number": infoMap["Phone number"]!, "profilepic": ""])
+                                            self!.allUserOfFirebase.append(["Name" : "\(infoMap["Name"]!)" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": ""])
                                             //                                    print("usersDetails----------->>>\(self!.usersDetails)")
                                         }
                                         break
@@ -167,7 +167,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                                         break
                                     }
                                     else {
-                                        self!.allUserOfFirebase.append(["Name" : "" , "Phone number": infoMap["Phone number"]!, "profilepic": ""])
+                                        self!.allUserOfFirebase.append(["Name" : "" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": ""])
                                         print("usersDetails----------->>>\(self!.usersDetails)")
                                         break
                                     }
@@ -178,10 +178,10 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                             if infoMap["Name"] != nil {
                                 
                                 if infoMap["photo url"] != nil {
-                                    self!.usersDetails.append(["Name" : infoMap["Name"]! , "Phone number": infoMap["Phone number"]!, "profilepic": infoMap["photo url"]!])
+                                    self!.usersDetails.append(["Name" : "\(infoMap["Name"]!)" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": "\(infoMap["photo url"]!)"])
                                     //                                    print("usersDetails----------->>>\(self!.usersDetails)")
                                 } else {
-                                    self!.usersDetails.append(["Name" : infoMap["Name"]! , "Phone number": infoMap["Phone number"]!, "profilepic": ""])
+                                    self!.usersDetails.append(["Name" : "\(infoMap["Name"]!)" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": ""])
                                     //                                    print("usersDetails----------->>>\(self!.usersDetails)")
                                 }
                                 
@@ -193,7 +193,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                                     if self!.phones == "+\(ffhhf[i])" {
                                         print("yes")
                                         let photo = infoMap["photo url"] ?? ""
-                                        self!.usersDetails.append(["group name" : "\(infoMap["group name"]!)" , "Phone number": infoMap["group user"]!, "profilepic": "\(photo)","admin": "\(infoMap["admin"]!)","uniqueid": "\(infoMap["uniqueid"]! )", "fileName":"\(infoMap["location"] ?? "")"])
+                                        self!.usersDetails.append(["group name" : "\(infoMap["group name"]!)" , "Phone number": "\(infoMap["group user"]!)", "profilepic": "\(photo)","admin": "\(infoMap["admin"]!)","uniqueid": "\(infoMap["uniqueid"]! )", "fileName":"\(infoMap["location"] ?? "")"])
                                         break
                                     } else {
                                         print("god")
@@ -203,7 +203,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                                 
                             }
                             else {
-                                self!.usersDetails.append(["Name" : "" , "Phone number": infoMap["Phone number"]!, "profilepic": ""])
+                                self!.usersDetails.append(["Name" : "" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": ""])
                                 
                             }
                             

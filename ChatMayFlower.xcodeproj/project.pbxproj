@@ -28,6 +28,9 @@
 		885F4A51294ADEF300279586 /* ReceiverProfileViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885F4A50294ADEF300279586 /* ReceiverProfileViewCell.swift */; };
 		885F4A53294AF31000279586 /* ReceiverEditCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885F4A52294AF31000279586 /* ReceiverEditCode.swift */; };
 		887D10BD291291A50086E251 /* ShowProfileDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887D10BC291291A50086E251 /* ShowProfileDetail.swift */; };
+		88838DD5295B17EB00C97803 /* StatusCollectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88838DD4295B17EB00C97803 /* StatusCollectionVC.swift */; };
+		88838DD7295B183200C97803 /* StatusCollectionVCCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88838DD6295B183200C97803 /* StatusCollectionVCCell.swift */; };
+		88838DD9295B263B00C97803 /* SegmentedProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88838DD8295B263B00C97803 /* SegmentedProgressBar.swift */; };
 		888662DE2955E59700B2E82F /* StatusVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888662DD2955E59400B2E82F /* StatusVCViewController.swift */; };
 		888662E02955E5E200B2E82F /* StatusViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888662DF2955E5E200B2E82F /* StatusViewCell.swift */; };
 		888FCD1F293DB1D000EE2E49 /* AllUsersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888FCD1E293DB1D000EE2E49 /* AllUsersList.swift */; };
@@ -69,6 +72,9 @@
 		885F4A50294ADEF300279586 /* ReceiverProfileViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiverProfileViewCell.swift; sourceTree = "<group>"; };
 		885F4A52294AF31000279586 /* ReceiverEditCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiverEditCode.swift; sourceTree = "<group>"; };
 		887D10BC291291A50086E251 /* ShowProfileDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowProfileDetail.swift; sourceTree = "<group>"; };
+		88838DD4295B17EB00C97803 /* StatusCollectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusCollectionVC.swift; sourceTree = "<group>"; };
+		88838DD6295B183200C97803 /* StatusCollectionVCCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusCollectionVCCell.swift; sourceTree = "<group>"; };
+		88838DD8295B263B00C97803 /* SegmentedProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SegmentedProgressBar.swift; path = "../../../../../../Downloads/ARStories-master/ARStories/helper/SegmentedProgressBar.swift"; sourceTree = "<group>"; };
 		888662DD2955E59400B2E82F /* StatusVCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusVCViewController.swift; sourceTree = "<group>"; };
 		888662DF2955E5E200B2E82F /* StatusViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewCell.swift; sourceTree = "<group>"; };
 		888FCD1E293DB1D000EE2E49 /* AllUsersList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllUsersList.swift; sourceTree = "<group>"; };
@@ -196,6 +202,8 @@
 				888662DF2955E5E200B2E82F /* StatusViewCell.swift */,
 				88253214295969CE007B16BE /* CameraAndLibraryController.swift */,
 				88DF6EB02959C5FD00B830C9 /* StatusSentCode.swift */,
+				88838DD4295B17EB00C97803 /* StatusCollectionVC.swift */,
+				88838DD6295B183200C97803 /* StatusCollectionVCCell.swift */,
 			);
 			path = StatusCodes;
 			sourceTree = "<group>";
@@ -203,6 +211,7 @@
 		88A32E0828F975B50041B6ED /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				88838DD8295B263B00C97803 /* SegmentedProgressBar.swift */,
 				883EBD4028F7E09F000A59BA /* AppDelegate.swift */,
 				883EBD4228F7E09F000A59BA /* SceneDelegate.swift */,
 			);
@@ -364,6 +373,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88838DD5295B17EB00C97803 /* StatusCollectionVC.swift in Sources */,
 				88253215295969CE007B16BE /* CameraAndLibraryController.swift in Sources */,
 				883600DE295326BD006C9482 /* GroupViewController.swift in Sources */,
 				883EBD4528F7E09F000A59BA /* ViewController.swift in Sources */,
@@ -377,6 +387,7 @@
 				883600E029532703006C9482 /* GroupViewCell.swift in Sources */,
 				883EBD4128F7E09F000A59BA /* AppDelegate.swift in Sources */,
 				88B4AE742937192A00F65E65 /* GroupCreationCode.swift in Sources */,
+				88838DD7295B183200C97803 /* StatusCollectionVCCell.swift in Sources */,
 				889B210928FD64FA00189789 /* ChatConversionCode.swift in Sources */,
 				882381E0291639BC00786164 /* EditProfileInformation.swift in Sources */,
 				88A32E0F28F9769D0041B6ED /* DataBaseManager.swift in Sources */,
@@ -389,6 +400,7 @@
 				88402BB529234F4F00EC8972 /* ImageTableViewCell.swift in Sources */,
 				888FCD21293DB36B00EE2E49 /* AllUserTableViewCell.swift in Sources */,
 				888662E02955E5E200B2E82F /* StatusViewCell.swift in Sources */,
+				88838DD9295B263B00C97803 /* SegmentedProgressBar.swift in Sources */,
 				883EBD5928F7FBB6000A59BA /* PhoneVerificationCode.swift in Sources */,
 				883EBD4328F7E09F000A59BA /* SceneDelegate.swift in Sources */,
 				885F4A51294ADEF300279586 /* ReceiverProfileViewCell.swift in Sources */,

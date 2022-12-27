@@ -6,10 +6,14 @@
 //
 
 import UIKit
-
+import FirebaseStorage
+import FirebaseDatabase
+import FirebaseAuth
 class StatusSentCode: UIViewController {
-    
-    var image = UIImage()
+    let database = Database.database().reference()
+    var currentUserData : [String:String] = [:]
+    var currentUser = ""
+    var image :UIImage?
     public let percentThresholdDismiss: CGFloat = 0.3
     public var velocityDismiss: CGFloat = 300
     public var axis: NSLayoutConstraint.Axis = .vertical
@@ -18,13 +22,94 @@ class StatusSentCode: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(onDrag(_:))))
+        
+        if image != nil {
+            imageView.image = image
+        }
+        
         // Do any additional setup after loading the view.
     }
     
 
     @IBAction func sentStatus(_ sender: UIButton) {
+        
+        guard image != nil else{
+//            if tName.text != "" && tPhoneNumber.text != ""{
+//
+//
+//
+//                DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.number,name: tName.text!,profileImage : photoUrlPath, location: filename!))
+//                //                let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
+//                //                vc?.phones = self.number
+//                self.navigationController?.popViewController(animated: true)
+//            }
+            return
+        }
+        
+       
+        // Create Firebase Storage Reference
+        let storageRef = Storage.storage().reference()
+        
+        
+        let imageData = image!.jpegData(compressionQuality: 0.4)
+        
+        guard imageData != nil else {
+            return
+        }
+        // imagesRef still points to "images"
+      
+        let filename = "statusimages/\(UUID().uuidString).jpg"
+    
+        let fileRef = storageRef.child(filename)
+        print("\(fileRef)")
+        
+        // This is equivalent to creating the full reference
+        // Upload data
+        let _ = fileRef.putData(imageData!, metadata: nil) { [self] metadata, error in
+            var urlpth = ""
+            // Check error
+            if error == nil && metadata != nil {
+                if textField.text != "" {
+                    
+                    
+                    fileRef.downloadURL {
+                        url, error in
+                        if let error = error {
+                            // Handle any errors
+                            print(error)
+                        } else {
+                            urlpth = "\(url!)"
+                            // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
+                            let ref = database.child("Contact List").child("\(currentUser)").child("status").child("\(UUID().uuid.0)")
+                    
+                            ref.updateChildValues(["statusPhoto":"\(urlpth)", "statusComment" : textField.text!]) { error, _ in
+                                guard error == nil else {
+                                    print("Failedt Update")
+                                    return
+                                }
+                                print("Update Successfully")
+                                self.dismiss(animated: true)
+                            }
+                            
+                            self.navigationController?.popViewController(animated: true)
+                        }
+                        
+                    }
+                    //                    print("Urllll ---sdsdfsdf-->",urlpth)
+                    
+                    //                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
+                    //                    vc?.phones = self.number
+                    
+                }
+            }
+            print("Error ====== \(String(describing: error))")
+        }
+        
+        
+        
     }
     @IBAction func dismiss(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
     }
     
 }

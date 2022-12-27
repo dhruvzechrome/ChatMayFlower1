@@ -1637,7 +1637,75 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Cs-MB-zhd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3453.6231884057975" y="-700.44642857142856"/>
+            <point key="canvasLocation" x="2841" y="-700"/>
+        </scene>
+        <!--StatusCollectionVC-->
+        <scene sceneID="3I8-9C-05g">
+            <objects>
+                <viewController storyboardIdentifier="StatusCollectionVC" title="StatusCollectionVC" id="cju-vj-R7N" customClass="StatusCollectionVC" customModule="ChatMayFlower" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="4tV-s6-2z1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qXs-YN-oGN">
+                                <rect key="frame" x="0.0" y="37" width="414" height="821"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Ay-nt-mPg">
+                                <rect key="frame" x="0.0" y="44" width="414" height="60"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CsM-J5-DDV">
+                                        <rect key="frame" x="5" y="5" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="4W1-xG-xV4"/>
+                                            <constraint firstAttribute="width" constant="50" id="fwa-ck-rSi"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oLm-vF-eeM">
+                                        <rect key="frame" x="75" y="20" width="248" height="20"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eac-CJ-00z">
+                                        <rect key="frame" x="342" y="13" width="50" height="34"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="q4L-VY-aX4"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="xmark" catalog="system">
+                                            <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="17"/>
+                                        </buttonConfiguration>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="CsM-J5-DDV" firstAttribute="leading" secondItem="3Ay-nt-mPg" secondAttribute="leading" constant="5" id="1e4-bv-HbG"/>
+                                    <constraint firstItem="oLm-vF-eeM" firstAttribute="top" secondItem="3Ay-nt-mPg" secondAttribute="top" constant="20" id="2h4-hE-mZf"/>
+                                    <constraint firstAttribute="bottom" secondItem="oLm-vF-eeM" secondAttribute="bottom" constant="20" id="C77-87-5LV"/>
+                                    <constraint firstItem="oLm-vF-eeM" firstAttribute="leading" secondItem="CsM-J5-DDV" secondAttribute="trailing" constant="20" id="Dez-Dj-Pd7"/>
+                                    <constraint firstAttribute="bottom" secondItem="CsM-J5-DDV" secondAttribute="bottom" constant="5" id="Igc-7G-ZZb"/>
+                                    <constraint firstAttribute="height" constant="60" id="UnJ-i8-uD2"/>
+                                    <constraint firstAttribute="bottom" secondItem="Eac-CJ-00z" secondAttribute="bottom" constant="13" id="cFd-WW-qQV"/>
+                                    <constraint firstItem="Eac-CJ-00z" firstAttribute="top" secondItem="3Ay-nt-mPg" secondAttribute="top" constant="13" id="cxg-iZ-3aC"/>
+                                    <constraint firstItem="CsM-J5-DDV" firstAttribute="top" secondItem="3Ay-nt-mPg" secondAttribute="top" constant="5" id="eQB-26-OFP"/>
+                                    <constraint firstItem="Eac-CJ-00z" firstAttribute="leading" secondItem="oLm-vF-eeM" secondAttribute="trailing" constant="19" id="oTh-GE-Nc3"/>
+                                    <constraint firstAttribute="trailing" secondItem="Eac-CJ-00z" secondAttribute="trailing" constant="22" id="si3-AP-7Ms"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="3Vz-Fh-vdq"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="3Vz-Fh-vdq" firstAttribute="trailing" secondItem="3Ay-nt-mPg" secondAttribute="trailing" id="271-os-Uzn"/>
+                            <constraint firstItem="3Ay-nt-mPg" firstAttribute="leading" secondItem="3Vz-Fh-vdq" secondAttribute="leading" id="b2f-Ga-l2R"/>
+                            <constraint firstItem="3Ay-nt-mPg" firstAttribute="top" secondItem="3Vz-Fh-vdq" secondAttribute="top" id="qli-fC-a1C"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UFC-aN-Zup" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3589.8550724637685" y="-700.44642857142856"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="gl9-XV-ixC">
@@ -1673,7 +1741,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bPG-sm-qvd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4943" y="-696"/>
+            <point key="canvasLocation" x="4916" y="-700"/>
         </scene>
         <!--StatusSentCode-->
         <scene sceneID="H7n-pC-k2p">
@@ -1687,22 +1755,22 @@
                                 <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6AQ-Xv-3UM">
-                                <rect key="frame" x="10" y="54" width="58" height="45.5"/>
+                                <rect key="frame" x="10" y="54" width="53" height="40.5"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain">
                                     <imageReference key="image" image="xmark" catalog="system" symbolScale="large"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="26" scale="large"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="22" scale="large"/>
                                 </buttonConfiguration>
                                 <connections>
                                     <action selector="dismiss:" destination="01g-eZ-nM9" eventType="touchUpInside" id="CdW-YF-b98"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dcE-Tx-InK">
-                                <rect key="frame" x="20" y="802" width="374" height="50"/>
+                                <rect key="frame" x="20" y="812" width="374" height="40"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mgu-ox-chT">
-                                        <rect key="frame" x="0.0" y="0.0" width="32" height="50"/>
-                                        <color key="backgroundColor" red="1" green="0.83234566450000003" blue="0.47320586440000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="311.5" height="40"/>
+                                        <color key="backgroundColor" systemColor="systemGray4Color"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                         <userDefinedRuntimeAttributes>
@@ -1712,14 +1780,18 @@
                                         </userDefinedRuntimeAttributes>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="InF-16-6zE">
-                                        <rect key="frame" x="320.5" y="0.0" width="53.5" height="50"/>
+                                        <rect key="frame" x="334" y="0.0" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="E64-F4-2GR"/>
+                                            <constraint firstAttribute="height" constant="40" id="pRC-HJ-szX"/>
+                                        </constraints>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" image="arrow.forward" catalog="system">
+                                        <buttonConfiguration key="configuration" style="filled" image="arrow.forward" catalog="system" title="">
                                             <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="20"/>
                                         </buttonConfiguration>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="25"/>
+                                                <real key="value" value="20"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
@@ -1734,9 +1806,9 @@
                                     <constraint firstItem="mgu-ox-chT" firstAttribute="leading" secondItem="dcE-Tx-InK" secondAttribute="leading" id="6xz-Os-HdN"/>
                                     <constraint firstAttribute="trailing" secondItem="InF-16-6zE" secondAttribute="trailing" id="9gx-KE-c1o"/>
                                     <constraint firstAttribute="bottom" secondItem="InF-16-6zE" secondAttribute="bottom" id="Sd4-Ba-4qP"/>
-                                    <constraint firstItem="InF-16-6zE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="mgu-ox-chT" secondAttribute="trailing" constant="20" id="X5O-wU-3i0"/>
                                     <constraint firstItem="InF-16-6zE" firstAttribute="top" secondItem="dcE-Tx-InK" secondAttribute="top" id="XPe-2l-YKf"/>
-                                    <constraint firstAttribute="height" constant="50" id="jhk-IN-WiH"/>
+                                    <constraint firstAttribute="height" constant="40" id="jhk-IN-WiH"/>
+                                    <constraint firstItem="InF-16-6zE" firstAttribute="leading" secondItem="mgu-ox-chT" secondAttribute="trailing" constant="22.5" id="zla-nD-kbF"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -2365,10 +2437,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zHJ-tQ-bHo">
-                                <rect key="frame" x="20" y="144" width="374" height="428"/>
+                                <rect key="frame" x="20" y="144" width="374" height="548"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r71-Zg-nvs">
-                                <rect key="frame" x="20" y="672" width="374" height="50"/>
+                                <rect key="frame" x="20" y="792" width="374" height="50"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CQ2-rC-cuo">
                                         <rect key="frame" x="0.0" y="0.0" width="328.5" height="50"/>
@@ -2394,7 +2466,7 @@
                                 </constraints>
                             </stackView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="IMb-62-dq3">
-                                <rect key="frame" x="87" y="344" width="240" height="28"/>
+                                <rect key="frame" x="87" y="344" width="240" height="148"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="OJY-jY-ska"/>
                                 </constraints>
@@ -2979,7 +3051,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0ec-QQ-e3k" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2533.3333333333335" y="-700.44642857142856"/>
+            <point key="canvasLocation" x="2116" y="-700"/>
         </scene>
     </scenes>
     <resources>
