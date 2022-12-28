@@ -9,7 +9,8 @@ import UIKit
 import FirebaseStorage
 import FirebaseDatabase
 import FirebaseAuth
-class StatusSentCode: UIViewController {
+import MBProgressHUD
+class StatusSentCode: UIViewController,UITextFieldDelegate {
     let database = Database.database().reference()
     var currentUserData : [String:String] = [:]
     var currentUser = ""
@@ -22,7 +23,7 @@ class StatusSentCode: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(onDrag(_:))))
-        
+        textField.delegate = self
         if image != nil {
             imageView.image = image
         }
@@ -34,15 +35,6 @@ class StatusSentCode: UIViewController {
     @IBAction func sentStatus(_ sender: UIButton) {
         
         guard image != nil else{
-//            if tName.text != "" && tPhoneNumber.text != ""{
-//
-//
-//
-//                DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.number,name: tName.text!,profileImage : photoUrlPath, location: filename!))
-//                //                let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
-//                //                vc?.phones = self.number
-//                self.navigationController?.popViewController(animated: true)
-//            }
             return
         }
         
@@ -57,7 +49,7 @@ class StatusSentCode: UIViewController {
             return
         }
         // imagesRef still points to "images"
-      
+      mbProgressHUD(text: "waite while uploading")
         let filename = "statusimages/\(UUID().uuidString).jpg"
     
         let fileRef = storageRef.child(filename)
@@ -80,7 +72,9 @@ class StatusSentCode: UIViewController {
                         } else {
                             urlpth = "\(url!)"
                             // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
-                            let ref = database.child("Contact List").child("\(currentUser)").child("status").child("\(UUID().uuid.0)")
+                            let unique = UUID().uuid.0
+                            database.child("Contact List").child("\(currentUser)").updateChildValues(["statuskey":"\(unique)"])
+                            let ref = database.child("Contact List").child("\(currentUser)").child("status").child("\(unique)")
                     
                             ref.updateChildValues(["statusPhoto":"\(urlpth)", "statusComment" : textField.text!]) { error, _ in
                                 guard error == nil else {
@@ -88,7 +82,9 @@ class StatusSentCode: UIViewController {
                                     return
                                 }
                                 print("Update Successfully")
-                                self.dismiss(animated: true)
+                                self.dismiss(animated: true) {
+                                    hideProgress()
+                                }
                             }
                             
                             self.navigationController?.popViewController(animated: true)
@@ -115,6 +111,14 @@ class StatusSentCode: UIViewController {
 }
 
 extension StatusSentCode {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("Text hide called")
+        
+        view.endEditing(true)
+        return true
+        
+        
+    }
     @objc fileprivate func onDrag(_ sender: UIPanGestureRecognizer) {
 
             let translation = sender.translation(in: view)
@@ -178,4 +182,18 @@ extension StatusSentCode {
             }
             sender.setTranslation(.zero, in: view)
         }
+}
+extension StatusSentCode {
+    func mbProgressHUD(text: String) {
+        DispatchQueue.main.async {
+            let progressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
+            progressHUD.label.text = text
+            progressHUD.contentColor = .systemBlue
+        }
+    }
+    func hideProgress() {
+        DispatchQueue.main.async {
+            MBProgressHUD.hide(for: self.view, animated: false)
+        }
+    }
 }

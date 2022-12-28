@@ -63,14 +63,14 @@ class ShowProfileDetail: UIViewController {
                 for snap in snapshots {
                     let _ = snap.key
                     let _ = snap.value!
-                    let userMap = snapshot.value! as! [String:String]
-                    if userMap["Phone number"] ==  self?.phones {
-                        self!.uphoneno = userMap["Phone number"]!
+                    let userMap = snapshot.value! as! [String:Any]
+                    if userMap["Phone number"] as? String ==  self?.phones {
+                        self!.uphoneno = "\(userMap["Phone number"]!)"
                         
                         if userMap["Name"] != nil {
-                            if userMap["Name"] != "" {
-                                self!.name.text = userMap["Name"]!
-                                self!.uname = userMap["Name"]!
+                            if userMap["Name"] as! String != "" {
+                                self!.name.text = "\(userMap["Name"]!)"
+                                self!.uname = "\(userMap["Name"]!)"
                             }
                             else {
                                 self!.uname = "No name available"
@@ -78,10 +78,10 @@ class ShowProfileDetail: UIViewController {
                         }
                         self!.imag = UIImage(named: "placeholder")
                         if userMap["photo url"] != nil  {
-                            if userMap["photo url"] != "" {
-                                self!.filename = userMap["location"]!
-                                self!.urlPath = userMap["photo url"]!
-                                let url = URL(string: userMap["photo url"]!)
+                            if userMap["photo url"] as! String != "" {
+                                self!.filename = "\(userMap["location"]!)"
+                                self!.urlPath = "\(userMap["photo url"]!)"
+                                let url = URL(string: "\(userMap["photo url"]!)")
                                 print("URllllllll ----\(String(describing: url))")
                                 self!.profileImage.kf.setImage(with: url)
                             }

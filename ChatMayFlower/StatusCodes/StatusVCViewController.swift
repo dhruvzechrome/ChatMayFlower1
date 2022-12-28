@@ -95,11 +95,13 @@ class StatusVCViewController: UIViewController {
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
                 databaseRef.child("\(snapshot.key)").child("status").observe(.childAdded) { snaps in
                     _ = snaps.value
-                    print("my status1 \(snaps.key)")
+                    
                     if !statuskey.contains("\(snaps.key)") {
+                        print("my status1 \(snaps.key)")
                         statuskey.append("\(snaps.key)")
                         statusDetail.append(snaps.value as! [String:String])
                     }
+                    print("All user of firebase 121212 \(details) --- \(statuskey)")
                 }
                 for snap in snapshots {
                     let _ = snap.key
@@ -166,8 +168,11 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             let valll = frd["status"] as? [String:Any]
             let vc = storyboard?.instantiateViewController(withIdentifier: "StatusCollectionVC") as? StatusCollectionVC
             vc?.status = valll!
+            vc?.statuskey = statuskey
+            vc?.modalPresentationStyle = .fullScreen
+            navigationController?.present(vc!, animated: true, completion: nil)
 //            let img = valll?["\(keyS!)"] as? [String:String]
-//            print("datas    --- --- ---    \(valll)")
+            print("datas    --- --- ---    \(valll)")
         }
     }
 

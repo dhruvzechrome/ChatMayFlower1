@@ -286,4 +286,6 @@ extension CameraAndLibraryController : AVCapturePhotoCaptureDelegate {
 //        view.addSubview(imageView)
         
     }
+
+    
 }

@@ -1647,9 +1647,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qXs-YN-oGN">
-                                <rect key="frame" x="0.0" y="37" width="414" height="821"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qXs-YN-oGN">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Ay-nt-mPg">
                                 <rect key="frame" x="0.0" y="44" width="414" height="60"/>
@@ -1676,6 +1675,9 @@
                                         <buttonConfiguration key="configuration" style="plain" image="xmark" catalog="system">
                                             <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="17"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="dismissButton:" destination="cju-vj-R7N" eventType="touchUpInside" id="sUo-9T-9QT"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1693,15 +1695,31 @@
                                     <constraint firstAttribute="trailing" secondItem="Eac-CJ-00z" secondAttribute="trailing" constant="22" id="si3-AP-7Ms"/>
                                 </constraints>
                             </view>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="AB0-wr-dnJ">
+                                <rect key="frame" x="5" y="124" width="404" height="4"/>
+                            </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3Vz-Fh-vdq"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="3Vz-Fh-vdq" firstAttribute="trailing" secondItem="3Ay-nt-mPg" secondAttribute="trailing" id="271-os-Uzn"/>
+                            <constraint firstItem="AB0-wr-dnJ" firstAttribute="top" secondItem="3Ay-nt-mPg" secondAttribute="bottom" constant="20" id="2Je-PD-UGs"/>
+                            <constraint firstItem="AB0-wr-dnJ" firstAttribute="leading" secondItem="3Vz-Fh-vdq" secondAttribute="leading" constant="5" id="Spm-kj-qkf"/>
                             <constraint firstItem="3Ay-nt-mPg" firstAttribute="leading" secondItem="3Vz-Fh-vdq" secondAttribute="leading" id="b2f-Ga-l2R"/>
+                            <constraint firstItem="qXs-YN-oGN" firstAttribute="trailing" secondItem="3Vz-Fh-vdq" secondAttribute="trailing" id="cGO-Qw-Ddf"/>
+                            <constraint firstItem="3Vz-Fh-vdq" firstAttribute="bottom" secondItem="qXs-YN-oGN" secondAttribute="bottom" id="nuk-XG-pef"/>
                             <constraint firstItem="3Ay-nt-mPg" firstAttribute="top" secondItem="3Vz-Fh-vdq" secondAttribute="top" id="qli-fC-a1C"/>
+                            <constraint firstItem="qXs-YN-oGN" firstAttribute="top" secondItem="4tV-s6-2z1" secondAttribute="top" id="t5b-Qy-Mfs"/>
+                            <constraint firstItem="qXs-YN-oGN" firstAttribute="leading" secondItem="3Vz-Fh-vdq" secondAttribute="leading" id="uFX-WR-iJ7"/>
+                            <constraint firstItem="3Vz-Fh-vdq" firstAttribute="trailing" secondItem="AB0-wr-dnJ" secondAttribute="trailing" constant="5" id="ug2-qy-IvZ"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="name" destination="oLm-vF-eeM" id="AGC-nm-ezg"/>
+                        <outlet property="progressBar" destination="AB0-wr-dnJ" id="q53-SU-LDo"/>
+                        <outlet property="userImage" destination="CsM-J5-DDV" id="vN9-8u-WVs"/>
+                        <outlet property="videoImage" destination="qXs-YN-oGN" id="XGq-yb-2mk"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UFC-aN-Zup" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
