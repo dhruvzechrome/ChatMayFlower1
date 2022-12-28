@@ -24,17 +24,25 @@ class StatusVCViewController: UIViewController {
     var key = [String]()
     var currentUserData : [String:String] = [:]
     var statusImage : UIImage?
+    @IBOutlet weak var subLabel: UILabel!
+    
+    @IBAction func camera(_ sender: UIButton) {
+        print("Image Tapped")
+        let vc = storyboard?.instantiateViewController(withIdentifier: "CameraAndLibraryController") as? CameraAndLibraryController
+        vc?.modalPresentationStyle = .overFullScreen
+//            navigationController?.show(vc!, sender: nil)
+        vc?.currentUserData = currentUserData
+        vc?.currentUser = currentUser
+        navigationController?.present(vc!, animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        title = "Status"
         statusTableView.delegate = self
         statusTableView.dataSource = self
         getContact()
         getData()
-    }
-    
-    override func viewWillLayoutSubviews() {
-        print("Of course")
     }
     
     func my() {
@@ -50,7 +58,7 @@ class StatusVCViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         currentUser = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
-        print("\(statusImage)")
+        print("--\(statusImage)")
         if statusImage != nil {
             let vc = storyboard?.instantiateViewController(withIdentifier: "StatusSentCode") as? StatusSentCode
             vc?.image = statusImage!
@@ -98,6 +106,7 @@ class StatusVCViewController: UIViewController {
         }
         print("List of all user ===========  \(allUser)")
     }
+    var currentUserStatus = [String:Any]()
     var statuskey = [String]()
     var statusDetail = [[String:String]]()
     func getData() {
@@ -116,8 +125,9 @@ class StatusVCViewController: UIViewController {
                         print("my status1 \(snaps.key)")
                         statuskey.append("\(snaps.key)")
                         statusDetail.append(snaps.value as! [String:String])
+                        print("All user of firebase 121212 \(details) --- \(statuskey)")
                     }
-                    print("All user of firebase 121212 \(details) --- \(statuskey)")
+                   
                 }
                 for snap in snapshots {
                     let _ = snap.key
@@ -130,6 +140,7 @@ class StatusVCViewController: UIViewController {
                         currentUserData["location"] = "\(userMap["location"] ?? "")"
                         currentUserData["profilepic"] = "\(userMap["photo url"] ?? "")"
                         currentUserData["statuskey"] = "\(userMap["statuskey"] ?? "")"
+                        currentUserStatus = userMap["status"] as? [String : Any] ?? ["":""]
                         currentUserData["status"] = "\(userMap["status"] ?? "")"
 //                            print("my status \(snaps.value)")
                         statusTableView.reloadData()
@@ -172,12 +183,28 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             statusTableView.deselectRow(at: indexPath, animated: true)
         }
         if indexPath.section == 0 {
-            let vc = storyboard?.instantiateViewController(withIdentifier: "CameraAndLibraryController") as? CameraAndLibraryController
-            vc?.modalPresentationStyle = .overFullScreen
-//            navigationController?.show(vc!, sender: nil)
-            vc?.currentUserData = currentUserData
-            vc?.currentUser = currentUser 
-            navigationController?.present(vc!, animated: true, completion: nil)
+            
+            
+            if currentUserData["statuskey"] != ""  {
+//                let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
+                print("frdddddd = \(currentUserStatus)- - - \(currentUserData)")
+                let vc = storyboard?.instantiateViewController(withIdentifier: "StatusCollectionVC") as? StatusCollectionVC
+                vc?.statuskey = statuskey
+                vc?.status = currentUserStatus
+                vc?.modalPresentationStyle = .overFullScreen
+                navigationController?.present(vc!, animated: true, completion: nil)
+                
+            }
+            else {
+                
+                let vc = storyboard?.instantiateViewController(withIdentifier: "CameraAndLibraryController") as? CameraAndLibraryController
+                vc?.modalPresentationStyle = .overFullScreen
+                //            navigationController?.show(vc!, sender: nil)
+                vc?.currentUserData = currentUserData
+                vc?.currentUser = currentUser
+                navigationController?.present(vc!, animated: true, completion: nil)
+                
+            }
         } else {
             let frd = details[indexPath.section][indexPath.row]
             let keyS = frd["statuskey"]
@@ -211,15 +238,16 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
                 let url = URL(string: currentUserData["profilepic"] ?? "")
                 cell?.profileImage.kf.setImage(with: url)
 
-//                    if currentUserData["statuskey"] != ""  {
-//                        let frd = currentUser["status"]
-//
-//                        let url = URL(string: frd["statusPhoto"] ?? "")
-//                        cell?.profileImage.borderWidth = 3
-//                        cell?.profileImage.borderColor = .blue
-//                        cell?.profileImage.kf.setImage(with: url)
-//
-//                    }
+                    if currentUserData["statuskey"] != ""  {
+                        let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
+                        print("frdddddd = \(currentUserStatus)- - - \(currentUserData)")
+
+                        let url = URL(string: frd["statusPhoto"] ?? "")
+                        cell?.profileImage.borderWidth = 3
+                        cell?.profileImage.borderColor = .blue
+                        cell?.profileImage.kf.setImage(with: url)
+                        cell?.subLable.text = "Tap to view status"
+                    }
                 
                 
                 

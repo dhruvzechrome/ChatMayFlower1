@@ -9,4 +9,5 @@ import UIKit
 
 class StatusCollectionVCCell: UICollectionViewCell {
     
+    @IBOutlet weak var progressBarC: UIProgressView!
 }

@@ -209,7 +209,7 @@ class CameraAndLibraryController: UIViewController,UIImagePickerControllerDelega
                 break
             }
             sender.setTranslation(.zero, in: view)
-        }
+    }
     @objc private func dismissScreen() {
         self.dismiss(animated: true, completion: nil)
     }
