@@ -1548,7 +1548,7 @@
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="gray">
                                                         <imageReference key="image" image="camera.fill" catalog="system" symbolScale="large"/>
-                                                        <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" scale="large"/>
+                                                        <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="14" scale="large"/>
                                                     </buttonConfiguration>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -1680,7 +1680,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="CsM-J5-DDV" firstAttribute="leading" secondItem="3Ay-nt-mPg" secondAttribute="leading" constant="5" id="1e4-bv-HbG"/>
                                     <constraint firstItem="oLm-vF-eeM" firstAttribute="top" secondItem="3Ay-nt-mPg" secondAttribute="top" constant="20" id="2h4-hE-mZf"/>
@@ -1834,12 +1834,12 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="dcE-Tx-InK" firstAttribute="leading" secondItem="IWC-aP-vdA" secondAttribute="leading" constant="20" id="8Gk-tz-BpR"/>
-                            <constraint firstItem="U6I-d0-sOw" firstAttribute="top" secondItem="IWC-aP-vdA" secondAttribute="top" id="LgG-g2-kfL"/>
+                            <constraint firstItem="U6I-d0-sOw" firstAttribute="top" secondItem="L0b-RS-p4q" secondAttribute="top" id="LgG-g2-kfL"/>
                             <constraint firstItem="IWC-aP-vdA" firstAttribute="trailing" secondItem="U6I-d0-sOw" secondAttribute="trailing" id="SOe-gd-dfg"/>
                             <constraint firstItem="U6I-d0-sOw" firstAttribute="leading" secondItem="IWC-aP-vdA" secondAttribute="leading" id="WY0-CP-5Fb"/>
                             <constraint firstItem="IWC-aP-vdA" firstAttribute="bottom" secondItem="dcE-Tx-InK" secondAttribute="bottom" constant="10" id="dYC-0O-dTI"/>
-                            <constraint firstItem="IWC-aP-vdA" firstAttribute="bottom" secondItem="U6I-d0-sOw" secondAttribute="bottom" id="eOg-bo-flf"/>
-                            <constraint firstItem="6AQ-Xv-3UM" firstAttribute="top" secondItem="IWC-aP-vdA" secondAttribute="top" constant="10" id="h7N-2p-voV"/>
+                            <constraint firstAttribute="bottom" secondItem="U6I-d0-sOw" secondAttribute="bottom" id="eOg-bo-flf"/>
+                            <constraint firstItem="6AQ-Xv-3UM" firstAttribute="top" secondItem="IWC-aP-vdA" secondAttribute="top" constant="50" id="h7N-2p-voV"/>
                             <constraint firstItem="6AQ-Xv-3UM" firstAttribute="leading" secondItem="IWC-aP-vdA" secondAttribute="leading" constant="10" id="i45-NM-318"/>
                             <constraint firstItem="IWC-aP-vdA" firstAttribute="trailing" secondItem="dcE-Tx-InK" secondAttribute="trailing" constant="20" id="xG1-f6-8QL"/>
                         </constraints>

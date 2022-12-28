@@ -120,6 +120,7 @@ class CameraAndLibraryController: UIViewController,UIImagePickerControllerDelega
                             //                  pvc.receiverid = usersNumber
                             pvc.statusImage = selectedImage
                             self.dismiss(animated: true)
+                            pvc.my()
                         }
                     }
                 }
@@ -272,13 +273,25 @@ extension CameraAndLibraryController : AVCapturePhotoCaptureDelegate {
         let image = UIImage(data: data)
         
         session?.stopRunning()
-        let vc = storyboard?.instantiateViewController(withIdentifier: "StatusSentCode") as? StatusSentCode
-        vc?.image = image!
-        vc?.currentUser = currentUser
-        vc?.currentUserData = currentUserData
-        vc?.modalPresentationStyle = .fullScreen
-        navigationController?.present(vc!, animated: true, completion: nil)
+//        let vc = storyboard?.instantiateViewController(withIdentifier: "StatusSentCode") as? StatusSentCode
+//        vc?.image = image!
+//        vc?.currentUser = currentUser
+//        vc?.currentUserData = currentUserData
+//        vc?.modalPresentationStyle = .fullScreen
+//        navigationController?.present(vc!, animated: true, completion: nil)
         
+        if let vc = self.presentingViewController as? UITabBarController {
+            if let pv = vc.viewControllers?.last as? UINavigationController {
+                if let pvc = pv.viewControllers.first as? StatusVCViewController {
+                    //                  pvc.receiverid = usersNumber
+                    print("\(image)")
+                    pvc.statusImage = image
+                    
+                    self.dismiss(animated: true)
+                    pvc.my()
+                }
+            }
+        }
 //        let imageView = UIImageView(image: image)
 //        imageView.isUserInteractionEnabled = true
 //        imageView.contentMode = .scaleAspectFill

@@ -32,9 +32,25 @@ class StatusVCViewController: UIViewController {
         getContact()
         getData()
     }
+    
+    override func viewWillLayoutSubviews() {
+        print("Of course")
+    }
+    
+    func my() {
+        if statusImage != nil {
+            let vc = storyboard?.instantiateViewController(withIdentifier: "StatusSentCode") as? StatusSentCode
+            vc?.image = statusImage!
+            vc?.currentUser = currentUser
+            vc?.currentUserData = currentUserData
+            statusImage = nil
+            vc?.modalPresentationStyle = .overFullScreen
+            navigationController?.present(vc!, animated: true, completion: nil)
+        }
+    }
     override func viewWillAppear(_ animated: Bool) {
         currentUser = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
-
+        print("\(statusImage)")
         if statusImage != nil {
             let vc = storyboard?.instantiateViewController(withIdentifier: "StatusSentCode") as? StatusSentCode
             vc?.image = statusImage!
@@ -157,7 +173,7 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
         }
         if indexPath.section == 0 {
             let vc = storyboard?.instantiateViewController(withIdentifier: "CameraAndLibraryController") as? CameraAndLibraryController
-            vc?.modalPresentationStyle = .fullScreen
+            vc?.modalPresentationStyle = .overFullScreen
 //            navigationController?.show(vc!, sender: nil)
             vc?.currentUserData = currentUserData
             vc?.currentUser = currentUser 
@@ -169,7 +185,7 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             let vc = storyboard?.instantiateViewController(withIdentifier: "StatusCollectionVC") as? StatusCollectionVC
             vc?.status = valll!
             vc?.statuskey = statuskey
-            vc?.modalPresentationStyle = .fullScreen
+            vc?.modalPresentationStyle = .overFullScreen
             navigationController?.present(vc!, animated: true, completion: nil)
 //            let img = valll?["\(keyS!)"] as? [String:String]
             print("datas    --- --- ---    \(valll)")
