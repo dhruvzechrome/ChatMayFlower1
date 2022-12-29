@@ -586,7 +586,7 @@ extension ChatConversionCode {
     
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
+        print("inside")
         if let  videoURL = info[.mediaURL] as? URL
         {
             let localFile = URL(string: "\(videoURL)")!

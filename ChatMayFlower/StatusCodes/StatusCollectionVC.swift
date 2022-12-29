@@ -21,48 +21,71 @@ class StatusCollectionVC: UIViewController {
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var userImage: UIImageView!
     
+    var nameText = ""
     var seenStatuskey = [String]()
     var statuskey = [String]()
     var status = [String:Any]()
     var timer = Timer()
     var cnt = 0
     var counter = 0
-    
+    var int = 0
     var screenStatus = false
+    var userdata = [String:Any]()
     override func viewDidLoad() {
         super.viewDidLoad()
         progressCollection.delegate = self
         progressCollection.dataSource = self
-        progressBar.setProgress(0, animated: false)
-        progressBar.progressTintColor = .blue
-            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
-                if screenStatus == false {
-                    progressBar.setProgress(Float(counter*14), animated: true)
-                    if counter == 0 || counter == 15 {
-                        //                    let frd = status
-                        for i in 0...statuskey.count-1 {
-                            if status["\(statuskey[i])"]  != nil && !seenStatuskey.contains("\(statuskey[i])") {
-                                progressBar.setProgress(0, animated: false)
-                                seenStatuskey.append("\(statuskey[i])")
-                                let frd = status["\(statuskey[i])"] as? [String:String]
-                                let url = URL(string: frd?["statusPhoto"] ?? "")
-                                counter = 0
-                                cnt += 1
-                                videoImage.kf.setImage(with: url)
-                                break
+//        progressBar.setProgress(0, animated: false)
+//        progressBar.progressTintColor = .blue
+        if nameText != "" {
+            name.text = "Me"
+            if userdata["profilepic"] as? String != "" {
+                let url = URL(string: "\(userdata["profilepic"] ?? "")")
+                userImage.kf.setImage(with: url)
+            } else {
+                userImage.image = UIImage(systemName: "person.fill")
+            }
+        } else {
+            name.text = userdata["Name"] as? String
+            if userdata["profilepic"] as? String != "" {
+                let url = URL(string: "\(userdata["profilepic"] ?? "")")
+                userImage.kf.setImage(with: url)
+            } else {
+                userImage.image = UIImage(systemName: "person.fill")
+            }
+        }
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
+            if screenStatus == false {
+//                progressBar.setProgress(Float(counter*14), animated: true)
+                if counter == 0 || counter == 15 {
+                    //                    let frd = status
+                    for i in 0...statuskey.count-1 {
+                        if status["\(statuskey[i])"]  != nil && !seenStatuskey.contains("\(statuskey[i])") {
+//                            progressBar.setProgress(0, animated: false)
+                            seenStatuskey.append("\(statuskey[i])")
+                            let frd = status["\(statuskey[i])"] as? [String:String]
+                            let url = URL(string: frd?["statusPhoto"] ?? "")
+                            counter = 0
+                            print("cnt is ---- ",cnt)
+                            cnt += 1
+                            if cnt-1 > int {
+                                int += 1
                             }
-                        }
-                    }
-                    print("Counter \(Float(counter))")
-                    counter += 1
-                    if cnt == status.count && counter == 16{
-                        screenStatus = true
-                        self.dismiss(animated: true) {
-                            
+                            videoImage.kf.setImage(with: url)
+                            break
                         }
                     }
                 }
-            })
+                print("Counter \(Float(counter))")
+                counter += 1
+                if cnt == status.count && counter == 16{
+                    screenStatus = true
+                    self.dismiss(animated: true) {
+                        
+                    }
+                }
+            }
+        })
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(onDrag(_:))))
         
     }
@@ -70,34 +93,6 @@ class StatusCollectionVC: UIViewController {
         super.viewWillDisappear(animated)
         screenStatus = true
     }
-//    func segmentedProgressBarChangedIndex(index: Int) {
-//        <#code#>
-//    }
-//
-//    func segmentedProgressBarFinished() {
-//        <#code#>
-//    }
-//
-//    var SPB: SegmentedProgressBar!
-//    override func viewDidLoad() {
-//        SPB = SegmentedProgressBar(numberOfSegments: status.count, duration: 5)
-//        if #available(iOS 11.0, *) {
-//            SPB.frame = CGRect(x: 18, y: UIApplication.shared.statusBarFrame.height + 5, width: view.frame.width - 35, height: 3)
-//        } else {
-//            // Fallback on earlier versions
-//            SPB.frame = CGRect(x: 18, y: 15, width: view.frame.width - 35, height: 3)
-//        }
-//
-//        SPB.delegate = self
-//        SPB.topColor = UIColor.white
-//        SPB.bottomColor = UIColor.white.withAlphaComponent(0.25)
-//        SPB.padding = 2
-//        SPB.isPaused = true
-//        SPB.currentAnimationIndex = 0
-////        SPB.duration = getDuration(at: 0)
-//        view.addSubview(SPB)
-//        view.bringSubviewToFront(SPB)
-//    }
     
     @IBAction func dismissButton(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
@@ -112,7 +107,18 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = progressCollection.dequeueReusableCell(withReuseIdentifier: "StatusCollectionVCCell", for: indexPath) as? StatusCollectionVCCell
-        cell?.progressBarC.setProgress(140, animated: false)
+        print("int ==== \(int)   --- cnt ",cnt)
+        cell?.progressBarC.setProgress(0, animated: false)
+        cell?.progressBarC.progressTintColor = UIColor.blue
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
+            if indexPath.row == int {
+               
+                cell?.progressBarC.setProgress(Float(counter*15), animated: true)
+            } else {
+//                cell?.progressBarC.setProgress(0, animated: true)
+            }
+        })
+        
         return cell!
     }
     
@@ -123,7 +129,7 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
             let cwidth = progressCollection.bounds.width
             print("hight of ",cwidth)
             print("hight of ",cheight)
-            return CGSize(width: (cwidth/CGFloat(ik))-1, height: cheight)
+            return CGSize(width: (cwidth/CGFloat(ik))-2, height: cheight)
         } else {
             let cwidth = progressCollection.bounds.width
             print("hight of ",cwidth)
@@ -134,7 +140,7 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
 
     }
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-            return 1
+            return 2
         }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

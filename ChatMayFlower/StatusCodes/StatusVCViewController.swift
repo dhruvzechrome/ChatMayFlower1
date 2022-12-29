@@ -157,7 +157,7 @@ class StatusVCViewController: UIViewController {
                                         key.append(snapshot.key)
                                         
 //                                        print("Other user status \(snaps.value)")
-                                        statusData.append(["Name": "\(user["Name"] ?? "")","Phone number":"\(userMap["Phone number"] ?? "")","status":userMap["status"]! ,"statuskey":"\(userMap["statuskey"] ?? "")"])
+                                        statusData.append(["Name": "\(user["Name"] ?? "")","Phone number":"\(userMap["Phone number"] ?? "")","status":userMap["status"]! ,"statuskey":"\(userMap["statuskey"] ?? "")","profilepic":"\(userMap["photo url"] ?? "")"])
                                     }
                                     return true
                                 }
@@ -189,7 +189,9 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
 //                let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
                 print("frdddddd = \(currentUserStatus)- - - \(currentUserData)")
                 let vc = storyboard?.instantiateViewController(withIdentifier: "StatusCollectionVC") as? StatusCollectionVC
+                vc?.userdata = currentUserData
                 vc?.statuskey = statuskey
+                vc?.nameText = "You"
                 vc?.status = currentUserStatus
                 vc?.modalPresentationStyle = .overFullScreen
                 navigationController?.present(vc!, animated: true, completion: nil)
@@ -210,6 +212,7 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             let keyS = frd["statuskey"]
             let valll = frd["status"] as? [String:Any]
             let vc = storyboard?.instantiateViewController(withIdentifier: "StatusCollectionVC") as? StatusCollectionVC
+            vc?.userdata = frd
             vc?.status = valll!
             vc?.statuskey = statuskey
             vc?.modalPresentationStyle = .overFullScreen
