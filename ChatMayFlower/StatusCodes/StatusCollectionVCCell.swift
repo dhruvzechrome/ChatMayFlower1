@@ -11,3 +11,8 @@ class StatusCollectionVCCell: UICollectionViewCell {
     
     @IBOutlet weak var progressBarC: UIProgressView!
 }
+
+
+class StatusDetailsCollectionCell: UICollectionViewCell {
+    
+}

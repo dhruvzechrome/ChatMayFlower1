@@ -66,14 +66,14 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
                     //                    let cata = snap.key
                     //                    let ques = snap.value!
                     
-                    let userMap = snapshot.value! as! [String:String]
-                    if userMap["Phone number"] ==  self?.phones{
+                    let userMap = snapshot.value! as! [String:Any]
+                    if userMap["Phone number"] as? String ==  self?.phones{
                         //                        print("Ppppphhhhh :",userMap["Phone number"]!)
-                        self!.tphoneNumber.text = userMap["Phone number"]!
+                        self!.tphoneNumber.text = "\(userMap["Phone number"] ?? "")"
                         
                         if userMap["Name"] != nil {
-                            if userMap["Name"] != ""{
-                                self!.tname.text = userMap["Name"]!
+                            if userMap["Name"] as! String != ""{
+                                self!.tname.text = "\(userMap["Name"] ?? "")"
                             }
                             else {
                                 self!.tname.text = "No name available"
@@ -82,9 +82,9 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
                         }
                         let image = UIImage(named: "placeholder")
                         if userMap["photo url"] != nil {
-                            if userMap["photo url"] != "" {
-                                self!.location = userMap["location"]!
-                                self!.urlPath = userMap["photo url"]!
+                            if userMap["photo url"] as? String != "" {
+                                self!.location = "\(userMap["location"] ?? "")"
+                                self!.urlPath = "\(userMap["photo url"] ?? "")"
                                 print("Photo Url -------- \(self!.urlPath)")
                                 print("Photo location -------- \(self!.location)")
                                 let url = URL(string: self!.urlPath)

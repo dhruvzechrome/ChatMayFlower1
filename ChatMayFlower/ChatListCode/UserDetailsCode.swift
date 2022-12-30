@@ -306,7 +306,8 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
             self?.tabelView.reloadData()
         }
     }
-    
+    var timer = Timer()
+    var cnt = 0
     let searchController = UISearchController()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -323,8 +324,17 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         searchController.searchBar.sizeToFit()
         tabelView.tableHeaderView = searchController.searchBar
         
-        
-        
+//        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
+//            if cnt == 30 {
+//                print("cu \(phones)")
+//            
+//                Database.database().reference().child("Contact List").child("\(phones)").child("status").setValue(nil)
+//                Database.database().reference().child("Contact List").child("\(phones)").child("statuskey").setValue(nil)
+//               
+//            }
+//            print(cnt)
+//            cnt += 1
+//        })
         //                let refreshControl = UIRefreshControl()
         //                refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
         //                   self.tabelView.refreshControl = refreshControl
@@ -348,7 +358,6 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         
     }
     var receiverName = ""
-    var timer = Timer()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         validAuth()

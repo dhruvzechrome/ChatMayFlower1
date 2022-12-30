@@ -43,6 +43,7 @@ class StatusVCViewController: UIViewController {
         statusTableView.dataSource = self
         getContact()
         getData()
+
     }
     
     func my() {
@@ -112,6 +113,7 @@ class StatusVCViewController: UIViewController {
     func getData() {
         // Create Firebase Storage Reference
         _ = Storage.storage().reference()
+        
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded){[self](snapshot) in
             _ = snapshot.key
@@ -243,9 +245,9 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
 
                     if currentUserData["statuskey"] != ""  {
                         let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
-                        print("frdddddd = \(currentUserStatus)- - - \(currentUserData)")
+                        print("frdddddd = \(currentUserStatus)- - - \(frd)")
 
-                        let url = URL(string: frd["statusPhoto"] ?? "")
+                        let url = URL(string: frd["statusPhoto"]!)
                         cell?.profileImage.borderWidth = 3
                         cell?.profileImage.borderColor = .blue
                         cell?.profileImage.kf.setImage(with: url)

@@ -57,10 +57,11 @@ class StatusCollectionVC: UIViewController {
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
             if screenStatus == false {
 //                progressBar.setProgress(Float(counter*14), animated: true)
-                if counter == 0 || counter == 15 {
+                if counter == 0 || counter == 15 || lst == true{
                     //                    let frd = status
                     for i in 0...statuskey.count-1 {
                         if status["\(statuskey[i])"]  != nil && !seenStatuskey.contains("\(statuskey[i])") {
+                         
 //                            progressBar.setProgress(0, animated: false)
                             seenStatuskey.append("\(statuskey[i])")
                             let frd = status["\(statuskey[i])"] as? [String:String]
@@ -76,7 +77,7 @@ class StatusCollectionVC: UIViewController {
                         }
                     }
                 }
-                print("Counter \(Float(counter))")
+//                print("Counter \(Float(counter))")
                 counter += 1
                 if cnt == status.count && counter == 16{
                     screenStatus = true
@@ -97,8 +98,18 @@ class StatusCollectionVC: UIViewController {
     @IBAction func dismissButton(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
     }
+    var lst = false
+    var kkey :Int?
+    @IBAction func forward(_ sender: UIButton) {
+        counter = 15
+        lst = true
+        kkey = int
+        print("KKey \(kkey)")
+    }
+    var mycount = 0
     
 }
+
 
 extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -107,16 +118,30 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = progressCollection.dequeueReusableCell(withReuseIdentifier: "StatusCollectionVCCell", for: indexPath) as? StatusCollectionVCCell
-        print("int ==== \(int)   --- cnt ",cnt)
-        cell?.progressBarC.setProgress(0, animated: false)
-        cell?.progressBarC.progressTintColor = UIColor.blue
+//        print("int ==== \(int)   --- cnt ",cnt)
+        cell?.progressBarC.setProgress(0, animated: true)
+        cell?.progressBarC.progressTintColor = .tintColor
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
-            if indexPath.row == int {
-               
-                cell?.progressBarC.setProgress(Float(counter*15), animated: true)
-            } else {
-//                cell?.progressBarC.setProgress(0, animated: true)
+            if screenStatus == false {
+                print("My counting is \(mycount)")
+                mycount += 1
+                if  indexPath.row == 0 && lst == true{
+                    print("---- int \(int)---- kkey \(kkey) --- indexpath \(indexPath.row)")
+                    cell?.progressBarC.setProgress(100, animated: false)
+                    //                kkey = nil
+                    //                    lst = false
+                }
+                else if indexPath.row == int {
+                    print("int \(int) ---* indexpath \(indexPath.row)")
+                    
+                    cell?.progressBarC.setProgress(Float(counter*15), animated: true)
+                    
+                    
+                } else {
+                    //cell?.progressBarC.setProgress(100, animated: true)
+                }
             }
+            
         })
         
         return cell!
