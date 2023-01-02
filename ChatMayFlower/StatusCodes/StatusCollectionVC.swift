@@ -10,17 +10,20 @@ import UIKit
 class StatusCollectionVC: UIViewController {
     
     
-    @IBOutlet weak var progressCollection: UICollectionView!
+//    @IBOutlet weak var progressCollection: UICollectionView!
+    @IBOutlet weak var detailsCollection: UICollectionView!
     
     public let percentThresholdDismiss: CGFloat = 0.3
     public var velocityDismiss: CGFloat = 300
     public var axis: NSLayoutConstraint.Axis = .vertical
     
-    @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var videoImage: UIImageView!
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var userImage: UIImageView!
-    
+    var ifc = 0
+    var identifier : Int?
+    var url = URL(string: "")
+    var statusData = [[String:Any]]()
     var nameText = ""
     var seenStatuskey = [String]()
     var statuskey = [String]()
@@ -33,60 +36,33 @@ class StatusCollectionVC: UIViewController {
     var userdata = [String:Any]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        progressCollection.delegate = self
-        progressCollection.dataSource = self
+    
+//        progressCollection.delegate = self
+//        progressCollection.dataSource = self
+        detailsCollection.delegate = self
+        detailsCollection.dataSource = self
 //        progressBar.setProgress(0, animated: false)
 //        progressBar.progressTintColor = .blue
+        
         if nameText != "" {
-            name.text = "Me"
+//            name.text = "Me"
             if userdata["profilepic"] as? String != "" {
+                
                 let url = URL(string: "\(userdata["profilepic"] ?? "")")
-                userImage.kf.setImage(with: url)
+//                userImage.kf.setImage(with: url)
             } else {
-                userImage.image = UIImage(systemName: "person.fill")
+//                userImage.image = UIImage(systemName: "person.fill")
             }
         } else {
-            name.text = userdata["Name"] as? String
-            if userdata["profilepic"] as? String != "" {
-                let url = URL(string: "\(userdata["profilepic"] ?? "")")
-                userImage.kf.setImage(with: url)
-            } else {
-                userImage.image = UIImage(systemName: "person.fill")
-            }
+//            name.text = "\(userdata["Name"] ?? "")"
+//            if userdata["profilepic"] as? String != "" {
+//                let url = URL(string: "\(userdata["profilepic"] ?? "")")
+//                userImage.kf.setImage(with: url)
+//            } else {
+//                userImage.image = UIImage(systemName: "person.fill")
+//            }
         }
-        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
-            if screenStatus == false {
-//                progressBar.setProgress(Float(counter*14), animated: true)
-                if counter == 0 || counter == 15 || lst == true{
-                    //                    let frd = status
-                    for i in 0...statuskey.count-1 {
-                        if status["\(statuskey[i])"]  != nil && !seenStatuskey.contains("\(statuskey[i])") {
-                         
-//                            progressBar.setProgress(0, animated: false)
-                            seenStatuskey.append("\(statuskey[i])")
-                            let frd = status["\(statuskey[i])"] as? [String:String]
-                            let url = URL(string: frd?["statusPhoto"] ?? "")
-                            counter = 0
-                            print("cnt is ---- ",cnt)
-                            cnt += 1
-                            if cnt-1 > int {
-                                int += 1
-                            }
-                            videoImage.kf.setImage(with: url)
-                            break
-                        }
-                    }
-                }
-//                print("Counter \(Float(counter))")
-                counter += 1
-                if cnt == status.count && counter == 16{
-                    screenStatus = true
-                    self.dismiss(animated: true) {
-                        
-                    }
-                }
-            }
-        })
+        
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(onDrag(_:))))
         
     }
@@ -94,14 +70,25 @@ class StatusCollectionVC: UIViewController {
         super.viewWillDisappear(animated)
         screenStatus = true
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        seenStatuskey.removeAll()
+        if ifc == 0 {
+            print("yes of course")
+            let indexPath = IndexPath(row: identifier!, section: 0)
+            detailsCollection.scrollToItem(at: indexPath, at: [.bottom], animated: true)
+            ifc = 1
+//                                identifier = nil
+                                detailsCollection.reloadData()
+        }
+    }
     @IBAction func dismissButton(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
     }
     var lst = false
     var kkey :Int?
     @IBAction func forward(_ sender: UIButton) {
-        counter = 15
+//        counter = 15
         lst = true
         kkey = int
         print("KKey \(kkey)")
@@ -113,59 +100,100 @@ class StatusCollectionVC: UIViewController {
 
 extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return status.count
+        return statusData.count
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = progressCollection.dequeueReusableCell(withReuseIdentifier: "StatusCollectionVCCell", for: indexPath) as? StatusCollectionVCCell
-//        print("int ==== \(int)   --- cnt ",cnt)
-        cell?.progressBarC.setProgress(0, animated: true)
-        cell?.progressBarC.progressTintColor = .tintColor
+        let cell = detailsCollection.dequeueReusableCell(withReuseIdentifier: "StatusDetailsCollectionCell", for: indexPath) as? StatusDetailsCollectionCell
+//        if ifc == 1 {
+//            ifc = 0
+//            counter = 0
+//            cnt = 0
+//            seenStatuskey.removeAll()
+//            identifier = indexPath.item
+//        }
+        counter = 0
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
+            
             if screenStatus == false {
-                print("My counting is \(mycount)")
-                mycount += 1
-                if  indexPath.row == 0 && lst == true{
-                    print("---- int \(int)---- kkey \(kkey) --- indexpath \(indexPath.row)")
-                    cell?.progressBarC.setProgress(100, animated: false)
-                    //                kkey = nil
-                    //                    lst = false
+                print("llllolokok")
+                let frd = statusData[indexPath.item]
+                let valll = frd["status"] as? [String:Any]
+//                progressBar.setProgress(Float(counter*14), animated: true)
+                if counter == 0 || counter == 15 {
+                    
+                    print("pkpkpkpk \(seenStatuskey)")
+                    //                    let frd = status
+                    for i in 0...statuskey.count-1 {
+                        print("statuskey is ...",statuskey[i])
+                        print("\(valll?["\(statuskey[i])"])")
+                        if valll?["\(statuskey[i])"]  != nil && !seenStatuskey.contains("\(statuskey[i])") {
+                            
+//                            let keyS = frd["statuskey"]
+                            
+                            let img = valll?["\(statuskey[i])"] as? [String:String]
+//                            progressBar.setProgress(0, animated: false)
+                            seenStatuskey.append("\(statuskey[i])")
+//                            let frd = status["\(statuskey[i])"] as? [String:String]
+                            print("SeenStatus key \(seenStatuskey)")
+                            print("img is ...",statusData)
+                            print("frdd is ...",frd)
+                            print("valll is ...",statuskey[i])
+                            url = URL(string: "\(img?["statusPhoto"] ?? "")")
+                            cell?.videoImage.kf.setImage(with: url)
+                            counter = 0
+//                            print("cnt is ---- ",cnt)
+                            cnt += 1
+//                            if cnt-1 > int {
+//                                int += 1
+//                            }
+//                            videoImage.kf.setImage(with: url)
+                            break
+                        }
+                    }
                 }
-                else if indexPath.row == int {
-                    print("int \(int) ---* indexpath \(indexPath.row)")
-                    
-                    cell?.progressBarC.setProgress(Float(counter*15), animated: true)
-                    
-                    
-                } else {
-                    //cell?.progressBarC.setProgress(100, animated: true)
+//                print("Counter \(Float(counter))")
+                if valll!.count > 1 {
+                    cnt = 0
+                }
+                counter += 1
+                if cnt == statusData.count && counter == 16{
+                    screenStatus = true
+                    self.dismiss(animated: true) {
+                        
+                    }
                 }
             }
-            
         })
-        
+        print("cnt  \(cnt)")
+        print("Index Path \(indexPath.row)")
+       
         return cell!
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cheight = progressCollection.bounds.height
-        if status.count > 1 {
-            let ik = status.count
-            let cwidth = progressCollection.bounds.width
-            print("hight of ",cwidth)
-            print("hight of ",cheight)
-            return CGSize(width: (cwidth/CGFloat(ik))-2, height: cheight)
-        } else {
-            let cwidth = progressCollection.bounds.width
-            print("hight of ",cwidth)
-            print("hight of ",cheight)
-            return CGSize(width: cwidth, height: cheight)
-        }
+        let cheight = UIScreen.main.bounds.height
+        
+        let cwidth = UIScreen.main.bounds.width
+        return CGSize(width: cwidth, height: cheight)
+//        let cheight = progressCollection.bounds.height
+//        if status.count > 1 {
+//            let ik = status.count
+//            let cwidth = progressCollection.bounds.width
+//            print("hight of ",cwidth)
+//            print("hight of ",cheight)
+//            return CGSize(width: (cwidth/CGFloat(ik))-2, height: cheight)
+//        } else {
+//            let cwidth = progressCollection.bounds.width
+//            print("hight of ",cwidth)
+//            print("hight of ",cheight)
+//            return CGSize(width: cwidth, height: cheight)
+//        }
         
 
     }
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-            return 2
+            return 0
         }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

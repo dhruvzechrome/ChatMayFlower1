@@ -14,5 +14,9 @@ class StatusCollectionVCCell: UICollectionViewCell {
 
 
 class StatusDetailsCollectionCell: UICollectionViewCell {
+    @IBOutlet weak var progressCollection: UICollectionView!
+    @IBOutlet weak var videoImage: UIImageView!
+    @IBOutlet weak var userImage: UIImageView!
+    @IBOutlet weak var userName: UILabel!
     
 }

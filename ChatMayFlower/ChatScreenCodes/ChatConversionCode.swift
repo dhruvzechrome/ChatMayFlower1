@@ -180,7 +180,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
 
             //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
             //tap.cancelsTouchesInView = false
-        backgroundSV.addGestureRecognizer(tap1)
+        backgroundImage.addGestureRecognizer(tap1)
 //        chatTable.addGestureRecognizer(tap1)
         if allUser.count > 0 {
             let UserList = usersDetails
@@ -235,6 +235,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         }
         
     }
+    @IBOutlet weak var backgroundImage: UIImageView!
+    
+    
     override func viewWillDisappear(_ animated: Bool) {
         seenVcStatus = false
 //        view.endEditing(true)

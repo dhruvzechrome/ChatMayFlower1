@@ -24,6 +24,7 @@ class StatusVCViewController: UIViewController {
     var key = [String]()
     var currentUserData : [String:String] = [:]
     var statusImage : UIImage?
+    var identifier : Int?
     @IBOutlet weak var subLabel: UILabel!
     
     @IBAction func camera(_ sender: UIButton) {
@@ -216,11 +217,13 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             let vc = storyboard?.instantiateViewController(withIdentifier: "StatusCollectionVC") as? StatusCollectionVC
             vc?.userdata = frd
             vc?.status = valll!
+            vc?.identifier = indexPath.row
+            vc?.statusData = statusData
             vc?.statuskey = statuskey
             vc?.modalPresentationStyle = .overFullScreen
             navigationController?.present(vc!, animated: true, completion: nil)
 //            let img = valll?["\(keyS!)"] as? [String:String]
-            print("datas    --- --- ---    \(valll)")
+            print("datas    --- --- ---    \(indexPath.row)")
         }
     }
 

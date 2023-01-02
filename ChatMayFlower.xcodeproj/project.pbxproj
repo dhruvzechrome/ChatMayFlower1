@@ -30,7 +30,6 @@
 		887D10BD291291A50086E251 /* ShowProfileDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887D10BC291291A50086E251 /* ShowProfileDetail.swift */; };
 		88838DD5295B17EB00C97803 /* StatusCollectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88838DD4295B17EB00C97803 /* StatusCollectionVC.swift */; };
 		88838DD7295B183200C97803 /* StatusCollectionVCCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88838DD6295B183200C97803 /* StatusCollectionVCCell.swift */; };
-		88838DD9295B263B00C97803 /* SegmentedProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88838DD8295B263B00C97803 /* SegmentedProgressBar.swift */; };
 		888662DE2955E59700B2E82F /* StatusVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888662DD2955E59400B2E82F /* StatusVCViewController.swift */; };
 		888662E02955E5E200B2E82F /* StatusViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888662DF2955E5E200B2E82F /* StatusViewCell.swift */; };
 		888FCD1F293DB1D000EE2E49 /* AllUsersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888FCD1E293DB1D000EE2E49 /* AllUsersList.swift */; };
@@ -74,7 +73,6 @@
 		887D10BC291291A50086E251 /* ShowProfileDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowProfileDetail.swift; sourceTree = "<group>"; };
 		88838DD4295B17EB00C97803 /* StatusCollectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusCollectionVC.swift; sourceTree = "<group>"; };
 		88838DD6295B183200C97803 /* StatusCollectionVCCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusCollectionVCCell.swift; sourceTree = "<group>"; };
-		88838DD8295B263B00C97803 /* SegmentedProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SegmentedProgressBar.swift; path = "../../../../../../Downloads/ARStories-master/ARStories/helper/SegmentedProgressBar.swift"; sourceTree = "<group>"; };
 		888662DD2955E59400B2E82F /* StatusVCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusVCViewController.swift; sourceTree = "<group>"; };
 		888662DF2955E5E200B2E82F /* StatusViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewCell.swift; sourceTree = "<group>"; };
 		888FCD1E293DB1D000EE2E49 /* AllUsersList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllUsersList.swift; sourceTree = "<group>"; };
@@ -211,7 +209,6 @@
 		88A32E0828F975B50041B6ED /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				88838DD8295B263B00C97803 /* SegmentedProgressBar.swift */,
 				883EBD4028F7E09F000A59BA /* AppDelegate.swift */,
 				883EBD4228F7E09F000A59BA /* SceneDelegate.swift */,
 			);
@@ -400,7 +397,6 @@
 				88402BB529234F4F00EC8972 /* ImageTableViewCell.swift in Sources */,
 				888FCD21293DB36B00EE2E49 /* AllUserTableViewCell.swift in Sources */,
 				888662E02955E5E200B2E82F /* StatusViewCell.swift in Sources */,
-				88838DD9295B263B00C97803 /* SegmentedProgressBar.swift in Sources */,
 				883EBD5928F7FBB6000A59BA /* PhoneVerificationCode.swift in Sources */,
 				883EBD4328F7E09F000A59BA /* SceneDelegate.swift in Sources */,
 				885F4A51294ADEF300279586 /* ReceiverProfileViewCell.swift in Sources */,
