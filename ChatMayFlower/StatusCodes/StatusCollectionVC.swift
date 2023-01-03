@@ -73,14 +73,7 @@ class StatusCollectionVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 //        seenStatuskey.removeAll()
-        if ifc == 0 {
-            print("yes of course")
-            let indexPath = IndexPath(row: identifier!, section: 0)
-            detailsCollection.scrollToItem(at: indexPath, at: [.bottom], animated: true)
-            ifc = 1
-//                                identifier = nil
-                                detailsCollection.reloadData()
-        }
+        
     }
     @IBAction func dismissButton(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
@@ -103,6 +96,24 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
         return statusData.count
     }
 
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        print("Yes my Guys")
+        print("Index Path \(indexPath.item)")
+        seenStatuskey.removeAll()
+        counter = 14
+        cnt = 0
+        if ifc == 0 {
+            print("yes of course")
+            seenStatuskey.removeAll()
+            let indexPath = IndexPath(item: identifier!, section: 0)
+            detailsCollection.scrollToItem(at: indexPath, at: [.bottom], animated: true)
+            ifc = 1
+            counter = 0
+                                identifier = nil
+//                                detailsCollection.reloadData()
+        }
+    }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = detailsCollection.dequeueReusableCell(withReuseIdentifier: "StatusDetailsCollectionCell", for: indexPath) as? StatusDetailsCollectionCell
 //        if ifc == 1 {
@@ -112,17 +123,25 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
 //            seenStatuskey.removeAll()
 //            identifier = indexPath.item
 //        }
-        counter = 0
+        print("cnt  \(cnt)")
+        print("Index Path \(indexPath.row)")
+        
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
             
             if screenStatus == false {
-                print("llllolokok")
-                let frd = statusData[indexPath.item]
+//                print("llllolokok")
+                var frd = [String:Any]()
+                if ifc == 0 {
+                     frd = statusData[identifier!]
+                } else {
+                     frd = statusData[indexPath.item]
+                }
+            
                 let valll = frd["status"] as? [String:Any]
 //                progressBar.setProgress(Float(counter*14), animated: true)
                 if counter == 0 || counter == 15 {
                     
-                    print("pkpkpkpk \(seenStatuskey)")
+//                    print("pkpkpkpk \(seenStatuskey)")
                     //                    let frd = status
                     for i in 0...statuskey.count-1 {
                         print("statuskey is ...",statuskey[i])
@@ -136,9 +155,10 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                             seenStatuskey.append("\(statuskey[i])")
 //                            let frd = status["\(statuskey[i])"] as? [String:String]
                             print("SeenStatus key \(seenStatuskey)")
-                            print("img is ...",statusData)
+                            print("statusData\(indexPath.item) is ...",statusData[indexPath.item])
                             print("frdd is ...",frd)
-                            print("valll is ...",statuskey[i])
+                            print("statusKeys ...",statuskey)
+                            print("statuskey\(i) is ...",statuskey[i])
                             url = URL(string: "\(img?["statusPhoto"] ?? "")")
                             cell?.videoImage.kf.setImage(with: url)
                             counter = 0
@@ -152,21 +172,26 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                         }
                     }
                 }
-//                print("Counter \(Float(counter))")
-                if valll!.count > 1 {
-                    cnt = 0
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                    print("Counter \(Float(counter))   indexpath ...\(indexPath.item)")
+                    print("Cnt ... \(cnt)     valll.count ....\(valll?.count)")
+                    counter += 1
                 }
-                counter += 1
-                if cnt == statusData.count && counter == 16{
+                
+                
+                if indexPath.item == statusData.count-1 && counter == 15 && cnt-1 == valll?.count {
                     screenStatus = true
                     self.dismiss(animated: true) {
-                        
+                       
                     }
+                }
+                if counter >= 15 {
+                    counter = 0
                 }
             }
         })
-        print("cnt  \(cnt)")
-        print("Index Path \(indexPath.row)")
+       
        
         return cell!
     }
