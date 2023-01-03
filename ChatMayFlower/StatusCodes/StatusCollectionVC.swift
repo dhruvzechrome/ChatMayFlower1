@@ -29,14 +29,14 @@ class StatusCollectionVC: UIViewController {
     var statuskey = [String]()
     var status = [String:Any]()
     var timer = Timer()
-    var cnt = 0
+    var cnt = 1
     var counter = 0
     var int = 0
     var screenStatus = false
     var userdata = [String:Any]()
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        cnt = 0
 //        progressCollection.delegate = self
 //        progressCollection.dataSource = self
         detailsCollection.delegate = self
@@ -83,8 +83,17 @@ class StatusCollectionVC: UIViewController {
     @IBAction func forward(_ sender: UIButton) {
 //        counter = 15
         lst = true
-        kkey = int
-        print("KKey \(kkey)")
+        counter = 14
+//        cnt = 0
+        if kkey!+1 < statusData.count {
+            let indexPath = IndexPath(item: kkey!+1, section: 0)
+            detailsCollection.scrollToItem(at: indexPath, at: [.bottom], animated: true)
+        }
+        if kkey != statusData.count-1 && counter == 15  {
+            screenStatus = true
+            self.dismiss(animated: true) {
+            }
+        }
     }
     var mycount = 0
     
@@ -103,6 +112,8 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
         seenStatuskey.removeAll()
         counter = 14
         cnt = 0
+        kkey = indexPath.item
+        detailsCollection.scrollToItem(at: indexPath, at: [.right], animated: true)
         if ifc == 0 {
             print("yes of course")
             seenStatuskey.removeAll()
@@ -127,15 +138,12 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
         print("Index Path \(indexPath.row)")
         
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
-            
+//            print("Index Path \(indexPath.item)")
             if screenStatus == false {
 //                print("llllolokok")
-                var frd = [String:Any]()
-                if ifc == 0 {
-                     frd = statusData[identifier!]
-                } else {
-                     frd = statusData[indexPath.item]
-                }
+//                print("Indexpath.item ... \(indexPath.item)")
+                    let frd = statusData[indexPath.item]
+              
             
                 let valll = frd["status"] as? [String:Any]
 //                progressBar.setProgress(Float(counter*14), animated: true)
@@ -160,9 +168,14 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                             print("statusKeys ...",statuskey)
                             print("statuskey\(i) is ...",statuskey[i])
                             url = URL(string: "\(img?["statusPhoto"] ?? "")")
+                            
                             cell?.videoImage.kf.setImage(with: url)
                             counter = 0
 //                            print("cnt is ---- ",cnt)
+                            print("url \(url) =")
+//                            if url == nil {
+//                             counter = 14
+//                            }
                             cnt += 1
 //                            if cnt-1 > int {
 //                                int += 1
@@ -174,20 +187,25 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                 }
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                    print("Counter \(Float(counter))   indexpath ...\(indexPath.item)")
-                    print("Cnt ... \(cnt)     valll.count ....\(valll?.count)")
+//                    print("Counter \(Float(counter))   indexpath ...\(indexPath.item)")
+//                    print("Cnt ... \(cnt)     valll.count ....\(valll?.count)")
                     counter += 1
                 }
                 
                 
-                if indexPath.item == statusData.count-1 && counter == 15 && cnt-1 == valll?.count {
+                if indexPath.item == statusData.count-1 && counter == 15 && cnt >= valll!.count {
                     screenStatus = true
                     self.dismiss(animated: true) {
                        
                     }
                 }
+                if indexPath.item != statusData.count-1 && counter == 15 {
+                    detailsCollection.scrollToItem(at: IndexPath(item: indexPath.item+1, section: 0), at: .right, animated: true)
+                    print("<L<L")
+                }
                 if counter >= 15 {
                     counter = 0
+                    
                 }
             }
         })
