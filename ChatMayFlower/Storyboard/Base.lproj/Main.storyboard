@@ -1653,7 +1653,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2Dc-QT-YYy">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2Dc-QT-YYy">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" red="0.45085787770000002" green="0.98829740290000001" blue="0.83763033149999999" alpha="0.096387042115066227" colorSpace="custom" customColorSpace="sRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="3aV-7r-awQ">
@@ -1775,6 +1775,14 @@
                                                         <action selector="forward:" destination="cju-vj-R7N" eventType="touchUpInside" id="Rxy-u7-L9N"/>
                                                     </connections>
                                                 </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="742-Lx-INK">
+                                                    <rect key="frame" x="0.0" y="100" width="193" height="754"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain"/>
+                                                    <connections>
+                                                        <action selector="bakward:" destination="cju-vj-R7N" eventType="touchUpInside" id="HIx-lo-W6J"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="dkd-nP-t1d" firstAttribute="top" secondItem="3Ay-nt-mPg" secondAttribute="bottom" id="31T-s3-WCo"/>
@@ -1782,9 +1790,13 @@
                                                 <constraint firstItem="qXs-YN-oGN" firstAttribute="top" secondItem="BmX-Ho-m8c" secondAttribute="top" id="4th-t7-cZY"/>
                                                 <constraint firstAttribute="trailing" secondItem="sWR-Uz-2nH" secondAttribute="trailing" constant="5" id="DqD-K8-qEL"/>
                                                 <constraint firstAttribute="trailing" secondItem="3Ay-nt-mPg" secondAttribute="trailing" id="HOu-yL-HDd"/>
+                                                <constraint firstItem="dkd-nP-t1d" firstAttribute="leading" secondItem="742-Lx-INK" secondAttribute="trailing" constant="5" id="Idx-mi-sVK"/>
+                                                <constraint firstAttribute="bottom" secondItem="742-Lx-INK" secondAttribute="bottom" id="MMe-3t-a7i"/>
                                                 <constraint firstItem="3Ay-nt-mPg" firstAttribute="leading" secondItem="BmX-Ho-m8c" secondAttribute="leading" id="Mrz-ap-30D"/>
                                                 <constraint firstItem="sWR-Uz-2nH" firstAttribute="top" secondItem="BmX-Ho-m8c" secondAttribute="topMargin" id="VKj-Re-Wch"/>
+                                                <constraint firstItem="742-Lx-INK" firstAttribute="top" secondItem="3Ay-nt-mPg" secondAttribute="bottom" id="VkW-va-bk2"/>
                                                 <constraint firstItem="3Ay-nt-mPg" firstAttribute="top" secondItem="BmX-Ho-m8c" secondAttribute="top" constant="40" id="WOV-58-6AG"/>
+                                                <constraint firstItem="742-Lx-INK" firstAttribute="leading" secondItem="BmX-Ho-m8c" secondAttribute="leading" id="feH-iK-Q8u"/>
                                                 <constraint firstAttribute="bottom" secondItem="qXs-YN-oGN" secondAttribute="bottom" id="iga-r9-w0d"/>
                                                 <constraint firstAttribute="trailing" secondItem="qXs-YN-oGN" secondAttribute="trailing" id="kbg-35-x5I"/>
                                                 <constraint firstItem="qXs-YN-oGN" firstAttribute="leading" secondItem="BmX-Ho-m8c" secondAttribute="leading" id="n9w-Zf-wts"/>

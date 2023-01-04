@@ -23,6 +23,7 @@ class StatusVCViewController: UIViewController {
     var details = [[[String:String]](),[[String:Any]]()]
     var key = [String]()
     var currentUserData : [String:String] = [:]
+    var currentAData : [String:Any] = [:]
     var statusImage : UIImage?
     var identifier : Int?
     @IBOutlet weak var subLabel: UILabel!
@@ -145,6 +146,13 @@ class StatusVCViewController: UIViewController {
                         currentUserData["statuskey"] = "\(userMap["statuskey"] ?? "")"
                         currentUserStatus = userMap["status"] as? [String : Any] ?? ["":""]
                         currentUserData["status"] = "\(userMap["status"] ?? "")"
+                        
+                        currentAData["Name"] = "\(userMap["Name"] ?? "")"
+                        currentAData["Phone number"] = "\(userMap["Phone number"] ?? "")"
+                        currentAData["location"] = "\(userMap["location"] ?? "")"
+                        currentAData["profilepic"] = "\(userMap["photo url"] ?? "")"
+                        currentAData["statuskey"] = "\(userMap["statuskey"] ?? "")"
+                        currentAData["status"] = userMap["status"] as? [String:Any]
 //                            print("my status \(snaps.value)")
                         statusTableView.reloadData()
                     }
@@ -193,6 +201,8 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
                 print("frdddddd = \(currentUserStatus)- - - \(currentUserData)")
                 let vc = storyboard?.instantiateViewController(withIdentifier: "StatusCollectionVC") as? StatusCollectionVC
                 vc?.userdata = currentUserData
+                vc?.statusData = [currentAData]
+                vc?.identifier = 0
                 vc?.statuskey = statuskey
                 vc?.nameText = "You"
                 vc?.status = currentUserStatus

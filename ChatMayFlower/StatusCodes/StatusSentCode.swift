@@ -73,29 +73,38 @@ class StatusSentCode: UIViewController,UITextFieldDelegate {
                             urlpth = "\(url!)"
                             // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
                             let unique = UUID().uuid.0
-                            database.child("Contact List").child("\(currentUser)").updateChildValues(["statuskey":"\(unique)"])
-                            let ref = database.child("Contact List").child("\(currentUser)").child("status").child("\(unique)")
-                    
-                            ref.updateChildValues(["statusPhoto":"\(urlpth)", "statusComment" : textField.text!]) { error, _ in
-                                guard error == nil else {
-                                    print("Failedt Update")
-                                    return
+                            if textField.text != "" {
+                                database.child("Contact List").child("\(currentUser)").updateChildValues(["statuskey":"\(unique)"])
+                                let ref = database.child("Contact List").child("\(currentUser)").child("status").child("\(unique)")
+                        
+                                ref.updateChildValues(["statusPhoto":"\(urlpth)", "statusComment" : textField.text!]) { error, _ in
+                                    guard error == nil else {
+                                        print("Failedt Update")
+                                        return
+                                    }
+                                    print("Update Successfully")
+                                    self.dismiss(animated: true) {
+                                        hideProgress()
+                                    }
                                 }
-                                print("Update Successfully")
-                                self.dismiss(animated: true) {
-                                    hideProgress()
+                            } else {
+                                database.child("Contact List").child("\(currentUser)").updateChildValues(["statuskey":"\(unique)"])
+                                let ref = database.child("Contact List").child("\(currentUser)").child("status").child("\(unique)")
+                                ref.updateChildValues(["statusPhoto":"\(urlpth)", "statusComment" : ""]) { error, _ in
+                                    guard error == nil else {
+                                        print("Failedt Update")
+                                        return
+                                    }
+                                    print("Update Successfully")
+                                    self.dismiss(animated: true) {
+                                        hideProgress()
+                                    }
                                 }
                             }
-                            
                             self.navigationController?.popViewController(animated: true)
                         }
                         
                     }
-                    //                    print("Urllll ---sdsdfsdf-->",urlpth)
-                    
-                    //                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
-                    //                    vc?.phones = self.number
-                    
                 }
             }
             print("Error ====== \(String(describing: error))")
