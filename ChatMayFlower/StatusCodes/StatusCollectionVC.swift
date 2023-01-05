@@ -9,7 +9,8 @@ import UIKit
 
 class StatusCollectionVC: UIViewController {
     
-    
+    @IBOutlet weak var stackProgressView: UIStackView!
+    var progressViews = [UIProgressView()]
 //    @IBOutlet weak var progressCollection: UICollectionView!
     @IBOutlet weak var detailsCollection: UICollectionView!
     
@@ -104,7 +105,7 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
         return true
     }
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        
+        counter = 0
 //        print("Index Path - \(indexPath.item)")
         if kkey == indexPath.item {
             
@@ -130,8 +131,21 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
         let frd = statusData[indexPath.item]
         print("frd \(frd)")
         let valll = frd["status"] as? [String:Any]
-        print("valll \(valll)")
+        print("valll \(valll?.count)")
         let url1 = URL(string: "\(frd["profilepic"] ?? "")")
+        
+        progressViews  = (0 ..< valll!.count).map { _ in
+            let view = UIProgressView()
+            view.tintColor = .gray
+            view.progress = 0.5
+            return view
+        }
+        for progressView in progressViews {
+            progressView.trackTintColor = UIColor.gray
+            progressView.progressTintColor = UIColor.blue
+//                                progressView.setProgress(50, animated: true)
+            stackProgressView.addArrangedSubview(progressView)
+        }
         cell?.userImage.kf.setImage(with: url1)
         cell?.userName.text = "\(frd["Name"] ?? "\(frd["Phone number"] ?? "")")"
 //        print("statuskey  ... \(frd["statuskey"] ?? "")")
