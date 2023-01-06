@@ -61,8 +61,6 @@ class StatusSentCode: UIViewController,UITextFieldDelegate {
             var urlpth = ""
             // Check error
             if error == nil && metadata != nil {
-                if textField.text != "" {
-                    
                     
                     fileRef.downloadURL {
                         url, error in
@@ -105,7 +103,7 @@ class StatusSentCode: UIViewController,UITextFieldDelegate {
                         }
                         
                     }
-                }
+                
             }
             print("Error ====== \(String(describing: error))")
         }

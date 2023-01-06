@@ -7,7 +7,7 @@
 
 import UIKit
 
-class StatusCollectionVC: UIViewController {
+class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     var stack = UIStackView()
     var progressViews = [UIProgressView()]
 //    @IBOutlet weak var progressCollection: UICollectionView!
@@ -33,12 +33,13 @@ class StatusCollectionVC: UIViewController {
         super.viewDidLoad()
         detailsCollection.delegate = self
         detailsCollection.dataSource = self
-        stack.frame = CGRect(x: 0, y: 38, width: view.frame.width, height: 5)
+        stack.frame = CGRect(x: 5, y: 38, width: view.frame.width-10, height: 5)
         stack.axis = .horizontal
         stack.spacing = 5
         stack.distribution = .fillProportionally
         stack.alignment = .fill
         view.addSubview(stack)
+        
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if self.screenStatus == false {
                 self.counter += 1
@@ -81,9 +82,56 @@ class StatusCollectionVC: UIViewController {
         
     }
     @IBAction func dismissButton(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: nil)
+        
+        if nameText == "Yes" {
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
+        
+        
     }
-   
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
+          configurationForMenuAtLocation location: CGPoint)
+          -> UIContextMenuConfiguration? {
+
+          let favorite = UIAction(title: "Favorite",
+            image: UIImage(systemName: "heart.fill")) { _ in
+            // Perform action
+          }
+
+          let share = UIAction(title: "Share",
+            image: UIImage(systemName: "square.and.arrow.up.fill")) { action in
+            // Perform action
+          }
+
+          let delete = UIAction(title: "Delete",
+            image: UIImage(systemName: "trash.fill"),
+            attributes: [.destructive]) { action in
+             // Perform action
+           }
+
+           return UIContextMenuConfiguration(identifier: nil,
+             previewProvider: nil) { _ in
+             UIMenu(title: "Actions", children: [favorite, share, delete])
+           }
+        }
+//    func createContextMenu() -> UIMenu {
+//        let shareAction = UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { _ in
+//            print("Share")
+//        }
+//        let copy = UIAction(title: "Copy", image: UIImage(systemName: "doc.on.doc")) { _ in
+//            print("Copy")
+//        }
+//        let saveToPhotos = UIAction(title: "Add To Photos", image: UIImage(systemName: "photo")) { _ in
+//            print("Save to Photos")
+//        }
+//        return UIMenu(title: "", children: [shareAction, copy, saveToPhotos])
+//    }
+//    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+//        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ -> UIMenu? in
+//            return self.createContextMenu()
+//        }
+//    }
     var kkey :Int?
     
     
@@ -118,7 +166,10 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return statusData.count
     }
-
+    let favorite = UIAction(title: "Favorite",
+      image: UIImage(systemName: "heart.fill")) { _ in
+      // Perform action
+    }
     func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
         print("Yes my Guys \(indexPath.item)")
         return true
@@ -185,6 +236,9 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                 if !seenStatuskey.contains("\(statuskey[i])") {
                     seenStatuskey.append("\(statuskey[i])")
                     let photo = valll?["\(statuskey[i])"] as? [String:String]
+                    let statuscmt = "\(photo?["statusComment"] ?? "")"
+                    print("comment  \(statuscmt)")
+                    cell?.statusComment.text = statuscmt
                     url = URL(string: "\(photo?["statusPhoto"] ?? "")")
                     cell?.videoImage.kf.setImage(with: url)
                     break
@@ -207,7 +261,15 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
             }
            
         }
-       
+        if nameText == "You" {
+            cell?.dismissBtn.setImage(UIImage(systemName: "ellipsis"), for: .normal)
+//            let interaction = UIContextMenuInteraction(delegate: self)
+            cell?.dismissBtn.showsMenuAsPrimaryAction = true
+            cell?.dismissBtn.menu = UIMenu(title: "delete", children: [favorite, ...])
+//            let interaction = UIContextMenuInteraction(delegate: self)
+//            cell?.dismissBtn.addInteraction(interaction)
+//            cell?.dismissBtn.isUserInteractionEnabled = true
+        }
         return cell!
     }
     

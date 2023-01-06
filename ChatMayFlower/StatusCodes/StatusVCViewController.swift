@@ -252,10 +252,9 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
 //        print("indexPath of section \(indexPath.section) \(indexPath.row)")
         if indexPath.section == 0 {
             let cell = statusTableView.dequeueReusableCell(withIdentifier: "StatusPutCell") as? StatusPutCell
-            if currentUserData["profilepic"] != "" {
                 let url = URL(string: currentUserData["profilepic"] ?? "")
                 cell?.profileImage.kf.setImage(with: url)
-
+                    print("Come on yaar ")
                     if currentUserData["statuskey"] != ""  {
                         let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
                         print("frdddddd = \(currentUserStatus)- - - \(frd)")
@@ -265,12 +264,14 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
                         cell?.profileImage.borderColor = .blue
                         cell?.profileImage.kf.setImage(with: url)
                         cell?.subLable.text = "Tap to view status"
+                    } else {
+                        cell?.profileImage.image = UIImage(systemName: "person.circle.fill")
                     }
                 
                 
                 
-            }
-            cell?.profileImage.image = UIImage(systemName: "person.circle.fill")
+            
+            
             return cell!
         }else {
             let frd = details[indexPath.section][indexPath.row]
