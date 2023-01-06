@@ -8,8 +8,7 @@
 import UIKit
 
 class StatusCollectionVC: UIViewController {
-    
-    @IBOutlet weak var stackProgressView: UIStackView!
+    var stack = UIStackView()
     var progressViews = [UIProgressView()]
 //    @IBOutlet weak var progressCollection: UICollectionView!
     @IBOutlet weak var detailsCollection: UICollectionView!
@@ -18,9 +17,6 @@ class StatusCollectionVC: UIViewController {
     public var velocityDismiss: CGFloat = 300
     public var axis: NSLayoutConstraint.Axis = .vertical
     
-    @IBOutlet weak var videoImage: UIImageView!
-    @IBOutlet weak var name: UILabel!
-    @IBOutlet weak var userImage: UIImageView!
     var ifc = 0
     var identifier : Int?
     var url = URL(string: "")
@@ -37,11 +33,34 @@ class StatusCollectionVC: UIViewController {
         super.viewDidLoad()
         detailsCollection.delegate = self
         detailsCollection.dataSource = self
+        stack.frame = CGRect(x: 0, y: 38, width: view.frame.width, height: 5)
+        stack.axis = .horizontal
+        stack.spacing = 5
+        stack.distribution = .fillProportionally
+        stack.alignment = .fill
+        view.addSubview(stack)
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if self.screenStatus == false {
                 self.counter += 1
                 print("Count \(self.counter)")
+                
+                if self.progressViews.count > 1 {
+                    
+                    for i in 0...self.progressViews.count-1 {
+                         if i == self.statuscount {
+                            self.progressViews[self.statuscount].setProgress(Float(self.counter*4), animated: true)
+                        }
+                    }
+                    
+                    
+                    print("statucount \(self.statuscount)")
+                } else {
+                    self.progressViews[0].setProgress(Float(self.counter*4), animated: true)
+                }
                 if self.counter == 5 {
+                    
+                    
+                    
                     self.detailsCollection.reloadData()
                     self.localBool = true
                     self.statuscount += 1
@@ -111,11 +130,10 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
             
         } else {
             seenStatuskey.removeAll()
+            statuscount = 0
             detailsCollection.reloadData()
         }
         kkey = indexPath.item
-//        let indexPath = IndexPath(item: indexPath.item-1, section: 0)
-//        detailsCollection.scrollToItem(at: indexPath, at: [.bottom], animated: true)
         if ifc == 0 {
             print("yes of course")
 //            seenStatuskey.removeAll()
@@ -133,19 +151,29 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
         let valll = frd["status"] as? [String:Any]
         print("valll \(valll?.count)")
         let url1 = URL(string: "\(frd["profilepic"] ?? "")")
-        
+        progressViews.removeAll()
+        stack.subviews.forEach { (view) in
+            view.removeFromSuperview()
+        }
         progressViews  = (0 ..< valll!.count).map { _ in
             let view = UIProgressView()
             view.tintColor = .gray
-            view.progress = 0.5
+            view.progress = 0
             return view
         }
+        for i in 0...self.progressViews.count-1 {
+            if i < self.statuscount {
+                self.progressViews[i].setProgress(100, animated: false)
+            }
+        }
         for progressView in progressViews {
+            print("yes")
             progressView.trackTintColor = UIColor.gray
             progressView.progressTintColor = UIColor.blue
 //                                progressView.setProgress(50, animated: true)
-            stackProgressView.addArrangedSubview(progressView)
+            stack.addArrangedSubview(progressView)
         }
+        print("stack \(progressViews) ---- \(stack)")
         cell?.userImage.kf.setImage(with: url1)
         cell?.userName.text = "\(frd["Name"] ?? "\(frd["Phone number"] ?? "")")"
 //        print("statuskey  ... \(frd["statuskey"] ?? "")")
