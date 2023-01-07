@@ -44,7 +44,7 @@ class StatusVCViewController: UIViewController {
         statusTableView.delegate = self
         statusTableView.dataSource = self
         getContact()
-        getData()
+        
 
     }
     
@@ -72,6 +72,7 @@ class StatusVCViewController: UIViewController {
             navigationController?.present(vc!, animated: true, completion: nil)
         }
         
+        getData()
         print("Current user == \(currentUser)")
     }
     func getContact(){
@@ -114,6 +115,14 @@ class StatusVCViewController: UIViewController {
     var statusDetail = [[String:String]]()
     func getData() {
         // Create Firebase Storage Reference
+        statuskey.removeAll()
+        statusDetail.removeAll()
+        currentUserData.removeAll()
+        currentAData.removeAll()
+        currentUserStatus.removeAll()
+        key.removeAll()
+        statusData.removeAll()
+        details.removeAll()
         _ = Storage.storage().reference()
         
         databaseRef = Database.database().reference().child("Contact List")
@@ -200,12 +209,11 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
 //                let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
                 print("frdddddd = \(currentUserStatus)- - - \(currentUserData)")
                 let vc = storyboard?.instantiateViewController(withIdentifier: "StatusCollectionVC") as? StatusCollectionVC
-                vc?.userdata = currentUserData
                 vc?.statusData = [currentAData]
                 vc?.identifier = 0
                 vc?.statuskey = statuskey
+                vc?.phones = currentUser
                 vc?.nameText = "You"
-                vc?.status = currentUserStatus
                 vc?.modalPresentationStyle = .overFullScreen
                 navigationController?.present(vc!, animated: true, completion: nil)
                 
@@ -225,8 +233,6 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             let keyS = frd["statuskey"]
             let valll = frd["status"] as? [String:Any]
             let vc = storyboard?.instantiateViewController(withIdentifier: "StatusCollectionVC") as? StatusCollectionVC
-            vc?.userdata = frd
-            vc?.status = valll!
             vc?.identifier = indexPath.row
             vc?.statusData = statusData
             vc?.statuskey = statuskey

@@ -6,6 +6,10 @@
 //
 
 import UIKit
+import FirebaseDatabase
+import FirebaseAuth
+import FirebaseStorage
+import Kingfisher
 
 class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     var stack = UIStackView()
@@ -17,6 +21,27 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     public var velocityDismiss: CGFloat = 300
     public var axis: NSLayoutConstraint.Axis = .vertical
     
+    let favorite = UIAction(title: "Delete",
+                            image: UIImage(systemName: "trash.circle.fill")) { [self] _ in
+        // Perform actio
+        
+        StatusCollectionVC().alertView()
+    }
+    func alertView(){
+        let alert = UIAlertController(title: "", message: "Are you sure for delete!", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { [self]_ in
+            delete()
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    func delete() {
+        let ref = Database.database().reference().child("Contact List")
+        ref.child("\(phones)").child("status").setValue(nil)
+        ref.child("\(phones)").setValue(["statusKey" : nil])
+    }
+    var databaseRef: DatabaseReference!
+    var phones = ""
     var ifc = 0
     var identifier : Int?
     var url = URL(string: "")
@@ -24,11 +49,9 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     var nameText = ""
     var seenStatuskey = [String]()
     var statuskey = [String]()
-    var status = [String:Any]()
     var timer = Timer()
     var counter = 0
     var screenStatus = false
-    var userdata = [String:Any]()
     override func viewDidLoad() {
         super.viewDidLoad()
         detailsCollection.delegate = self
@@ -59,9 +82,6 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
                     self.progressViews[0].setProgress(Float(self.counter*4), animated: true)
                 }
                 if self.counter == 5 {
-                    
-                    
-                    
                     self.detailsCollection.reloadData()
                     self.localBool = true
                     self.statuscount += 1
@@ -82,10 +102,10 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
         
     }
     @IBAction func dismissButton(_ sender: UIButton) {
-        
-        if nameText == "Yes" {
+        if nameText == "You" {
+            alertView()
         } else {
-            self.dismiss(animated: true, completion: nil)
+//            self.dismiss(animated: true, completion: nil)
         }
         
         
@@ -166,10 +186,7 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return statusData.count
     }
-    let favorite = UIAction(title: "Favorite",
-      image: UIImage(systemName: "heart.fill")) { _ in
-      // Perform action
-    }
+    
     func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
         print("Yes my Guys \(indexPath.item)")
         return true
@@ -264,8 +281,9 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
         if nameText == "You" {
             cell?.dismissBtn.setImage(UIImage(systemName: "ellipsis"), for: .normal)
 //            let interaction = UIContextMenuInteraction(delegate: self)
-            cell?.dismissBtn.showsMenuAsPrimaryAction = true
-            cell?.dismissBtn.menu = UIMenu(title: "delete", children: [favorite, ...])
+            
+//            cell?.dismissBtn.showsMenuAsPrimaryAction = true
+//            cell?.dismissBtn.menu = UIMenu(title: "delete", children: [favorite])
 //            let interaction = UIContextMenuInteraction(delegate: self)
 //            cell?.dismissBtn.addInteraction(interaction)
 //            cell?.dismissBtn.isUserInteractionEnabled = true
