@@ -27,14 +27,7 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
         
         StatusCollectionVC().alertView()
     }
-    func alertView(){
-        let alert = UIAlertController(title: "", message: "Are you sure for delete!", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { [self]_ in
-            delete()
-        }))
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
+    
     func delete() {
         let ref = Database.database().reference().child("Contact List")
         ref.child("\(phones)").child("status").setValue(nil)
@@ -52,6 +45,7 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     var timer = Timer()
     var counter = 0
     var screenStatus = false
+    var uiimage = UIImageView()
     override func viewDidLoad() {
         super.viewDidLoad()
         detailsCollection.delegate = self
@@ -101,11 +95,36 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
 //        seenStatuskey.removeAll()
         
     }
+    
+    func alertView(){
+        let alert = UIAlertController(title: "", message: "Are you sure for delete!", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { [self]_ in
+            delete()
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Save Status", style: UIAlertAction.Style.default, handler: { [self]_ in
+            UIImageWriteToSavedPhotosAlbum(uiimage.image!, self, #selector(image(_:withPotentialError:contextInfo:)), nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    func saveAlertView(){
+        let alert = UIAlertController(title: "", message: "Save Status!", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { [self]_ in
+            UIImageWriteToSavedPhotosAlbum(uiimage.image!, self, #selector(image(_:withPotentialError:contextInfo:)), nil)
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    @objc func image(_ image: UIImage, withPotentialError error: NSErrorPointer, contextInfo: UnsafeRawPointer) {
+        let alert = UIAlertController(title: "Image Saved", message: "Image successfully saved to Photos library", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
     @IBAction func dismissButton(_ sender: UIButton) {
         if nameText == "You" {
             alertView()
         } else {
-//            self.dismiss(animated: true, completion: nil)
+            saveAlertView()
         }
         
         
@@ -257,6 +276,7 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                     print("comment  \(statuscmt)")
                     cell?.statusComment.text = statuscmt
                     url = URL(string: "\(photo?["statusPhoto"] ?? "")")
+                    uiimage.kf.setImage(with: url)
                     cell?.videoImage.kf.setImage(with: url)
                     break
                 }
@@ -287,7 +307,10 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
 //            let interaction = UIContextMenuInteraction(delegate: self)
 //            cell?.dismissBtn.addInteraction(interaction)
 //            cell?.dismissBtn.isUserInteractionEnabled = true
+        }else {
+            cell?.dismissBtn.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         }
+        
         return cell!
     }
     

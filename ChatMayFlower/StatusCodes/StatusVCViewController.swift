@@ -44,7 +44,7 @@ class StatusVCViewController: UIViewController {
         statusTableView.delegate = self
         statusTableView.dataSource = self
         getContact()
-        
+        getData()
 
     }
     
@@ -115,14 +115,14 @@ class StatusVCViewController: UIViewController {
     var statusDetail = [[String:String]]()
     func getData() {
         // Create Firebase Storage Reference
-        statuskey.removeAll()
-        statusDetail.removeAll()
-        currentUserData.removeAll()
-        currentAData.removeAll()
-        currentUserStatus.removeAll()
-        key.removeAll()
-        statusData.removeAll()
-        details.removeAll()
+//        statuskey.removeAll()
+//        statusDetail.removeAll()
+//        currentUserData.removeAll()
+//        currentAData.removeAll()
+//        currentUserStatus.removeAll()
+//        key.removeAll()
+//        statusData.removeAll()
+//        details.removeAll()
         _ = Storage.storage().reference()
         
         databaseRef = Database.database().reference().child("Contact List")

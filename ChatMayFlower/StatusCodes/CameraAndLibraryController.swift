@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 import SwiftUI
-
+import FirebaseStorage
 class CameraAndLibraryController: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     var currentUser = ""
     //Capture session
@@ -91,20 +91,72 @@ class CameraAndLibraryController: UIViewController,UIImagePickerControllerDelega
     
     func showImagePicker(selectSource:UIImagePickerController.SourceType)
     {
-        guard UIImagePickerController.isSourceTypeAvailable(selectSource) else{
+        guard UIImagePickerController.isSourceTypeAvailable(selectSource) else {
             print("Selected Source not available")
             return
         }
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         imagePickerController.sourceType = selectSource
-        imagePickerController.modalPresentationStyle = .fullScreen
+        imagePickerController.mediaTypes = ["public.image", "public.movie"]
         imagePickerController.allowsEditing = false
         self.present(imagePickerController, animated: true, completion: nil)
     }
     var filename : String?
     var didselectedImage : UIImage?
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        if let  videoURL = info[.mediaURL] as? URL
+        {
+            let localFile = URL(string: "\(videoURL)")!
+            print("Video Url is -=-=-=-=-=-=-=-==-=-= \(videoURL)")
+            //            let asset = AVURLAsset(url: videoURL,options: nil)
+            //            let imgGenerator = AVAssetImageGenerator(asset: asset)
+            //            imgGenerator.appliesPreferredTrackTransform = true
+            
+            //            let cgImage = try  imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+            //                let thumbnail = UIImage(cgImage: cgImage)
+            //                print("asset -----===== \(asset)")
+            //                print("cgImage  ======= \(cgImage)")
+            //                print("thumbnail ========= \(thumbnail)")
+            let storageRef = Storage.storage().reference()
+            let filename = "statusimages/\(UUID().uuidString).MOV"
+            let fileRef = storageRef.child(filename)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                let uploadTask = fileRef.putFile(from: localFile, metadata: nil){metadata, error in
+//                    var urlpth = ""
+//                    if error == nil && metadata != nil {
+//
+//                        fileRef.downloadURL(completion: { [self](url,error) in
+//                            if error == nil {
+//                                urlpth = "\(url!)"
+////                                self.ui = self.ui + 1
+////                                self.database.child("Uid").setValue(self.ui)
+////                                database.child("Chats").child(mid).child("status").setValue(["\(phoneid)":true,"\(receiverid)":false])
+////                                self.database.child("Chats").child(self.mid).child("chatting").child("\(self.ui)").setValue(["\(self.phoneid)chatVideo": urlpth], withCompletionBlock: { error, _ in
+////                                    guard error == nil else {
+////                                        print("Failed to write data ")
+////                                        return
+////                                    }
+////                                    print("data written seccess ")
+////                                    DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+////                                        picker.dismiss(animated: true)
+////                                        hideProgress()
+////                                    }
+////                                })
+//                            } else {
+//                                print("Error for download url \(String(describing: error))")
+//                            }
+//                        })
+//                    } else {
+//                        print("Error for uploading \(String(describing: error))-----------")
+////                        print("Metadata is >>>>>>>>>>>>> \(metadata)")
+//                    }
+//                }
+//                _ = uploadTask
+            }
+            
+        }
         
         if let selectedImage =  info[.originalImage] as? UIImage{
             print("Selected image ",selectedImage)
