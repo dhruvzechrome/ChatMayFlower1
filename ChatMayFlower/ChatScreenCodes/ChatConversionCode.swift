@@ -724,7 +724,7 @@ extension ChatConversionCode : UITextFieldDelegate{
 
 
 // MARK: - Delegate Methods of TableView
-extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
+extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource ,UIContextMenuInteractionDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatMap.count
     }
@@ -1546,6 +1546,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                         if indexPath.row == chatMapKey.count-1 {
                             toggle = true
                         }
+                        let interaction = UIContextMenuInteraction(delegate: self)
+                            cell?.addInteraction(interaction)
+                        
+                        cell?.layer.bounds = (cell?.contentView.bounds)!
+                        cell?.frame = (cell?.contentView.frame)!
                         return cell!
                     }
                     else {
@@ -1576,6 +1581,12 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
                                 toggle = false
                             }
                         }
+                        let interaction = UIContextMenuInteraction(delegate: self)
+                        cell?.addInteraction(interaction)
+                        
+                        cell?.frame = CGRect(x: 20, y: 0, width: cell?.receiverMessages.frame.width, height: 50)
+                        print("\(cell?.contentView.frame)")
+                        cell?.layer.bounds = (cell?.contentView.bounds)!
                         return cell!
                     }
                 }
@@ -1585,7 +1596,32 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource{
         cell?.selectionStyle = .none
         return cell!
     }
-    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
+          configurationForMenuAtLocation location: CGPoint)
+          -> UIContextMenuConfiguration? {
+
+              
+          let favorite = UIAction(title: "Favorite",
+            image: UIImage(systemName: "heart.fill")) { _ in
+            // Perform action
+          }
+
+          let share = UIAction(title: "Share",
+            image: UIImage(systemName: "square.and.arrow.up.fill")) { action in
+            // Perform action
+          }
+
+          let delete = UIAction(title: "Delete",
+            image: UIImage(systemName: "trash.fill"),
+            attributes: [.destructive]) { action in
+             // Perform action
+           }
+
+           return UIContextMenuConfiguration(identifier: nil,
+             previewProvider: nil) { _ in
+             UIMenu(title: "Actions", children: [favorite, share, delete])
+           }
+        }
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let chat = chatMap[indexPath.row]
         let userNumberKey = chatMapKey[indexPath.row]

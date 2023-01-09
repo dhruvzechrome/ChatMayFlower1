@@ -154,6 +154,7 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
              UIMenu(title: "Actions", children: [favorite, share, delete])
            }
         }
+
 //    func createContextMenu() -> UIMenu {
 //        let shareAction = UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { _ in
 //            print("Share")

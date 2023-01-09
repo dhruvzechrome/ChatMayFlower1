@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		880DA13D296C28DF0095EEF9 /* Storyboard2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 880DA13C296C28DF0095EEF9 /* Storyboard2.storyboard */; };
 		882381E0291639BC00786164 /* EditProfileInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882381DF291639BC00786164 /* EditProfileInformation.swift */; };
 		88253215295969CE007B16BE /* CameraAndLibraryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88253214295969CE007B16BE /* CameraAndLibraryController.swift */; };
 		882DE2F22928AE5500B8963A /* ImageVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882DE2F12928AE5500B8963A /* ImageVc.swift */; };
@@ -48,6 +49,7 @@
 
 /* Begin PBXFileReference section */
 		2DC5EE7365248C3F824D13CC /* Pods-ChatMayFlower.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatMayFlower.release.xcconfig"; path = "Target Support Files/Pods-ChatMayFlower/Pods-ChatMayFlower.release.xcconfig"; sourceTree = "<group>"; };
+		880DA13C296C28DF0095EEF9 /* Storyboard2.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Storyboard2.storyboard; sourceTree = "<group>"; };
 		882381DF291639BC00786164 /* EditProfileInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileInformation.swift; sourceTree = "<group>"; };
 		88253214295969CE007B16BE /* CameraAndLibraryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAndLibraryController.swift; sourceTree = "<group>"; };
 		882DE2F12928AE5500B8963A /* ImageVc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageVc.swift; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 			children = (
 				883EBD4628F7E09F000A59BA /* Main.storyboard */,
 				883EBD4B28F7E0A2000A59BA /* LaunchScreen.storyboard */,
+				880DA13C296C28DF0095EEF9 /* Storyboard2.storyboard */,
 			);
 			path = Storyboard;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				884E693B29220A69005DF15B /* GoogleService-Info.plist in Resources */,
 				883EBD4A28F7E0A2000A59BA /* Assets.xcassets in Resources */,
 				883EBD4828F7E09F000A59BA /* Main.storyboard in Resources */,
+				880DA13D296C28DF0095EEF9 /* Storyboard2.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
