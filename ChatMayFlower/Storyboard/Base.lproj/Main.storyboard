@@ -349,7 +349,7 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="back1" translatesAutoresizingMaskIntoConstraints="NO" id="OIx-Ne-aqj">
                                 <rect key="frame" x="0.0" y="88" width="414" height="675"/>
                             </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N5j-Fy-H7q">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N5j-Fy-H7q">
                                 <rect key="frame" x="0.0" y="88" width="414" height="675"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZS3-UF-RtH">
@@ -446,6 +446,7 @@
                                                             <outlet property="receiverNumber" destination="5T4-Ca-D6d" id="NsM-49-rAd"/>
                                                             <outlet property="receiverPlay" destination="AGa-me-cab" id="MPG-56-EaQ"/>
                                                             <outlet property="receiverVideo" destination="LYd-YU-OiY" id="SyH-QD-CZG"/>
+                                                            <outlet property="viewC" destination="3fn-lb-Jj8" id="7pd-pM-bLD"/>
                                                         </connections>
                                                     </tableViewCell>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SenderVideoCell" id="wUh-xr-tWz" customClass="SenderVideoCell" customModule="ChatMayFlower" customModuleProvider="target">
@@ -536,6 +537,8 @@
                                                         <connections>
                                                             <outlet property="senderPlay" destination="zmd-B5-sz5" id="Hce-kc-CyT"/>
                                                             <outlet property="senderVideo" destination="kn2-Gp-haa" id="ZVq-JB-upT"/>
+                                                            <outlet property="viewC" destination="P90-ZC-o28" id="rum-iq-DKW"/>
+                                                            <segue destination="B8C-2j-r54" kind="presentation" id="0VE-AK-Pjj"/>
                                                         </connections>
                                                     </tableViewCell>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleAspectFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImageTableViewCell" rowHeight="264" id="Gft-Si-iXI" customClass="ImageTableViewCell" customModule="ChatMayFlower" customModuleProvider="target">
@@ -611,6 +614,7 @@
                                                             <outlet property="photos" destination="TdF-LG-zKW" id="Gwp-hz-hBw"/>
                                                             <outlet property="receiverComentImage" destination="S9d-lb-Mrb" id="Xms-1L-XNA"/>
                                                             <outlet property="receiverNumber" destination="krV-Wc-DcB" id="qgk-Y6-vFG"/>
+                                                            <outlet property="viewC" destination="6cf-2k-07W" id="Yka-Es-Zh1"/>
                                                         </connections>
                                                     </tableViewCell>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SenderImageChatCell" id="fRT-ub-psh" customClass="SenderImageChatCell" customModule="ChatMayFlower" customModuleProvider="target">
@@ -687,6 +691,7 @@
                                                         <connections>
                                                             <outlet property="senderImage" destination="xh3-AO-e19" id="czD-im-HHg"/>
                                                             <outlet property="senderImageComment" destination="tjC-fg-TUQ" id="YZX-7H-GEN"/>
+                                                            <outlet property="viewC" destination="G38-0P-puU" id="co8-pS-wRL"/>
                                                         </connections>
                                                     </tableViewCell>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ReceiverReplyViewCell" id="wZZ-xE-rPq" customClass="ReceiverReplyViewCell" customModule="ChatMayFlower" customModuleProvider="target">
@@ -786,9 +791,10 @@
                                                             <outlet property="receiverNumber" destination="bSV-il-sPO" id="CpQ-Xi-nkK"/>
                                                             <outlet property="receiverReply" destination="Q7J-KL-o4z" id="Vw6-QY-bAl"/>
                                                             <outlet property="user" destination="0hs-Ag-4j8" id="xpt-pU-t33"/>
+                                                            <outlet property="viewC" destination="ZmW-PC-HJh" id="wOg-BS-zZ0"/>
                                                         </connections>
                                                     </tableViewCell>
-                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="0.0" reuseIdentifier="SenderViewCell" rowHeight="40" id="Kpk-QN-LAs" customClass="SenderViewCell" customModule="ChatMayFlower" customModuleProvider="target">
+                                                    <tableViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="0.0" reuseIdentifier="SenderViewCell" rowHeight="40" id="Kpk-QN-LAs" customClass="SenderViewCell" customModule="ChatMayFlower" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="964.5" width="414" height="40"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Kpk-QN-LAs" id="cds-nV-eYQ">
@@ -856,6 +862,7 @@
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <connections>
                                                             <outlet property="senderMessage" destination="8el-3C-V5F" id="MH5-UD-4vU"/>
+                                                            <outlet property="viewC" destination="mil-Me-HI8" id="q8j-d6-Kcv"/>
                                                         </connections>
                                                     </tableViewCell>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SenderReplyImageCell" id="xMB-Eu-mKy" customClass="SenderReplyImageCell" customModule="ChatMayFlower" customModuleProvider="target">
@@ -972,6 +979,7 @@
                                                             <outlet property="sendermsg" destination="vkI-yw-Nlm" id="KPP-pi-ent"/>
                                                             <outlet property="senderreply" destination="1Ry-Fi-qZE" id="awC-VJ-Vef"/>
                                                             <outlet property="user" destination="N7G-Q3-ckY" id="RJC-n2-exs"/>
+                                                            <outlet property="viewC" destination="7Hv-9Y-FGy" id="S9o-sL-HIn"/>
                                                         </connections>
                                                     </tableViewCell>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SenderReplyViewCell" id="wuK-Gu-QRD" customClass="SenderReplyViewCell" customModule="ChatMayFlower" customModuleProvider="target">
@@ -1070,9 +1078,10 @@
                                                             <outlet property="senderMessages" destination="8Lw-AE-R4D" id="dKY-3b-Qoc"/>
                                                             <outlet property="senderReply" destination="zT5-8I-WDu" id="QNL-i8-MR1"/>
                                                             <outlet property="user" destination="22s-ln-b1Z" id="Be0-dz-wvx"/>
+                                                            <outlet property="viewC" destination="OGE-o3-3n0" id="csZ-TN-xrQ"/>
                                                         </connections>
                                                     </tableViewCell>
-                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleAspectFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="0.0" reuseIdentifier="ReceiverViewCell" rowHeight="20" id="o21-m3-WQN" customClass="ReceiverViewCell" customModule="ChatMayFlower" customModuleProvider="target">
+                                                    <tableViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="0.0" reuseIdentifier="ReceiverViewCell" rowHeight="20" id="o21-m3-WQN" customClass="ReceiverViewCell" customModule="ChatMayFlower" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="1092.5" width="414" height="20"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="o21-m3-WQN" id="chs-X3-IeL">
@@ -1150,9 +1159,10 @@
                                                         <connections>
                                                             <outlet property="receiverMessages" destination="nFC-aq-rOS" id="lHP-SB-75t"/>
                                                             <outlet property="receiverNumber" destination="ceQ-ta-Miw" id="hrC-mY-uH9"/>
+                                                            <outlet property="viewC" destination="z94-eF-v5l" id="tFb-wP-E41"/>
                                                         </connections>
                                                     </tableViewCell>
-                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ReceiverReplyImageCell" id="nic-vY-9CZ" customClass="ReceiverReplyImageCell" customModule="ChatMayFlower" customModuleProvider="target">
+                                                    <tableViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ReceiverReplyImageCell" id="nic-vY-9CZ" customClass="ReceiverReplyImageCell" customModule="ChatMayFlower" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="1112.5" width="414" height="44"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nic-vY-9CZ" id="dBv-A9-DCz">
@@ -1265,6 +1275,7 @@
                                                             <outlet property="receivermsg" destination="GGb-n8-fuS" id="rYm-2J-jyn"/>
                                                             <outlet property="receiverreply" destination="zch-8C-zSI" id="y8f-OJ-Icq"/>
                                                             <outlet property="user" destination="rRi-be-den" id="NSn-eS-uzc"/>
+                                                            <outlet property="viewC" destination="16l-Pq-iQ9" id="CM9-0n-SZr"/>
                                                         </connections>
                                                     </tableViewCell>
                                                 </prototypes>
@@ -1946,7 +1957,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4ZK-aJ-emf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2842" y="5"/>
+            <point key="canvasLocation" x="1803" y="67"/>
         </scene>
         <!--ShowProfileDetail-->
         <scene sceneID="Vnr-x6-gK2">
@@ -3080,6 +3091,115 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0ec-QQ-e3k" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2116" y="-700"/>
+        </scene>
+        <!--UserDetailsCodeForward-->
+        <scene sceneID="RIJ-91-OYG">
+            <objects>
+                <viewController storyboardIdentifier="UserDetailsCodeForward" title="UserDetailsCodeForward" id="B8C-2j-r54" customClass="UserDetailsCodeForward" customModule="ChatMayFlower" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jBf-kn-OHb">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="wAJ-SO-rmt">
+                                <rect key="frame" x="0.0" y="50" width="414" height="748"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="UserForwardCell" rowHeight="97" id="1JY-ch-GUR" customClass="UserForwardCell" customModule="ChatMayFlower" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="97"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1JY-ch-GUR" id="Kn1-oq-uCx">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="97"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="9Tu-FO-Ly7">
+                                                    <rect key="frame" x="20" y="5.5" width="50" height="86"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="q68-mc-PES"/>
+                                                        <constraint firstAttribute="width" constant="50" id="xio-Zs-Xxr"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="25"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </imageView>
+                                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2lO-z3-FXq">
+                                                    <rect key="frame" x="80" y="5" width="324" height="87"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1r8-eP-Ffb">
+                                                            <rect key="frame" x="0.0" y="0.0" width="274" height="87"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="1fA-ls-yBO"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cc8-Cq-eOB">
+                                                            <rect key="frame" x="274" y="0.0" width="50" height="87"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="50" id="Ji1-sL-rep"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="1r8-eP-Ffb" firstAttribute="leading" secondItem="2lO-z3-FXq" secondAttribute="leading" id="4ZD-Jx-H3S"/>
+                                                        <constraint firstItem="cc8-Cq-eOB" firstAttribute="top" secondItem="2lO-z3-FXq" secondAttribute="top" id="9H4-bF-Vl4"/>
+                                                        <constraint firstAttribute="bottom" secondItem="cc8-Cq-eOB" secondAttribute="bottom" id="V7G-lw-lWi"/>
+                                                        <constraint firstAttribute="bottom" secondItem="1r8-eP-Ffb" secondAttribute="bottom" id="VOa-9B-Yg3"/>
+                                                        <constraint firstItem="cc8-Cq-eOB" firstAttribute="leading" secondItem="1r8-eP-Ffb" secondAttribute="trailing" id="e8M-In-rpd"/>
+                                                        <constraint firstAttribute="trailing" secondItem="cc8-Cq-eOB" secondAttribute="trailing" id="fdE-wo-dYC"/>
+                                                        <constraint firstItem="1r8-eP-Ffb" firstAttribute="top" secondItem="2lO-z3-FXq" secondAttribute="top" id="vpI-g3-PjS"/>
+                                                    </constraints>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="2lO-z3-FXq" secondAttribute="trailing" constant="10" id="0u3-oD-E9f"/>
+                                                <constraint firstAttribute="bottom" secondItem="9Tu-FO-Ly7" secondAttribute="bottom" constant="5" id="9LU-ky-aF3"/>
+                                                <constraint firstAttribute="bottom" secondItem="2lO-z3-FXq" secondAttribute="bottom" constant="5" id="HNO-Qu-HUp"/>
+                                                <constraint firstItem="9Tu-FO-Ly7" firstAttribute="leading" secondItem="Kn1-oq-uCx" secondAttribute="leadingMargin" id="Ih7-7L-eHQ"/>
+                                                <constraint firstItem="2lO-z3-FXq" firstAttribute="leading" secondItem="9Tu-FO-Ly7" secondAttribute="trailing" constant="10" id="OfK-cv-OVm"/>
+                                                <constraint firstItem="2lO-z3-FXq" firstAttribute="top" secondItem="Kn1-oq-uCx" secondAttribute="top" constant="5" id="acP-Dn-nII"/>
+                                                <constraint firstItem="9Tu-FO-Ly7" firstAttribute="top" secondItem="Kn1-oq-uCx" secondAttribute="top" constant="5" id="dL8-zo-VXg"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HqK-Bd-YwO">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Title" id="YHu-vX-rbL">
+                                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="cancel" id="4RK-tR-p1G">
+                                            <connections>
+                                                <action selector="cancel:" destination="B8C-2j-r54" id="0bK-Bv-dnK"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Sbn-dk-53b"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Sbn-dk-53b" firstAttribute="trailing" secondItem="wAJ-SO-rmt" secondAttribute="trailing" id="06L-fh-4aq"/>
+                            <constraint firstItem="Sbn-dk-53b" firstAttribute="bottom" secondItem="wAJ-SO-rmt" secondAttribute="bottom" constant="10" id="Kvm-UF-BHO"/>
+                            <constraint firstItem="Sbn-dk-53b" firstAttribute="trailing" secondItem="wAJ-SO-rmt" secondAttribute="trailing" id="Nqq-ad-S7b"/>
+                            <constraint firstItem="wAJ-SO-rmt" firstAttribute="top" secondItem="Sbn-dk-53b" secondAttribute="top" constant="50" id="awf-nb-Azv"/>
+                            <constraint firstItem="wAJ-SO-rmt" firstAttribute="leading" secondItem="Sbn-dk-53b" secondAttribute="leading" id="bQV-uo-zmc"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="userTable" destination="wAJ-SO-rmt" id="9SV-jZ-Y5r"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SNh-x9-JQZ" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2754" y="60"/>
         </scene>
     </scenes>
     <resources>

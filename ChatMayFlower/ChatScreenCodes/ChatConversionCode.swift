@@ -19,7 +19,7 @@ import FirebaseStorage
 import SwiftUI
 
 class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
-    
+    var valueString = ""
     var usersDetails = [[String:String]]()
     var usersLists = [[String:String]]()   ////  Main list of all contact list
     var allUser = [[String:String]]()
@@ -724,7 +724,7 @@ extension ChatConversionCode : UITextFieldDelegate{
 
 
 // MARK: - Delegate Methods of TableView
-extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource ,UIContextMenuInteractionDelegate{
+extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatMap.count
     }
@@ -740,7 +740,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource ,UICon
 //                print("chatText =================......\(String(describing: chatText))")
 //                print("txtchat is ======----> \(txtChat)")
 //                print("key chat is =======--- \(key)")
-//                print("chatMapKey is ..........  \(chatMapKey)")
+                print("chatMapKey is ..........  \(chatMapKey)")
+        valueString = "\(txtChat)"
         for i in 0...key.count-1 {
             if key[i] == userNumberKey {
                 //                print("userNumberKey is =====-------> \(userNumberKey)")
@@ -939,6 +940,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource ,UICon
                                 toggle = false
                             }
                         }
+                        
                         return cell!
                     } else {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyImageCell") as? SenderReplyImageCell
@@ -999,6 +1001,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource ,UICon
                         if indexPath.row == chatMapKey.count-1 {
                             toggle = true
                         }
+                        
                         return cell!
                     }
                 } else if abc?["\(receiverid)chatVideo"] != nil || abc?["\(phoneid)chatVideo"] != nil {
@@ -1080,6 +1083,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource ,UICon
                                 toggle = false
                             }
                         }
+                        
                         return cell!
                         
                     } else {
@@ -1137,6 +1141,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource ,UICon
                         if indexPath.row == chatMapKey.count-1 {
                             toggle = true
                         }
+                        
                         return cell!
                     }
                 }
@@ -1278,6 +1283,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource ,UICon
                             toggle = false
                         }
                     }
+                    
                     return cell!
                 }
                 else if chatText?["\(receiverid)"] == nil {
@@ -1531,6 +1537,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource ,UICon
                                     toggle = false
                                 }
                             }
+                            
                             return cell!
                         }
                     }
@@ -1546,11 +1553,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource ,UICon
                         if indexPath.row == chatMapKey.count-1 {
                             toggle = true
                         }
-                        let interaction = UIContextMenuInteraction(delegate: self)
-                            cell?.addInteraction(interaction)
-                        
-                        cell?.layer.bounds = (cell?.contentView.bounds)!
-                        cell?.frame = (cell?.contentView.frame)!
+//
                         return cell!
                     }
                     else {
@@ -1581,12 +1584,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource ,UICon
                                 toggle = false
                             }
                         }
-                        let interaction = UIContextMenuInteraction(delegate: self)
-                        cell?.addInteraction(interaction)
-                        
-                        cell?.frame = CGRect(x: 20, y: 0, width: cell?.receiverMessages.frame.width, height: 50)
-                        print("\(cell?.contentView.frame)")
-                        cell?.layer.bounds = (cell?.contentView.bounds)!
                         return cell!
                     }
                 }
@@ -1596,32 +1593,121 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource ,UICon
         cell?.selectionStyle = .none
         return cell!
     }
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
-          configurationForMenuAtLocation location: CGPoint)
-          -> UIContextMenuConfiguration? {
-
-              
-          let favorite = UIAction(title: "Favorite",
-            image: UIImage(systemName: "heart.fill")) { _ in
-            // Perform action
-          }
-
-          let share = UIAction(title: "Share",
-            image: UIImage(systemName: "square.and.arrow.up.fill")) { action in
-            // Perform action
-          }
-
-          let delete = UIAction(title: "Delete",
-            image: UIImage(systemName: "trash.fill"),
-            attributes: [.destructive]) { action in
-             // Perform action
-           }
-
-           return UIContextMenuConfiguration(identifier: nil,
-             previewProvider: nil) { _ in
-             UIMenu(title: "Actions", children: [favorite, share, delete])
-           }
+    func tableView(_ tableView: UITableView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        guard let indexPath = configuration.identifier as? IndexPath else {
+            return nil
         }
+        if let cell = chatTable.cellForRow(at: indexPath) as? SenderViewCell {
+            let parameters = UIPreviewParameters()
+            parameters.backgroundColor = .clear
+            
+        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+        }
+        if let cell = chatTable.cellForRow(at: indexPath) as? SenderImageChatCell {
+            let parameters = UIPreviewParameters()
+            parameters.backgroundColor = .clear
+            
+        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+        }
+        if let cell = chatTable.cellForRow(at: indexPath) as? SenderReplyImageCell {
+            let parameters = UIPreviewParameters()
+            parameters.backgroundColor = .clear
+            
+        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+        }
+        if let cell = chatTable.cellForRow(at: indexPath) as? SenderVideoCell {
+            let parameters = UIPreviewParameters()
+            parameters.backgroundColor = .clear
+            
+        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+        }
+        if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverViewCell {
+            let parameters = UIPreviewParameters()
+            parameters.backgroundColor = .clear
+            
+        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+        }
+        if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverReplyViewCell {
+            let parameters = UIPreviewParameters()
+            parameters.backgroundColor = .clear
+            
+        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+        }
+        if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverVideoCell {
+            let parameters = UIPreviewParameters()
+            parameters.backgroundColor = .clear
+            
+        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+        }
+        if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverReplyImageCell {
+            let parameters = UIPreviewParameters()
+            parameters.backgroundColor = .clear
+            
+        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+        }
+        if let cell = chatTable.cellForRow(at: indexPath) as? SenderReplyViewCell {
+            let parameters = UIPreviewParameters()
+            parameters.backgroundColor = .clear
+            
+        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+        } else {
+            let cell = chatTable.cellForRow(at: indexPath) as? ImageTableViewCell
+            let parameters = UIPreviewParameters()
+            parameters.backgroundColor = .clear
+            return UITargetedPreview(view: cell!.viewC, parameters: parameters)
+        }
+        
+    }
+     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+         let chat = chatMap[indexPath.row]
+         let userNumberKey = chatMapKey[indexPath.row]
+         let uniqueKey = key[indexPath.row]
+         let chatText = chat[uniqueKey]
+         let txtChat = chatText?[userNumberKey]
+         let abc = chatText?[userNumberKey]  as? [String : Any]
+         // Selected Drug and notes
+         var titleString = "\(uniqueKey)"
+         print("key", titleString)
+            return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil) { _ in
+                return UIMenu(title: "", children: [
+                    UIAction(title: "Forward",
+                      image: UIImage(systemName: "square.and.arrow.up.fill")) { action in
+                      // Perform action
+                          let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
+                          print("users ",self.usersDetails)
+                          vc?.listOfData = self.usersDetails
+                          vc?.allUser = self.allUserOfContact
+                          self.navigationController?.present(vc!, animated: true, completion: nil)
+                    },
+                    UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { action in
+                        print("Delete")
+                        let ref = Database.database().reference().child("Chats").child("\(self.mid)").child("chatting").child("\(uniqueKey)")
+
+                        ref.setValue(nil)
+                        self.chatMap.remove(at: indexPath.row)
+                        self.chatMapKey.remove(at: indexPath.row)
+                        self.key.remove(at: indexPath.row)
+//                        self.data.remove(at: indexPath.row)
+                        self.chatTable.deleteRows(at: [indexPath], with: .automatic)
+                        self.chatTable.reloadData()
+                    }
+                ])
+            }
+        }
+
+
+     func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+         guard let indexPath = configuration.identifier as? IndexPath, let cell = chatTable.cellForRow(at: indexPath) as? SenderViewCell else {
+             return nil
+         }
+         
+         let parameters = UIPreviewParameters()
+         parameters.backgroundColor = .clear
+         
+     return UITargetedPreview(view: cell.viewC, parameters: parameters)
+    }
+  
+
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let chat = chatMap[indexPath.row]
         let userNumberKey = chatMapKey[indexPath.row]

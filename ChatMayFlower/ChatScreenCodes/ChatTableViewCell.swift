@@ -14,18 +14,21 @@ class ChatTableViewCell: UITableViewCell {
     
 }
 class SenderViewCell : UITableViewCell {
+    @IBOutlet weak var viewC: UIView!
     
     @IBOutlet weak var senderNumber: UILabel!
     @IBOutlet weak var senderMessage: UILabel!
 }
 class SenderImageChatCell : UITableViewCell {
     
+    @IBOutlet weak var viewC: UIView!
     @IBOutlet weak var senderNumber: UILabel!
     @IBOutlet weak var senderImageComment: UILabel!
     @IBOutlet weak var senderImage: UIImageView!
 }
 class SenderVideoCell : UITableViewCell {
     
+    @IBOutlet weak var viewC: UIView!
     @IBOutlet weak var senderNumber: UILabel!
     @IBOutlet weak var senderVideo: UIImageView!
     
@@ -68,6 +71,7 @@ class SenderVideoCell : UITableViewCell {
 
 class ImageTableViewCell: UITableViewCell {
     
+    @IBOutlet weak var viewC: UIView!
     
     @IBOutlet weak var receiverNumber: UILabel!
     @IBOutlet weak var receiverComentImage: UILabel!
@@ -82,6 +86,7 @@ class ImageTableViewCell: UITableViewCell {
 
 class ReceiverViewCell: UITableViewCell {
     
+    @IBOutlet weak var viewC: UIView!
     @IBOutlet weak var receiverNumber: UILabel!
     @IBOutlet weak var receiverMessages: UILabel!
     override func awakeFromNib() {
@@ -96,6 +101,7 @@ class ReceiverViewCell: UITableViewCell {
 class ReceiverVideoCell : UITableViewCell {
     @IBOutlet weak var receiverNumber: UILabel!
     
+    @IBOutlet weak var viewC: UIView!
     @IBOutlet weak var receiverVideo: UIImageView!
     
     @IBOutlet weak var receiverPlay: UIImageView!
@@ -138,6 +144,7 @@ class ReceiverVideoCell : UITableViewCell {
 class SenderReplyViewCell: UITableViewCell {
     @IBOutlet weak var senderNumber: UILabel!
     
+    @IBOutlet weak var viewC: UIView!
     @IBOutlet weak var user: UILabel!
     @IBOutlet weak var senderReply: UILabel!
     @IBOutlet weak var senderMessages: UILabel!
@@ -151,6 +158,7 @@ class SenderReplyViewCell: UITableViewCell {
 
 class ReceiverReplyViewCell: UITableViewCell {
     
+    @IBOutlet weak var viewC: UIView!
     @IBOutlet weak var receiverNumber: UILabel!
     @IBOutlet weak var user: UILabel!
     @IBOutlet weak var receiverReply: UILabel!
@@ -165,6 +173,7 @@ class ReceiverReplyViewCell: UITableViewCell {
 
 class SenderReplyImageCell: UITableViewCell {
     
+    @IBOutlet weak var viewC: UIView!
     @IBOutlet weak var senderNumber: UILabel!
     
     @IBOutlet weak var user: UILabel!
@@ -199,6 +208,7 @@ class SenderReplyImageCell: UITableViewCell {
 }
 class ReceiverReplyImageCell: UITableViewCell {
     
+    @IBOutlet weak var viewC: UIView!
     @IBOutlet weak var receiverNumber: UILabel!
     @IBOutlet weak var receivermsg: UILabel!
     @IBOutlet weak var receiverreply: UILabel!

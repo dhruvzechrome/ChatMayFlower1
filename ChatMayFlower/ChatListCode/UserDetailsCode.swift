@@ -497,7 +497,7 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
             vc?.currentUserData = currentUserData
             vc?.groupK = "yes"
         }
-       
+        vc?.usersDetails = listOfData
         vc?.phoneid = phones
         navigationController?.pushViewController(vc!, animated: true)
         hideProgress()
