@@ -194,15 +194,15 @@ extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
                 break
             }
         }
-    
-            for i in 0...selecetdUser.count-1 {
-                let tds = selecetdUser[i]
-                if frd["Phone number"] == tds["Phone number"] {
-                    selecetdUser.remove(at: i)
-                    break
-                }
+        
+        for i in 0...selecetdUser.count-1 {
+            let tds = selecetdUser[i]
+            if frd["Phone number"] == tds["Phone number"] {
+                selecetdUser.remove(at: i)
+                break
             }
-    
+        }
+        
         if groupUser.count == 0 {
             nextButton.isEnabled = false
         }

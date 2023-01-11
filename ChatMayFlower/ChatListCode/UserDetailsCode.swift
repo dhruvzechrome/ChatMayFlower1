@@ -481,6 +481,8 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         vc?.usersNumber = usersNumber
         mychat()
         vc?.mid = messageId!
+        vc?.usersDetails = listOfData
+        vc?.usersLists = listOfData
         if frd["group name"] == nil {
         } else {
             print("group user id \(listOfData)")
@@ -497,7 +499,9 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
             vc?.currentUserData = currentUserData
             vc?.groupK = "yes"
         }
-        vc?.usersDetails = listOfData
+        vc?.msgIdList = msgIdList
+        vc?.allUserOfContact = allUser
+        vc?.phones = phones
         vc?.phoneid = phones
         navigationController?.pushViewController(vc!, animated: true)
         hideProgress()

@@ -3100,8 +3100,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HqK-Bd-YwO">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
+                                <items>
+                                    <navigationItem title="Title" id="YHu-vX-rbL">
+                                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="cancel" id="4RK-tR-p1G">
+                                            <connections>
+                                                <action selector="cancel:" destination="B8C-2j-r54" id="0bK-Bv-dnK"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="wAJ-SO-rmt">
-                                <rect key="frame" x="0.0" y="50" width="414" height="748"/>
+                                <rect key="frame" x="0.0" y="59" width="414" height="739"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="UserForwardCell" rowHeight="97" id="1JY-ch-GUR" customClass="UserForwardCell" customModule="ChatMayFlower" customModuleProvider="target">
@@ -3166,40 +3178,82 @@
                                                 <constraint firstItem="9Tu-FO-Ly7" firstAttribute="top" secondItem="Kn1-oq-uCx" secondAttribute="top" constant="5" id="dL8-zo-VXg"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="nsme" destination="1r8-eP-Ffb" id="r7k-wv-4VW"/>
+                                            <outlet property="profile" destination="9Tu-FO-Ly7" id="fjz-Vw-XlO"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HqK-Bd-YwO">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <items>
-                                    <navigationItem title="Title" id="YHu-vX-rbL">
-                                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="cancel" id="4RK-tR-p1G">
-                                            <connections>
-                                                <action selector="cancel:" destination="B8C-2j-r54" id="0bK-Bv-dnK"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ToE-N2-zbG">
+                                <rect key="frame" x="0.0" y="742" width="414" height="100"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HwF-YD-IMi">
+                                        <rect key="frame" x="20" y="0.0" width="394" height="50"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sq1-cX-Kut">
+                                                <rect key="frame" x="0.0" y="0.0" width="294" height="50"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sec-Dq-ZNO">
+                                                <rect key="frame" x="294" y="0.0" width="100" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="Wmy-Qg-dke"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Forward">
+                                                    <fontDescription key="titleFontDescription" type="system" pointSize="18"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="forwardButton:" destination="B8C-2j-r54" eventType="touchUpInside" id="8Ta-Sb-h5n"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="Sec-Dq-ZNO" firstAttribute="top" secondItem="HwF-YD-IMi" secondAttribute="top" id="Hfe-yX-DY5"/>
+                                            <constraint firstItem="sq1-cX-Kut" firstAttribute="top" secondItem="HwF-YD-IMi" secondAttribute="top" id="Ujk-gn-X52"/>
+                                            <constraint firstItem="Sec-Dq-ZNO" firstAttribute="leading" secondItem="sq1-cX-Kut" secondAttribute="trailing" id="WWA-uY-oDq"/>
+                                            <constraint firstAttribute="height" constant="50" id="ciO-hg-YsD"/>
+                                            <constraint firstAttribute="trailing" secondItem="Sec-Dq-ZNO" secondAttribute="trailing" id="qek-Xd-6Lx"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="0.9336692769890288" blue="0.86638397565803571" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="HwF-YD-IMi" secondAttribute="trailing" id="3RV-aT-ScP"/>
+                                    <constraint firstItem="HwF-YD-IMi" firstAttribute="top" secondItem="ToE-N2-zbG" secondAttribute="top" id="HhU-el-4W6"/>
+                                    <constraint firstAttribute="height" constant="100" id="bCR-3Z-qID"/>
+                                    <constraint firstItem="HwF-YD-IMi" firstAttribute="leading" secondItem="ToE-N2-zbG" secondAttribute="leading" constant="20" id="tmV-eJ-PmG"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Sbn-dk-53b"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="Sbn-dk-53b" firstAttribute="trailing" secondItem="wAJ-SO-rmt" secondAttribute="trailing" id="06L-fh-4aq"/>
-                            <constraint firstItem="Sbn-dk-53b" firstAttribute="bottom" secondItem="wAJ-SO-rmt" secondAttribute="bottom" constant="10" id="Kvm-UF-BHO"/>
+                            <constraint firstItem="HqK-Bd-YwO" firstAttribute="trailing" secondItem="Sbn-dk-53b" secondAttribute="trailing" id="3qU-VF-tFc"/>
+                            <constraint firstItem="HqK-Bd-YwO" firstAttribute="leading" secondItem="Sbn-dk-53b" secondAttribute="leading" id="9tX-Dl-oL7"/>
                             <constraint firstItem="Sbn-dk-53b" firstAttribute="trailing" secondItem="wAJ-SO-rmt" secondAttribute="trailing" id="Nqq-ad-S7b"/>
-                            <constraint firstItem="wAJ-SO-rmt" firstAttribute="top" secondItem="Sbn-dk-53b" secondAttribute="top" constant="50" id="awf-nb-Azv"/>
+                            <constraint firstItem="HqK-Bd-YwO" firstAttribute="top" secondItem="Sbn-dk-53b" secondAttribute="top" id="SCV-Vi-hcr"/>
                             <constraint firstItem="wAJ-SO-rmt" firstAttribute="leading" secondItem="Sbn-dk-53b" secondAttribute="leading" id="bQV-uo-zmc"/>
+                            <constraint firstItem="Sbn-dk-53b" firstAttribute="trailing" secondItem="ToE-N2-zbG" secondAttribute="trailing" id="dP1-v7-bXs"/>
+                            <constraint firstItem="wAJ-SO-rmt" firstAttribute="top" secondItem="HqK-Bd-YwO" secondAttribute="bottom" constant="3" id="dY4-G0-UfJ"/>
+                            <constraint firstItem="ToE-N2-zbG" firstAttribute="leading" secondItem="Sbn-dk-53b" secondAttribute="leading" id="fP7-Us-yGf"/>
+                            <constraint firstItem="Sbn-dk-53b" firstAttribute="bottom" secondItem="wAJ-SO-rmt" secondAttribute="bottom" constant="10" id="ivb-hd-Ujd"/>
+                            <constraint firstAttribute="bottom" secondItem="ToE-N2-zbG" secondAttribute="bottom" id="qB6-pI-2eo"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="forwardView" destination="ToE-N2-zbG" id="562-M4-Wn8"/>
+                        <outlet property="selectedUser" destination="sq1-cX-Kut" id="S9w-1k-fi3"/>
                         <outlet property="userTable" destination="wAJ-SO-rmt" id="9SV-jZ-Y5r"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SNh-x9-JQZ" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2754" y="60"/>
+            <point key="canvasLocation" x="2753.6231884057975" y="59.598214285714285"/>
         </scene>
     </scenes>
     <resources>

@@ -71,6 +71,8 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     var receiverName = ""
     var receiverUserid = ""
     var groupAdmin = ""
+    var forwardChat = ""
+    var forwardChatKey = ""
     var currentUserData : [String:String] = [:]
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -1594,66 +1596,78 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
         return cell!
     }
     func tableView(_ tableView: UITableView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        
         guard let indexPath = configuration.identifier as? IndexPath else {
             return nil
         }
+        let chat = chatMap[indexPath.row]
+        let userNumberKey = chatMapKey[indexPath.row]
+        let uniqueKey = key[indexPath.row]
+        let chatText = chat[uniqueKey]
+        let txtChat = chatText?[userNumberKey]
+        let abc = chatText?[userNumberKey]  as? [String : Any]
+        print("txtChat \(txtChat)")
+        print("Chattext \(chatText)")
         if let cell = chatTable.cellForRow(at: indexPath) as? SenderViewCell {
             let parameters = UIPreviewParameters()
             parameters.backgroundColor = .clear
+            forwardChat = "\(txtChat)"
+            print("SenderViewCell")
             
         return UITargetedPreview(view: cell.viewC, parameters: parameters)
         }
         if let cell = chatTable.cellForRow(at: indexPath) as? SenderImageChatCell {
             let parameters = UIPreviewParameters()
             parameters.backgroundColor = .clear
-            
-        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+            print("SenderImageChatCell")
+            return UITargetedPreview(view: cell.viewC, parameters: parameters)
         }
         if let cell = chatTable.cellForRow(at: indexPath) as? SenderReplyImageCell {
             let parameters = UIPreviewParameters()
             parameters.backgroundColor = .clear
-            
+            print("SenderReplyImageCell")
         return UITargetedPreview(view: cell.viewC, parameters: parameters)
         }
         if let cell = chatTable.cellForRow(at: indexPath) as? SenderVideoCell {
             let parameters = UIPreviewParameters()
             parameters.backgroundColor = .clear
-            
+            print("SenderVideoCell")
         return UITargetedPreview(view: cell.viewC, parameters: parameters)
         }
         if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverViewCell {
             let parameters = UIPreviewParameters()
             parameters.backgroundColor = .clear
-            
+            print("ReceiverViewCell")
         return UITargetedPreview(view: cell.viewC, parameters: parameters)
         }
         if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverReplyViewCell {
             let parameters = UIPreviewParameters()
             parameters.backgroundColor = .clear
-            
+            print("ReceiverReplyViewCell")
         return UITargetedPreview(view: cell.viewC, parameters: parameters)
         }
         if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverVideoCell {
             let parameters = UIPreviewParameters()
             parameters.backgroundColor = .clear
-            
+            print("ReceiverVideoCell")
         return UITargetedPreview(view: cell.viewC, parameters: parameters)
         }
         if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverReplyImageCell {
             let parameters = UIPreviewParameters()
             parameters.backgroundColor = .clear
-            
+            print("ReceiverReplyImageCell")
         return UITargetedPreview(view: cell.viewC, parameters: parameters)
         }
         if let cell = chatTable.cellForRow(at: indexPath) as? SenderReplyViewCell {
             let parameters = UIPreviewParameters()
             parameters.backgroundColor = .clear
-            
+            print("SenderReplyViewCell")
         return UITargetedPreview(view: cell.viewC, parameters: parameters)
         } else {
             let cell = chatTable.cellForRow(at: indexPath) as? ImageTableViewCell
             let parameters = UIPreviewParameters()
             parameters.backgroundColor = .clear
+            print("ImageTableViewCell")
             return UITargetedPreview(view: cell!.viewC, parameters: parameters)
         }
         
@@ -1673,10 +1687,12 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                     UIAction(title: "Forward",
                       image: UIImage(systemName: "square.and.arrow.up.fill")) { action in
                       // Perform action
-                          let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
+                          let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCodeForward") as? UserDetailsCodeForward
                           print("users ",self.usersDetails)
-                          vc?.listOfData = self.usersDetails
-                          vc?.allUser = self.allUserOfContact
+                          vc?.usersDetails = self.usersLists
+                          vc?.allUserOfContact = self.allUserOfContact
+                          vc?.phones = self.phones
+                          vc?.msgIdList = self.msgIdList
                           self.navigationController?.present(vc!, animated: true, completion: nil)
                     },
                     UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { action in
