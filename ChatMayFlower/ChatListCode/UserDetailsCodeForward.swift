@@ -20,6 +20,12 @@ class UserDetailsCodeForward: UIViewController {
     var userNumber = ""
     var phones = ""
     var msgstatus = false
+    var forwardChat = ""
+    var forwardChatVideo = ""
+    var forwardChatPhoto = ""
+    var forwardChatKey = ""
+    var uid : Int?
+    var boolforPhoto = false
     @IBOutlet weak var forwardView: UIView!
     @IBOutlet weak var selectedUser: UILabel!
     override func viewDidLoad() {
@@ -38,6 +44,109 @@ class UserDetailsCodeForward: UIViewController {
     @IBAction func forwardButton(_ sender: UIButton) {
         print("Yes \(msgIdList)")
         chats()
+        var database = Database.database().reference()
+        print("ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) | ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+        if forwardChatPhoto != "" {
+            boolforPhoto = false
+            print("ForwardChatPhoto - \(forwardChatPhoto)")
+            if forwardChat == "" {
+                uid! += 1
+                database.child("Uid").setValue(uid)
+                database.child("Chats").child(messageId).child("chatting").child("\(uid!)").setValue(["\(forwardChatKey)chatPhoto": forwardChatPhoto], withCompletionBlock: { error, _ in
+                    guard error == nil else {
+                        print("Failed to write data")
+                        
+                        return
+                    }
+                    print("data written seccess")
+                    DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+//                        if let vc = self.presentingViewController as? UITabBarController {
+//                            if let cvc = vc.viewControllers?.first as? UINavigationController {
+//                                if let cv = cvc.viewControllers.last as? ChatConversionCode {
+//                                    self.dismiss(animated: true, completion: nil)
+//                                    cv.afterForwardPop()
+//                                }
+//    //
+//                            }
+//
+//                        }
+                    }
+                })
+            } else {
+                uid! += 1
+                database.child("Uid").setValue(uid)
+                database.child("Chats").child(messageId).child("chatting").child("\(uid!)").setValue(["\(forwardChatKey)text": forwardChat,"\(forwardChatKey)chatPhoto": forwardChatPhoto], withCompletionBlock: { error, _ in
+                    guard error == nil else {
+                        print("Failed to write data")
+                        
+                        return
+                    }
+                    print("data written seccess")
+                    DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+//                        if let vc = self.presentingViewController as? UITabBarController {
+//                            if let cvc = vc.viewControllers?.first as? UINavigationController {
+//                                if let cv = cvc.viewControllers.last as? ChatConversionCode {
+//                                    self.dismiss(animated: true, completion: nil)
+//                                    cv.afterForwardPop()
+//                                }
+//    //
+//                            }
+//
+//                        }
+                    }
+                })
+            }
+        }
+       else if forwardChatVideo != "" {
+            print("ForwardChatVideo - \(forwardChatVideo)")
+            uid! += 1
+            database.child("Uid").setValue(uid)
+            database.child("Chats").child(messageId).child("chatting").child("\(uid!)").setValue(["\(forwardChatKey)chatVideo": forwardChatVideo], withCompletionBlock: { error, _ in
+                guard error == nil else {
+                    print("Failed to write data ")
+                    return
+                }
+                print("data written seccess ")
+                DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+//                    if let vc = self.presentingViewController as? UITabBarController {
+//                        if let cvc = vc.viewControllers?.first as? UINavigationController {
+//                            if let cv = cvc.viewControllers.last as? ChatConversionCode {
+//                                self.dismiss(animated: true, completion: nil)
+//                                cv.afterForwardPop()
+//                            }
+////
+//                        }
+//
+//                    }
+                }
+            })
+        }
+        else if forwardChat != "" &&  boolforPhoto == false{
+            print("ForwardChat - \(forwardChat)")
+            uid! += 1
+            database.child("Uid").setValue(uid)
+            database.child("Chats").child(messageId).child("chatting").child("\(uid!)").setValue(["\(forwardChatKey)": forwardChat], withCompletionBlock: { error, _ in
+                guard error == nil else {
+                    print("Failed to write data")
+                    
+                    return
+                }
+                print("data written seccess")
+                DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+                    
+//                    if let vc = self.presentingViewController as? UITabBarController {
+//                        if let cvc = vc.viewControllers?.first as? UINavigationController {
+//                            if let cv = cvc.viewControllers.last as? ChatConversionCode {
+//                                self.dismiss(animated: true, completion: nil)
+//                                cv.afterForwardPop()
+//                            }
+////
+//                        }
+//
+//                    }
+                }
+            })
+        }
     }
     @IBAction func cancel(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
@@ -158,27 +267,34 @@ extension UserDetailsCodeForward : UITableViewDelegate, UITableViewDataSource {
         return view
     }
     func chats(){
-        for avl in 0...msgIdList.count - 1 {
-            print("msgkey at index  \(msgIdList[avl]) - \(phones) - \(userNumber)")
-            if msgIdList[avl] == "\(phones)\(userNumber)" || msgIdList[avl] == "\(userNumber)\(phones)" || msgIdList[avl] == "\(userNumber)" {
-                messageId = msgIdList[avl]
-                 print("True ----------- \(messageId)")
-                msgstatus = true
-                break
+        let frd = selectedUsers[0]
+        if frd["uniqueid"] != nil {
+            messageId = frd["uniqueid"]!
+            print("True ----------- \(messageId)")
+        } else {
+            for avl in 0...msgIdList.count - 1 {
+                print("msgkey at index  \(msgIdList[avl]) - \(phones) - \(userNumber)")
+                if msgIdList[avl] == "\(phones)\(userNumber)" || msgIdList[avl] == "\(userNumber)\(phones)" || msgIdList[avl] == "\(userNumber)" {
+                    messageId = msgIdList[avl]
+                     print("True ----------- \(messageId)")
+                    msgstatus = true
+                    break
+                }
+            }
+            if msgstatus == false {
+                messageId = "\(phones)\(userNumber)"
+                
+                Database.database().reference().child("Chat").observeSingleEvent(of: .value, with: { [self] (snapshot) in
+                    if snapshot.exists() {
+                        print("true rooms exist")
+                    } else {
+                        print("false room doesn't exist")
+                        DataBaseManager.shared.createNewChat(with: Message( messagid: self.messageId, chats: "", sender: "",uii: 0, chatPhotos: ""))
+                    }
+                })
             }
         }
-        if msgstatus == false {
-            messageId = "\(phones)\(userNumber)"
-            
-            Database.database().reference().child("Chat").observeSingleEvent(of: .value, with: { [self] (snapshot) in
-                if snapshot.exists() {
-                    print("true rooms exist")
-                } else {
-                    print("false room doesn't exist")
-                    DataBaseManager.shared.createNewChat(with: Message( messagid: self.messageId, chats: "", sender: "",uii: 0, chatPhotos: ""))
-                }
-            })
-        }
+        
     }
     func mychat() {
         
