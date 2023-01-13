@@ -10,7 +10,7 @@ import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
 import Kingfisher
-
+import AVFoundation
 class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     var stack = UIStackView()
     var progressViews = [UIProgressView()]
@@ -276,9 +276,25 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                     let statuscmt = "\(photo?["statusComment"] ?? "")"
                     print("comment  \(statuscmt)")
                     cell?.statusComment.text = statuscmt
-                    url = URL(string: "\(photo?["statusPhoto"] ?? "")")
-                    uiimage.kf.setImage(with: url)
-                    cell?.videoImage.kf.setImage(with: url)
+                    
+                    if photo?["statusVideo"] == nil {
+                        cell?.videoViewer.isHidden = true
+                        url = URL(string: "\(photo?["statusPhoto"] ?? "")")
+                        uiimage.kf.setImage(with: url)
+                        cell?.videoImage.kf.setImage(with: url)
+                    } else {
+                        cell?.videoImage.isHidden = true
+                        print("video")
+                        url = URL(string: "\(photo?["statusVideo"] ?? "")")
+                        let player = AVPlayer(url: url!)
+                        let playerLayer = AVPlayerLayer(player: player)
+                        cell?.videoViewer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.65)
+                        playerLayer.frame = (cell?.videoViewer.bounds)!
+                        playerLayer.videoGravity = .resizeAspect
+                        cell?.videoViewer.layer.addSublayer(playerLayer)
+                        player.play()
+                        player.volume = 100
+                    }
                     break
                 }
             }

@@ -264,11 +264,17 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
                     if currentUserData["statuskey"] != ""  {
                         let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
                         print("frdddddd = \(currentUserStatus)- - - \(frd)")
-
-                        let url = URL(string: frd["statusPhoto"]!)
+                        
+                        if frd["statusPhoto"] != nil {
+                            let url = URL(string: frd["statusPhoto"]!)
+                            cell?.profileImage.kf.setImage(with: url)
+                        } else {
+                            let url = URL(string: frd["statusVideo"]!)!
+                            cell?.profileImage.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
+                        }
                         cell?.profileImage.borderWidth = 3
                         cell?.profileImage.borderColor = .blue
-                        cell?.profileImage.kf.setImage(with: url)
+                        
                         cell?.subLable.text = "Tap to view status"
                     } else {
                         cell?.profileImage.image = UIImage(systemName: "person.circle.fill")
@@ -290,6 +296,9 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             if img?["statusPhoto"] != nil {
                 let url = URL(string: img?["statusPhoto"] ?? "")
                 cell?.statusImage.kf.setImage(with: url)
+            } else {
+                let url = URL(string: frd["statusVideo"]! as! String)!
+                cell?.statusImage.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
             }
             cell?.userName.text = frd["Name"] as? String
             return cell!

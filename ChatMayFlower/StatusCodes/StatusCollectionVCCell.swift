@@ -12,6 +12,7 @@ import UIKit
 class StatusDetailsCollectionCell: UICollectionViewCell {
     @IBOutlet weak var dismissBtn: UIButton!
     
+    @IBOutlet weak var videoViewer: UIView!
     @IBOutlet weak var statusComment: UILabel!
     @IBOutlet weak var videoImage: UIImageView!
     @IBOutlet weak var userImage: UIImageView!

@@ -1681,6 +1681,10 @@
                                             <rect key="frame" x="0.0" y="0.0" width="398" height="854"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lc6-MZ-uyM">
+                                                    <rect key="frame" x="0.0" y="0.0" width="398" height="854"/>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                </view>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qXs-YN-oGN">
                                                     <rect key="frame" x="0.0" y="0.0" width="398" height="854"/>
                                                 </imageView>
@@ -1747,7 +1751,7 @@
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="742-Lx-INK">
-                                                    <rect key="frame" x="0.0" y="105" width="193" height="749"/>
+                                                    <rect key="frame" x="0.0" y="840" width="193" height="14"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain"/>
                                                     <connections>
@@ -1766,20 +1770,22 @@
                                                 <constraint firstItem="dkd-nP-t1d" firstAttribute="top" secondItem="3Ay-nt-mPg" secondAttribute="bottom" id="31T-s3-WCo"/>
                                                 <constraint firstAttribute="trailing" secondItem="dkd-nP-t1d" secondAttribute="trailing" id="491-0t-wrs"/>
                                                 <constraint firstItem="qXs-YN-oGN" firstAttribute="top" secondItem="BmX-Ho-m8c" secondAttribute="top" id="4th-t7-cZY"/>
+                                                <constraint firstItem="lc6-MZ-uyM" firstAttribute="leading" secondItem="BmX-Ho-m8c" secondAttribute="leading" id="4yg-ai-7ne"/>
                                                 <constraint firstAttribute="trailing" secondItem="3Ay-nt-mPg" secondAttribute="trailing" id="HOu-yL-HDd"/>
                                                 <constraint firstItem="dkd-nP-t1d" firstAttribute="leading" secondItem="742-Lx-INK" secondAttribute="trailing" constant="5" id="Idx-mi-sVK"/>
                                                 <constraint firstAttribute="bottom" secondItem="742-Lx-INK" secondAttribute="bottom" id="MMe-3t-a7i"/>
                                                 <constraint firstItem="3Ay-nt-mPg" firstAttribute="leading" secondItem="BmX-Ho-m8c" secondAttribute="leading" id="Mrz-ap-30D"/>
                                                 <constraint firstItem="dnf-N9-UXe" firstAttribute="leading" secondItem="BmX-Ho-m8c" secondAttribute="leading" id="OWs-hi-mN0"/>
-                                                <constraint firstItem="742-Lx-INK" firstAttribute="top" secondItem="3Ay-nt-mPg" secondAttribute="bottom" id="VkW-va-bk2"/>
                                                 <constraint firstItem="3Ay-nt-mPg" firstAttribute="top" secondItem="BmX-Ho-m8c" secondAttribute="top" constant="45" id="WOV-58-6AG"/>
+                                                <constraint firstItem="lc6-MZ-uyM" firstAttribute="top" secondItem="BmX-Ho-m8c" secondAttribute="top" id="X0m-Ne-UqI"/>
                                                 <constraint firstAttribute="trailing" secondItem="dnf-N9-UXe" secondAttribute="trailing" id="Z51-iu-mGm"/>
                                                 <constraint firstItem="742-Lx-INK" firstAttribute="leading" secondItem="BmX-Ho-m8c" secondAttribute="leading" id="feH-iK-Q8u"/>
                                                 <constraint firstAttribute="bottom" secondItem="qXs-YN-oGN" secondAttribute="bottom" id="iga-r9-w0d"/>
+                                                <constraint firstAttribute="bottom" secondItem="lc6-MZ-uyM" secondAttribute="bottom" id="kUX-FW-Y6g"/>
                                                 <constraint firstAttribute="trailing" secondItem="qXs-YN-oGN" secondAttribute="trailing" id="kbg-35-x5I"/>
                                                 <constraint firstItem="qXs-YN-oGN" firstAttribute="leading" secondItem="BmX-Ho-m8c" secondAttribute="leading" id="n9w-Zf-wts"/>
-                                                <constraint firstAttribute="leading" secondItem="3Ay-nt-mPg" secondAttribute="leading" id="ods-Bg-HSe"/>
                                                 <constraint firstAttribute="bottom" secondItem="dkd-nP-t1d" secondAttribute="bottom" id="rDy-hZ-lo5"/>
+                                                <constraint firstAttribute="trailing" secondItem="lc6-MZ-uyM" secondAttribute="trailing" id="w88-XX-Sqy"/>
                                                 <constraint firstAttribute="bottom" secondItem="dnf-N9-UXe" secondAttribute="bottom" constant="30" id="xMW-Zg-qgB"/>
                                             </constraints>
                                         </collectionViewCellContentView>
@@ -1791,6 +1797,7 @@
                                             <outlet property="userImage" destination="CsM-J5-DDV" id="dP8-YP-vix"/>
                                             <outlet property="userName" destination="oLm-vF-eeM" id="9T2-la-odw"/>
                                             <outlet property="videoImage" destination="qXs-YN-oGN" id="QkY-AX-aeu"/>
+                                            <outlet property="videoViewer" destination="lc6-MZ-uyM" id="8M2-K9-KKS"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

@@ -611,6 +611,9 @@ extension ChatConversionCode {
             let storageRef = Storage.storage().reference()
             let filename = "chatVideo/\(UUID().uuidString).MOV"
             let fileRef = storageRef.child(filename)
+            if groupK == "yes" {
+                mid = groupMsgId
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.mbProgressHUD(text: "")
                 let uploadTask = fileRef.putFile(from: localFile, metadata: nil){metadata, error in
@@ -693,8 +696,9 @@ extension ChatConversionCode : UITextFieldDelegate{
         if keyBoardStatus == false {
             keyBoardStatus = true
             if let keyboardSize = (sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-                //let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+                print("Height of UIVIew Before \(view.frame.height)")
                 view.frame.size = CGSize(width: view.bounds.width, height: view.frame.height - keyboardSize.height)
+                print("Height of UIVIew \(view.frame.height)")
                 bkview.frame.size = CGSize(width: bkview.bounds.width, height: bkview.frame.height - keyboardSize.height)
                 keyboardheight = Int(keyboardSize.height)
                 chatTable.frame.size = CGSize(width: chatTable.frame.width, height: chatTable.frame.height - keyboardSize.height)
@@ -777,7 +781,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
         
         if userNumberKey == "\(phoneid)chatVideo" || userNumberKey == "\(receiverid)chatVideo" || userNumberKey.contains("chatVideo") {
             videoPlayer(videoUrl: txtChat! as! String)
-            //            print("MY URL IS ++++ \(txtChat)")
+                        print("MY URL IS ++++ \(txtChat)")
             
         }else if userNumberKey == "\(phoneid)chatPhoto" || userNumberKey == "\(receiverid)chatPhoto" || userNumberKey.contains("chatPhoto") {
             keyBoardStatus = true
@@ -2106,7 +2110,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
         //        playerLayer.videoGravity = .resizeAspect
         //        self.view.layer.addSublayer(playerLayer)
         player.play()
-        present(playerController, animated: true)
+        self.present(playerController, animated: true)
     }
     
     // MARK: - Image  Controller

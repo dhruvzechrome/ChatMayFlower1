@@ -60,16 +60,14 @@ class UserDetailsCodeForward: UIViewController {
                     }
                     print("data written seccess")
                     DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
-//                        if let vc = self.presentingViewController as? UITabBarController {
-//                            if let cvc = vc.viewControllers?.first as? UINavigationController {
-//                                if let cv = cvc.viewControllers.last as? ChatConversionCode {
-//                                    self.dismiss(animated: true, completion: nil)
-//                                    cv.afterForwardPop()
-//                                }
-//    //
-//                            }
-//
-//                        }
+                        if let vc = self.presentingViewController as? UITabBarController {
+                            if let cvc = vc.viewControllers?.first as? UINavigationController {
+                                if let cv = cvc.viewControllers.last as? ChatConversionCode {
+                                    self.dismiss(animated: true, completion: nil)
+                                    cv.afterForwardPop()
+                                }
+                            }
+                        }
                     }
                 })
             } else {
@@ -83,16 +81,14 @@ class UserDetailsCodeForward: UIViewController {
                     }
                     print("data written seccess")
                     DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
-//                        if let vc = self.presentingViewController as? UITabBarController {
-//                            if let cvc = vc.viewControllers?.first as? UINavigationController {
-//                                if let cv = cvc.viewControllers.last as? ChatConversionCode {
-//                                    self.dismiss(animated: true, completion: nil)
-//                                    cv.afterForwardPop()
-//                                }
-//    //
-//                            }
-//
-//                        }
+                        if let vc = self.presentingViewController as? UITabBarController {
+                            if let cvc = vc.viewControllers?.first as? UINavigationController {
+                                if let cv = cvc.viewControllers.last as? ChatConversionCode {
+                                    self.dismiss(animated: true, completion: nil)
+                                    cv.afterForwardPop()
+                                }
+                            }
+                        }
                     }
                 })
             }
@@ -108,16 +104,14 @@ class UserDetailsCodeForward: UIViewController {
                 }
                 print("data written seccess ")
                 DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
-//                    if let vc = self.presentingViewController as? UITabBarController {
-//                        if let cvc = vc.viewControllers?.first as? UINavigationController {
-//                            if let cv = cvc.viewControllers.last as? ChatConversionCode {
-//                                self.dismiss(animated: true, completion: nil)
-//                                cv.afterForwardPop()
-//                            }
-////
-//                        }
-//
-//                    }
+                    if let vc = self.presentingViewController as? UITabBarController {
+                        if let cvc = vc.viewControllers?.first as? UINavigationController {
+                            if let cv = cvc.viewControllers.last as? ChatConversionCode {
+                                self.dismiss(animated: true, completion: nil)
+                                cv.afterForwardPop()
+                            }
+                        }
+                    }
                 }
             })
         }
@@ -134,16 +128,14 @@ class UserDetailsCodeForward: UIViewController {
                 print("data written seccess")
                 DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                     
-//                    if let vc = self.presentingViewController as? UITabBarController {
-//                        if let cvc = vc.viewControllers?.first as? UINavigationController {
-//                            if let cv = cvc.viewControllers.last as? ChatConversionCode {
-//                                self.dismiss(animated: true, completion: nil)
-//                                cv.afterForwardPop()
-//                            }
-////
-//                        }
-//
-//                    }
+                    if let vc = self.presentingViewController as? UITabBarController {
+                        if let cvc = vc.viewControllers?.first as? UINavigationController {
+                            if let cv = cvc.viewControllers.last as? ChatConversionCode {
+                                self.dismiss(animated: true, completion: nil)
+                                cv.afterForwardPop()
+                            }
+                        }
+                    }
                 }
             })
         }

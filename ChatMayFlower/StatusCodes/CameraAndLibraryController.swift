@@ -9,6 +9,7 @@ import UIKit
 import AVFoundation
 import SwiftUI
 import FirebaseStorage
+import FirebaseDatabase
 class CameraAndLibraryController: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     var currentUser = ""
     //Capture session
@@ -122,39 +123,37 @@ class CameraAndLibraryController: UIViewController,UIImagePickerControllerDelega
             let storageRef = Storage.storage().reference()
             let filename = "statusimages/\(UUID().uuidString).MOV"
             let fileRef = storageRef.child(filename)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//                let uploadTask = fileRef.putFile(from: localFile, metadata: nil){metadata, error in
-//                    var urlpth = ""
-//                    if error == nil && metadata != nil {
-//
-//                        fileRef.downloadURL(completion: { [self](url,error) in
-//                            if error == nil {
-//                                urlpth = "\(url!)"
-////                                self.ui = self.ui + 1
-////                                self.database.child("Uid").setValue(self.ui)
-////                                database.child("Chats").child(mid).child("status").setValue(["\(phoneid)":true,"\(receiverid)":false])
-////                                self.database.child("Chats").child(self.mid).child("chatting").child("\(self.ui)").setValue(["\(self.phoneid)chatVideo": urlpth], withCompletionBlock: { error, _ in
-////                                    guard error == nil else {
-////                                        print("Failed to write data ")
-////                                        return
-////                                    }
-////                                    print("data written seccess ")
-////                                    DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
-////                                        picker.dismiss(animated: true)
-////                                        hideProgress()
-////                                    }
-////                                })
-//                            } else {
-//                                print("Error for download url \(String(describing: error))")
-//                            }
-//                        })
-//                    } else {
-//                        print("Error for uploading \(String(describing: error))-----------")
-////                        print("Metadata is >>>>>>>>>>>>> \(metadata)")
-//                    }
-//                }
-//                _ = uploadTask
-            }
+            let database = Database.database().reference()
+                let uploadTask = fileRef.putFile(from: localFile, metadata: nil){metadata, error in
+                    var urlpth = ""
+                    if error == nil && metadata != nil {
+                        
+                        fileRef.downloadURL(completion: { [self](url,error) in
+                            if error == nil {
+                                urlpth = "\(url!)"
+                                let unique = UUID().uuid.0
+                                database.child("Contact List").child("\(currentUser)").updateChildValues(["statuskey":"\(unique)"])
+                                let ref = database.child("Contact List").child("\(currentUser)").child("status").child("\(unique)")
+                        
+                                ref.updateChildValues(["statusVideo":"\(urlpth)", "statusComment" : ""]) { error, _ in
+                                    guard error == nil else {
+                                        print("Failedt Update")
+                                        return
+                                    }
+                                    print("Update Successfully")
+                                    self.dismiss(animated: true) {
+                                    }
+                                }
+                            } else {
+                                print("Error for download url \(String(describing: error))")
+                            }
+                        })
+                    } else {
+                        print("Error for uploading \(String(describing: error))-----------")
+//                        print("Metadata is >>>>>>>>>>>>> \(metadata)")
+                    }
+                }
+                _ = uploadTask
             
         }
         
