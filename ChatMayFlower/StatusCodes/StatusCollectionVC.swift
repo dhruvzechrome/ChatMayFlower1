@@ -11,6 +11,8 @@ import FirebaseAuth
 import FirebaseStorage
 import Kingfisher
 import AVFoundation
+import Photos
+import AssetsLibrary
 class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     var stack = UIStackView()
     var progressViews = [UIProgressView()]
@@ -46,6 +48,7 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     var counter = 0
     var screenStatus = false
     var uiimage = UIImageView()
+    var videoUrl : String?
     override func viewDidLoad() {
         super.viewDidLoad()
         detailsCollection.delegate = self
@@ -103,14 +106,57 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
         }))
         alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
         alert.addAction(UIAlertAction(title: "Save Status", style: UIAlertAction.Style.default, handler: { [self]_ in
-            UIImageWriteToSavedPhotosAlbum(uiimage.image!, self, #selector(image(_:withPotentialError:contextInfo:)), nil)
+            if videoUrl == nil {
+                UIImageWriteToSavedPhotosAlbum(uiimage.image!, self, #selector(image(_:withPotentialError:contextInfo:)), nil)
+            } else {
+                DispatchQueue.global(qos: .background).async {
+                    if let url = URL(string: videoUrl!), let urIData = NSData(contentsOf: url) {
+                        let documentsPath=NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                                              .userDomainMask, true)[0];
+                        let filePath="\(documentsPath)/\(UUID().uuidString).MOV"
+                        DispatchQueue.main.async{
+                            urIData.write(toFile: filePath, atomically: true)
+                            PHPhotoLibrary.shared().performChanges({
+                                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL:URL(
+                                    fileURLWithPath: filePath))
+                            }) { completed, error in
+                                if completed {
+                                    print("Video is saved!")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }))
         self.present(alert, animated: true, completion: nil)
     }
     func saveAlertView(){
         let alert = UIAlertController(title: "", message: "Save Status!", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { [self]_ in
-            UIImageWriteToSavedPhotosAlbum(uiimage.image!, self, #selector(image(_:withPotentialError:contextInfo:)), nil)
+            
+            if videoUrl == nil {
+                UIImageWriteToSavedPhotosAlbum(uiimage.image!, self, #selector(image(_:withPotentialError:contextInfo:)), nil)
+            } else {
+                DispatchQueue.global(qos: .background).async {
+                    if let url = URL(string: videoUrl!), let urIData = NSData(contentsOf: url) {
+                        let documentsPath=NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                                              .userDomainMask, true)[0];
+                        let filePath="\(documentsPath)/\(UUID().uuidString).MOV"
+                        DispatchQueue.main.async{
+                            urIData.write(toFile: filePath, atomically: true)
+                            PHPhotoLibrary.shared().performChanges({
+                                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL:URL(
+                                    fileURLWithPath: filePath))
+                            }) { completed, error in
+                                if completed {
+                                    print("Video is saved!")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }))
         alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
@@ -176,6 +222,7 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     
     
     @IBAction func bakward(_ sender: UIButton) {
+        
         if seenStatuskey.count > 1 {
             seenStatuskey.remove(at: seenStatuskey.count-2)
             seenStatuskey.removeLast()
@@ -192,7 +239,6 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
         }
     }
     @IBAction func forward(_ sender: UIButton) {
-        
         detailsCollection.reloadData()
         localBool = true
         statuscount += 1
@@ -285,6 +331,7 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                     } else {
                         cell?.videoImage.isHidden = true
                         print("video")
+                        videoUrl = "\(photo?["statusVideo"] ?? "")"
                         url = URL(string: "\(photo?["statusVideo"] ?? "")")
                         let player = AVPlayer(url: url!)
                         let playerLayer = AVPlayerLayer(player: player)

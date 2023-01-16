@@ -17,9 +17,11 @@ import MobileCoreServices
 import YPImagePicker
 import FirebaseStorage
 import SwiftUI
+import Photos
 
 class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     var valueString = ""
+    var uiimage = UIImageView()
     var usersDetails = [[String:String]]()
     var usersLists = [[String:String]]()   ////  Main list of all contact list
     var allUser = [[String:String]]()
@@ -770,17 +772,15 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
 //                print("chatText =================......\(String(describing: chatText))")
 //                print("txtchat is ======----> \(txtChat)")
 //                print("key chat is =======--- \(key)")
-                print("chatMapKey is ..........  \(chatMapKey)--")
-        valueString = "\(txtChat ??  "")"
-            
-        
-            
-        
-        
+//                print("chatMapKey is ..........  \(chatMapKey)--")
+        view.endEditing(true)
+        if keyBoardStatus == true {
+            keyBoardStatus = false
+        }
     }
     
     @objc func videoTappSenderReceiver(_ sender: UITapGestureRecognizer) {
-        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
+//        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
 
         guard let indexPathRow = sender.view?.tag else {
             return
@@ -796,7 +796,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
         print("MY URL IS ++++ \(txtChat ?? "")")
     }
     @objc func imageTappSenderReceiver(_ sender: UITapGestureRecognizer) {
-        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
+//        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
 
         guard let indexPathRow = sender.view?.tag else {
             return
@@ -813,7 +813,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
         imageShow(url:txtChat! as! String)
     }
     @objc func messageTapp(_ sender: UITapGestureRecognizer) {
-        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
+//        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
 
         guard let indexPathRow = sender.view?.tag else {
             return
@@ -1737,6 +1737,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
             parameters.backgroundColor = .clear
             forwardChat = "\(chatText?["\(userNumberKey.replacingOccurrences(of: "chatPhoto", with: "text"))"] ?? "")"
             forwardChatPhoto = "\(chatText?["\(userNumberKey)"] ?? "")"
+            let url = URL(string: forwardChatPhoto)
+            uiimage.kf.setImage(with: url)
             forwardChatKey = "\(phones)"
             forwardCell = "SenderImageChatCell"
             print("SenderImageChatCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
@@ -1878,7 +1880,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
             forwardChat = "\(chatText?["\(phones)"] ?? "")"
             forwardChatKey = "\(phones)"
             print("SenderReplyViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) | ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey) ")
-        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+            return UITargetedPreview(view: cell.viewC, parameters: parameters)
         } else {
             
             let cell = chatTable.cellForRow(at: indexPath) as? ImageTableViewCell
@@ -1895,8 +1897,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                         print("OKOKKOOOOK")
                         forwardChat = "\(chatText?["+\(checking[i])text"] ?? "")"
                         forwardChatPhoto = "\(chatText?["+\(checking[i])chatPhoto"] ?? "")"
-                        
-//                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+                        let url = URL(string: forwardChatPhoto)
+                        uiimage.kf.setImage(with: url)
+                        //                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
                         forwardChatKey = "\(phones)"
                         break
                     }
@@ -1904,8 +1907,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
             } else {
                 forwardChat = "\(chatText?["\(receiverUserid)text"] ?? "")"
                 forwardChatPhoto = "\(chatText?["\(receiverUserid)chatPhoto"] ?? "")"
-                
-//                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+                let url = URL(string: forwardChatPhoto)
+                uiimage.kf.setImage(with: url)
+                //                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
                 forwardChatKey = "\(phones)"
                 
             }
@@ -1914,52 +1918,82 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
         }
         
     }
-     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-         let chat = chatMap[indexPath.row]
-         let userNumberKey = chatMapKey[indexPath.row]
-         let uniqueKey = key[indexPath.row]
-         let chatText = chat[uniqueKey]
-         let txtChat = chatText?[userNumberKey]
-         let abc = chatText?[userNumberKey]  as? [String : Any]
-         // Selected Drug and notes
-         var titleString = "\(uniqueKey)"
-         print("key", titleString)
-            return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil) { _ in
-                return UIMenu(title: "", children: [
-                    UIAction(title: "Forward",
-                      image: UIImage(systemName: "square.and.arrow.up.fill")) { action in
-                      // Perform action
-                          let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCodeForward") as? UserDetailsCodeForward
-                          print("users ",self.usersDetails)
-                          vc?.usersDetails = self.usersLists
-                          vc?.allUserOfContact = self.allUserOfContact
-                          vc?.phones = self.phones
-                          vc?.msgIdList = self.msgIdList
-                          vc?.uid = self.ui
-                          vc?.forwardChat = self.forwardChat
-                          vc?.forwardChatVideo = self.forwardChatVideo
-                          vc?.forwardChatPhoto = self.forwardChatPhoto
-                          vc?.forwardChatKey = self.forwardChatKey
-                          
-                          self.navigationController?.present(vc!, animated: true, completion: nil)
-                    },
-                    UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { action in
-                        print("Delete")
-                        let ref = Database.database().reference().child("Chats").child("\(self.mid)").child("chatting").child("\(uniqueKey)")
-
-                        ref.setValue(nil)
-                        self.chatMap.remove(at: indexPath.row)
-                        self.chatMapKey.remove(at: indexPath.row)
-                        self.key.remove(at: indexPath.row)
-//                        self.data.remove(at: indexPath.row)
-                        self.chatTable.deleteRows(at: [indexPath], with: .automatic)
-                        self.chatTable.reloadData()
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let chat = chatMap[indexPath.row]
+        let userNumberKey = chatMapKey[indexPath.row]
+        let uniqueKey = key[indexPath.row]
+        let chatText = chat[uniqueKey]
+        let txtChat = chatText?[userNumberKey]
+        let abc = chatText?[userNumberKey]  as? [String : Any]
+        // Selected Drug and notes
+        var titleString = "\(uniqueKey)"
+        print("key", titleString)
+        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil) { _ in
+            return UIMenu(title: "", children: [
+                UIAction(title: "Save", image: UIImage(systemName: "square.and.arrow.down")) { [self] action in
+                    if forwardChatVideo != "" {
+                        DispatchQueue.global(qos: .background).async {
+                            if let url = URL(string: forwardChatVideo), let urIData = NSData(contentsOf: url) {
+                                let documentsPath=NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                                                      .userDomainMask, true)[0];
+                                let filePath="\(documentsPath)/\(UUID().uuidString).MOV"
+                                DispatchQueue.main.async{
+                                    urIData.write(toFile: filePath, atomically: true)
+                                    PHPhotoLibrary.shared().performChanges({
+                                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL:URL(
+                                            fileURLWithPath: filePath))
+                                    }) { completed, error in
+                                        if completed {
+                                            print("Video is saved!")
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                ])
-            }
+                    else if forwardChatPhoto != "" {
+                        
+                        UIImageWriteToSavedPhotosAlbum(uiimage.image!, self, #selector(image(_:withPotentialError:contextInfo:)), nil)
+                    }
+                },
+                UIAction(title: "Forward",
+                         image: UIImage(systemName: "arrowshape.turn.up.right")) { action in
+                             // Perform action
+                             let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCodeForward") as? UserDetailsCodeForward
+                             print("users ",self.usersDetails)
+                             vc?.usersDetails = self.usersLists
+                             vc?.allUserOfContact = self.allUserOfContact
+                             vc?.phones = self.phones
+                             vc?.msgIdList = self.msgIdList
+                             vc?.uid = self.ui
+                             vc?.forwardChat = self.forwardChat
+                             vc?.forwardChatVideo = self.forwardChatVideo
+                             vc?.forwardChatPhoto = self.forwardChatPhoto
+                             vc?.forwardChatKey = self.forwardChatKey
+                             
+                             self.navigationController?.present(vc!, animated: true, completion: nil)
+                         },
+                UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { action in
+                    print("Delete")
+                    let ref = Database.database().reference().child("Chats").child("\(self.mid)").child("chatting").child("\(uniqueKey)")
+                    
+                    ref.setValue(nil)
+                    self.chatMap.remove(at: indexPath.row)
+                    self.chatMapKey.remove(at: indexPath.row)
+                    self.key.remove(at: indexPath.row)
+                    //                        self.data.remove(at: indexPath.row)
+                    self.chatTable.deleteRows(at: [indexPath], with: .automatic)
+                    self.chatTable.reloadData()
+                }
+            ])
         }
+    }
 
-
+    @objc func image(_ image: UIImage, withPotentialError error: NSErrorPointer, contextInfo: UnsafeRawPointer) {
+        let alert = UIAlertController(title: "Image Saved", message: "Image successfully saved to Photos library", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
      func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
          guard let indexPath = configuration.identifier as? IndexPath, let cell = chatTable.cellForRow(at: indexPath) as? SenderViewCell else {
              return nil
