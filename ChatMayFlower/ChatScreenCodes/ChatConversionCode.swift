@@ -746,6 +746,18 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatMap.count
     }
+    @objc func imgTap()
+        {
+            print("Hell World")
+//            let secondViewController = self.storyboard?.instantiateViewController(withIdentifier: "testViewController") as? testViewController
+//                let navController = UINavigationController(rootViewController: secondViewController!)
+//                navController.setViewControllers([secondViewController!], animated:true)
+//                self.revealViewController().setFront(navController, animated: true)
+//                revealViewController().pushFrontViewController(navController, animated: true)
+//            secondViewController?.movmentId = Id1stMove
+//            updateCount(itemId: Id1stMove)
+
+        }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let chat = chatMap[indexPath.row]
         let userNumberKey = chatMapKey[indexPath.row]
@@ -758,8 +770,61 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
 //                print("chatText =================......\(String(describing: chatText))")
 //                print("txtchat is ======----> \(txtChat)")
 //                print("key chat is =======--- \(key)")
-                print("chatMapKey is ..........  \(chatMapKey)")
-        valueString = "\(txtChat)"
+                print("chatMapKey is ..........  \(chatMapKey)--")
+        valueString = "\(txtChat ??  "")"
+            
+        
+            
+        
+        
+    }
+    
+    @objc func videoTappSenderReceiver(_ sender: UITapGestureRecognizer) {
+        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
+
+        guard let indexPathRow = sender.view?.tag else {
+            return
+        }
+        
+        let chat = chatMap[indexPathRow]
+        let userNumberKey = chatMapKey[indexPathRow]
+        let uniqueKey = key[indexPathRow]
+        let chatText = chat[uniqueKey]
+        let txtChat = chatText?[userNumberKey]
+        
+        videoPlayer(videoUrl: txtChat! as! String)
+        print("MY URL IS ++++ \(txtChat ?? "")")
+    }
+    @objc func imageTappSenderReceiver(_ sender: UITapGestureRecognizer) {
+        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
+
+        guard let indexPathRow = sender.view?.tag else {
+            return
+        }
+        
+        let chat = chatMap[indexPathRow]
+        let userNumberKey = chatMapKey[indexPathRow]
+        let uniqueKey = key[indexPathRow]
+        let chatText = chat[uniqueKey]
+        let txtChat = chatText?[userNumberKey]
+        
+        keyBoardStatus = true
+        view.endEditing(true)
+        imageShow(url:txtChat! as! String)
+    }
+    @objc func messageTapp(_ sender: UITapGestureRecognizer) {
+        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
+
+        guard let indexPathRow = sender.view?.tag else {
+            return
+        }
+        
+        let chat = chatMap[indexPathRow]
+        let userNumberKey = chatMapKey[indexPathRow]
+        let uniqueKey = key[indexPathRow]
+        let chatText = chat[uniqueKey]
+        let txtChat = chatText?[userNumberKey]
+        
         for i in 0...key.count-1 {
             if key[i] == userNumberKey {
                 //                print("userNumberKey is =====-------> \(userNumberKey)")
@@ -776,19 +841,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                 }
                 break
             }
-        }
-        
-        
-        if userNumberKey == "\(phoneid)chatVideo" || userNumberKey == "\(receiverid)chatVideo" || userNumberKey.contains("chatVideo") {
-            videoPlayer(videoUrl: txtChat! as! String)
-                        print("MY URL IS ++++ \(txtChat)")
-            
-        }else if userNumberKey == "\(phoneid)chatPhoto" || userNumberKey == "\(receiverid)chatPhoto" || userNumberKey.contains("chatPhoto") {
-            keyBoardStatus = true
-            view.endEditing(true)
-            imageShow(url:txtChat! as! String)
-            //            print("Image Url is \(txtChat)")
-        }else {
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -881,6 +933,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                     
                     if chatText?["\(phoneid)"] == nil {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyImageCell") as? ReceiverReplyImageCell
+                        let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
+                        cell?.viewC.addGestureRecognizer(tapGesture)
+                        cell?.viewC.tag = indexPath.row
                         if groupK == "yes" {
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
@@ -962,6 +1017,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                         return cell!
                     } else {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyImageCell") as? SenderReplyImageCell
+                        let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
+                        cell?.viewC.addGestureRecognizer(tapGesture)
+                        cell?.viewC.tag = indexPath.row
                         if groupK == "yes" {
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
@@ -1025,6 +1083,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                 } else if abc?["\(receiverid)chatVideo"] != nil || abc?["\(phoneid)chatVideo"] != nil {
                     if chatText?["\(phoneid)"] == nil {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyImageCell") as? ReceiverReplyImageCell
+                        let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
+                        cell?.viewC.addGestureRecognizer(tapGesture)
+                        cell?.viewC.tag = indexPath.row
 //                        print("Of course jii \(chatText?["\(receiverid)"])")
                         if groupK == "yes" {
                             let checking = mid.split(separator: "+")
@@ -1106,7 +1167,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                         
                     } else {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyImageCell") as? SenderReplyImageCell
-                        
+                        let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
+                        cell?.viewC.addGestureRecognizer(tapGesture)
+                        cell?.viewC.tag = indexPath.row
                         if groupK == "yes" {
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
@@ -1166,6 +1229,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                 else if chatText?["\(phoneid)"] == nil {
 //                    print("Message Reply of receiver is \(abc?["\(receiverid)"])")
                     let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyViewCell") as? ReceiverReplyViewCell
+                    let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
+                    cell?.viewC.addGestureRecognizer(tapGesture)
+                    cell?.viewC.tag = indexPath.row
                     if abc?["\(receiverid)"] == nil{
                         cell?.receiverMessages.text = abc?["\(phoneid)"] as? String
                         cell?.user.text = "You"
@@ -1307,6 +1373,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                 else if chatText?["\(receiverid)"] == nil {
 //                    print("Message Reply of sender is \(abc?["\(phoneid)"])")
                     let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyViewCell") as? SenderReplyViewCell
+                    let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
+                    cell?.viewC.addGestureRecognizer(tapGesture)
+                    cell?.viewC.tag = indexPath.row
                     if abc?["\(phoneid)"] == nil {
                         
                         cell?.senderMessages.text = abc?["\(receiverid)"] as? String
@@ -1382,6 +1451,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                         print("txtchat == \(receiverid)")
                         if txtChat as! String != "" {
                             let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
+                            let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.imageTappSenderReceiver))
+                            cell?.viewC.addGestureRecognizer(tapGesture)
+                            cell?.viewC.tag = indexPath.row
                             if receiverid.contains("text") || receiverid.contains("chatPhoto") {
                                 if receiverid.contains("text") {
                                     cell?.receiverComentImage.text = chatText?["\(receiverid)"] as? String
@@ -1424,6 +1496,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                             
                             let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderImageChatCell") as? SenderImageChatCell
                             cell?.senderImageComment.text = chatText?["\(phoneid)text"] as? String
+                            let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.imageTappSenderReceiver))
+                            cell?.viewC.addGestureRecognizer(tapGesture)
+                            cell?.viewC.tag = indexPath.row
                             if groupK == "yes" {
 //                                cell?.senderNumber.text = "You"
                             }
@@ -1439,6 +1514,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                         if txtChat as! String != "" {
                             let cell = chatTable.dequeueReusableCell(withIdentifier: "ImageTableViewCell") as? ImageTableViewCell
                             let url = URL(string: txtChat as! String)
+                            let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.imageTappSenderReceiver))
+                            cell?.viewC.addGestureRecognizer(tapGesture)
+                            cell?.viewC.tag = indexPath.row
                             cell?.photos.kf.setImage(with: url)
                             if groupK == "yes" {
                                 cell?.receiverNumber.text = "\(userNumberKey.replacingOccurrences(of: "chatPhoto", with: ""))"
@@ -1478,6 +1556,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
 //                            print("\(txtChat)")
                             let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverVideoCell") as? ReceiverVideoCell
                             cell?.confi(videoUrl: txtChat  as! String)
+                            let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.videoTappSenderReceiver))
+                            cell?.viewC.addGestureRecognizer(tapGesture)
+                            cell?.viewC.tag = indexPath.row
                             if groupK == "yes" {
                                 cell?.receiverNumber.text = "\(userNumberKey.replacingOccurrences(of: "chatVideo", with: ""))"
 //                                if nameString != "" {
@@ -1514,6 +1595,10 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                             //                        print("MY VIDEO URL IS -------\(txtChat)")
                             let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderVideoCell") as? SenderVideoCell
                             cell?.confi(videoUrl: txtChat  as! String)
+                            let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.videoTappSenderReceiver))
+                            cell?.viewC.addGestureRecognizer(tapGesture)
+                            cell?.viewC.tag = indexPath.row
+                            cell?.viewC.isUserInteractionEnabled = true
                             if groupK == "yes" {
 //                                cell?.senderNumber.text = "You"
                             }
@@ -1563,6 +1648,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                 else {
                     if phoneid == userNumberKey || "\(phoneid)text" == userNumberKey {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderViewCell", for: indexPath) as? SenderViewCell
+                        let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
+                        cell?.viewC.addGestureRecognizer(tapGesture)
+                        cell?.viewC.tag = indexPath.row
                         cell?.senderMessage.text = "\(txtChat!)"
                         cell?.selectionStyle = .none
                         if groupK == "yes" {
@@ -1578,7 +1666,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverViewCell", for: indexPath) as? ReceiverViewCell
                         cell?.receiverMessages.text = "\(txtChat!)"
                         cell?.selectionStyle = .none
-                        
+                        let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
+                        cell?.viewC.addGestureRecognizer(tapGesture)
+                        cell?.viewC.tag = indexPath.row
                         if groupK == "yes" {
                             cell?.receiverNumber.text = "\(userNumberKey)"
                             _ = allUserOfContact.filter {user in

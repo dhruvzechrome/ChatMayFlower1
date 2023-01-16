@@ -538,7 +538,6 @@
                                                             <outlet property="senderPlay" destination="zmd-B5-sz5" id="Hce-kc-CyT"/>
                                                             <outlet property="senderVideo" destination="kn2-Gp-haa" id="ZVq-JB-upT"/>
                                                             <outlet property="viewC" destination="P90-ZC-o28" id="rum-iq-DKW"/>
-                                                            <segue destination="B8C-2j-r54" kind="presentation" id="0VE-AK-Pjj"/>
                                                         </connections>
                                                     </tableViewCell>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleAspectFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImageTableViewCell" rowHeight="264" id="Gft-Si-iXI" customClass="ImageTableViewCell" customModule="ChatMayFlower" customModuleProvider="target">
@@ -1400,6 +1399,7 @@
                         <outlet property="chatTable" destination="uSu-f3-s4y" id="ccv-zA-gWS"/>
                         <outlet property="titl" destination="pfj-pY-Itt" id="OYN-yT-1c6"/>
                         <segue destination="dgw-eF-e8n" kind="show" id="IVZ-XC-fnC"/>
+                        <segue destination="B8C-2j-r54" kind="presentation" id="5Pc-n7-10i"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KA1-BT-NDG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -3110,7 +3110,7 @@
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HqK-Bd-YwO">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
                                 <items>
-                                    <navigationItem title="Title" id="YHu-vX-rbL">
+                                    <navigationItem title="Forward Message" id="YHu-vX-rbL">
                                         <barButtonItem key="rightBarButtonItem" style="plain" systemItem="cancel" id="4RK-tR-p1G">
                                             <connections>
                                                 <action selector="cancel:" destination="B8C-2j-r54" id="0bK-Bv-dnK"/>
