@@ -314,6 +314,8 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
 //        print("statusViedeo ... \(valll?["\(frd["statuskey"] ?? "")"] ?? "")")
 //        print("cnt  \(cnt)")
 //        print("Index Path \(indexPath.row)")
+        cell?.videoViewer.isHidden = true
+        cell?.videoImage.isHidden = true
         for i in 0...statuskey.count-1 {
             if valll?["\(statuskey[i])"] != nil {
                 if !seenStatuskey.contains("\(statuskey[i])") {
@@ -324,11 +326,15 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                     cell?.statusComment.text = statuscmt
                     
                     if photo?["statusVideo"] == nil {
+                        print("Photo")
+                        cell?.videoImage.isHidden = false
                         cell?.videoViewer.isHidden = true
                         url = URL(string: "\(photo?["statusPhoto"] ?? "")")
                         uiimage.kf.setImage(with: url)
                         cell?.videoImage.kf.setImage(with: url)
+                        
                     } else {
+                        cell?.videoViewer.isHidden = false
                         cell?.videoImage.isHidden = true
                         print("video")
                         videoUrl = "\(photo?["statusVideo"] ?? "")"

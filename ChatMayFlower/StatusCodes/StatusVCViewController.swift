@@ -290,15 +290,17 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             let keyS = frd["statuskey"]
             let valll = frd["status"] as? [String:Any]
             let img = valll?["\(keyS!)"] as? [String:String]
-            print("datas    --- --- ---    \(valll)")
+            print("datas    --- --- ---    \(img)")
             let cell = statusTableView.dequeueReusableCell(withIdentifier: "StatusViewCell") as? StatusViewCell
             cell?.statusImage.image = UIImage(systemName: "circle")
+            
             if img?["statusPhoto"] != nil {
                 let url = URL(string: img?["statusPhoto"] ?? "")
+                print("Photo ")
                 cell?.statusImage.kf.setImage(with: url)
             } else {
-                let url = URL(string: frd["statusVideo"]! as! String)!
-                cell?.statusImage.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
+                let url = URL(string: img?["statusVideo"] ?? "" )
+                cell?.statusImage.kf.setImage(with: AVAssetImageDataProvider(assetURL: url!, seconds: 1))
             }
             cell?.userName.text = frd["Name"] as? String
             return cell!

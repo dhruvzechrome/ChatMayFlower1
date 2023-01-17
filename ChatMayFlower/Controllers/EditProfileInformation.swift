@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseStorage
 import Kingfisher
+import FirebaseDatabase
 class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
     @IBOutlet weak var backgroundSv: UIScrollView!
@@ -103,8 +104,15 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
         guard didselectedImage != nil else{
             if tName.text != "" && tPhoneNumber.text != ""{
                 
-                
-                
+                let ref = Database.database().reference().child("Contact List").child(number)
+                ref.updateChildValues(["Phone number": number,"Name":tName.text!,"photo url":"","location" : ""], withCompletionBlock: { error, _ in
+                    guard error == nil else {
+                        print("Failed to write data")
+                        return
+                    }
+                    print("data written seccess")
+
+                })
                 DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.number,name: tName.text!,profileImage : photoUrlPath, location: filename!))
                 //                let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
                 //                vc?.phones = self.number
@@ -146,7 +154,16 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
                         } else {
                             // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
                             urlpth = "\(url!)"
-                            DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.number,name: tName.text!,profileImage : "\(urlpth)", location: filename!))
+                            let ref = Database.database().reference().child("Contact List").child(number)
+                            ref.updateChildValues(["Phone number": number,"Name":tName.text!,"photo url":"\(urlpth)","location" : filename!], withCompletionBlock: { error, _ in
+                                guard error == nil else {
+                                    print("Failed to write data")
+                                    return
+                                }
+                                print("data written seccess")
+
+                            })
+                            
                             self.navigationController?.popViewController(animated: true)
                         }
                         
