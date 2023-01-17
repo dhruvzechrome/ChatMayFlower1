@@ -744,7 +744,7 @@ extension ChatConversionCode : UITextFieldDelegate{
 
 
 // MARK: - Delegate Methods of TableView
-extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
+extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UIContextMenuInteractionDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatMap.count
     }
@@ -843,6 +843,265 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
             }
         }
     }
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
+          configurationForMenuAtLocation location: CGPoint)
+          -> UIContextMenuConfiguration? {
+              let indexPath = interaction.view?.tag
+              let chat = chatMap[indexPath!]
+              let userNumberKey = chatMapKey[indexPath!]
+              let uniqueKey = key[indexPath!]
+              let chatText = chat[uniqueKey]
+              let txtChat = chatText?[userNumberKey]
+              let abc = chatText?[userNumberKey]  as? [String : Any]
+              // Selected Drug and notes
+              var titleString = "\(uniqueKey)"
+              let indexPathRow = IndexPath(row: indexPath!, section: 0)
+              
+              if let cell = chatTable.cellForRow(at: indexPathRow) as? SenderViewCell {
+                  forwardChat = ""
+                  forwardChatPhoto = ""
+                  forwardChatVideo = ""
+                  forwardChatKey = ""
+                  forwardChat = "\(txtChat ?? "")"
+                  forwardChatKey = "\(phones)"
+                  forwardCell = "SenderViewCell"
+                  print("SenderViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+                  
+              }
+              if let cell = chatTable.cellForRow(at: indexPathRow) as? SenderImageChatCell {
+                  forwardChat = ""
+                  forwardChatPhoto = ""
+                  forwardChatVideo = ""
+                  forwardChatKey = ""
+                  forwardChat = "\(chatText?["\(userNumberKey.replacingOccurrences(of: "chatPhoto", with: "text"))"] ?? "")"
+                  forwardChatPhoto = "\(chatText?["\(userNumberKey)"] ?? "")"
+                  let url = URL(string: forwardChatPhoto)
+                  uiimage.kf.setImage(with: url)
+                  forwardChatKey = "\(phones)"
+                  forwardCell = "SenderImageChatCell"
+                  print("SenderImageChatCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+              }
+              if let cell = chatTable.cellForRow(at: indexPathRow) as? SenderReplyImageCell {
+                  forwardChat = ""
+                  forwardChatPhoto = ""
+                  forwardChatVideo = ""
+                  forwardChatKey = ""
+                  forwardChat = "\(chatText?["\(phones)"] ?? "")"
+                  forwardChatKey = "\(phones)"
+                  forwardCell = "SenderReplyImageCell"
+                  print("SenderReplyImageCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+              }
+              if let cell = chatTable.cellForRow(at: indexPathRow) as? SenderVideoCell {
+                  forwardChat = ""
+                  forwardChatPhoto = ""
+                  forwardChatVideo = ""
+                  forwardChatKey = ""
+                  forwardChatVideo = "\(chatText?["\(userNumberKey)"] ?? "")"
+                  forwardChatKey = phones
+                  print("SenderVideoCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+              }
+              if let cell = chatTable.cellForRow(at: indexPathRow) as? ReceiverViewCell {
+                  forwardChat = ""
+                  forwardChatPhoto = ""
+                  forwardChatVideo = ""
+                  forwardChatKey = ""
+                  if groupK == "yes" {
+                      let checking = mid.split(separator: "+")
+                      for i in  0...checking.count-1 {
+                          if chatText?["+\(checking[i])"] != nil {
+                              print("OKOKKOOOOK")
+                              forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+                              forwardChatKey = "\(phones)"
+                              break
+                          }
+                      }
+                  } else {
+                      forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+                      forwardChatKey = "\(phones)"
+                      
+                  }
+                  print("ReceiverViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+              }
+              if let cell = chatTable.cellForRow(at: indexPathRow) as? ReceiverReplyViewCell {
+                  forwardChat = ""
+                  forwardChatPhoto = ""
+                  forwardChatVideo = ""
+                  forwardChatKey = ""
+                  if groupK == "yes" {
+                      let checking = mid.split(separator: "+")
+                      for i in  0...checking.count-1 {
+                          if chatText?["+\(checking[i])"] != nil {
+                              print("OKOKKOOOOK")
+                              forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+                              forwardChatKey = "\(phones)"
+                              break
+                          }
+                      }
+                  } else {
+                      forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+                      forwardChatKey = "\(phones)"
+                      
+                  }
+                  print("ReceiverReplyViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+              }
+              if let cell = chatTable.cellForRow(at: indexPathRow) as? ReceiverVideoCell {
+                  forwardChat = ""
+                  forwardChatPhoto = ""
+                  forwardChatVideo = ""
+                  forwardChatKey = ""
+                  if groupK == "yes" {
+                      let checking = mid.split(separator: "+")
+                      for i in  0...checking.count-1 {
+                          if chatText?["+\(checking[i])"] != nil {
+                              print("OKOKKOOOOK")
+                              forwardChatVideo = "\(chatText?["+\(checking[i])chatVideo"] ?? "")"
+                              forwardChatKey = "\(phones)"
+                              break
+                          }
+                      }
+                  } else {
+                      forwardChatVideo = "\(chatText?["\(receiverUserid)"] ?? "")"
+                      forwardChatKey = "\(phones)"
+                      
+                  }
+                  print("ReceiverVideoCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+              }
+              if let cell = chatTable.cellForRow(at: indexPathRow) as? ReceiverReplyImageCell {
+                  forwardChat = ""
+                  forwardChatPhoto = ""
+                  forwardChatVideo = ""
+                  forwardChatKey = ""
+                  if groupK == "yes" {
+                      let checking = mid.split(separator: "+")
+                      for i in  0...checking.count-1 {
+                          if chatText?["+\(checking[i])"] != nil {
+                              print("OKOKKOOOOK")
+                              forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+                              forwardChatKey = "\(phones)"
+                              break
+                          }
+                      }
+                  } else {
+                      forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+                      forwardChatKey = "\(phones)"
+                      
+                  }
+                  forwardCell = "ReceiverReplyImageCell"
+                  print("ReceiverReplyImageCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+              }
+              if let cell = chatTable.cellForRow(at: indexPathRow) as? SenderReplyViewCell {
+                  forwardChat = ""
+                  forwardChatPhoto = ""
+                  forwardChatVideo = ""
+                  forwardChatKey = ""
+                  forwardChat = "\(chatText?["\(phones)"] ?? "")"
+                  forwardChatKey = "\(phones)"
+                  print("SenderReplyViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) | ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey) ")
+              }
+                  
+              if  let cell = chatTable.cellForRow(at: indexPathRow) as? ImageTableViewCell {
+                  forwardChat = ""
+                  forwardChatPhoto = ""
+                  forwardChatVideo = ""
+                  forwardChatKey = ""
+                  if groupK == "yes" {
+                      let checking = mid.split(separator: "+")
+                      for i in  0...checking.count-1 {
+                          if chatText?["+\(checking[i])chatPhoto"] != nil || chatText?["+\(checking[i])text"] != nil {
+                              print("OKOKKOOOOK")
+                              forwardChat = "\(chatText?["+\(checking[i])text"] ?? "")"
+                              forwardChatPhoto = "\(chatText?["+\(checking[i])chatPhoto"] ?? "")"
+                              let url = URL(string: forwardChatPhoto)
+                              uiimage.kf.setImage(with: url)
+                              //                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+                              forwardChatKey = "\(phones)"
+                              break
+                          }
+                      }
+                  } else {
+                      forwardChat = "\(chatText?["\(receiverUserid)text"] ?? "")"
+                      forwardChatPhoto = "\(chatText?["\(receiverUserid)chatPhoto"] ?? "")"
+                      let url = URL(string: forwardChatPhoto)
+                      uiimage.kf.setImage(with: url)
+                      //                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+                      forwardChatKey = "\(phones)"
+                      
+                  }
+                  print("ImageTableViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+              }
+              
+              //
+              
+              let save = UIAction(title: "Save", image: UIImage(systemName: "square.and.arrow.down")) { [self] action in
+                  if forwardChatVideo != "" {
+                      DispatchQueue.global(qos: .background).async {
+                          if let url = URL(string: forwardChatVideo), let urIData = NSData(contentsOf: url) {
+                              let documentsPath=NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                                                    .userDomainMask, true)[0];
+                              let filePath="\(documentsPath)/\(UUID().uuidString).MOV"
+                              DispatchQueue.main.async{
+                                  urIData.write(toFile: filePath, atomically: true)
+                                  PHPhotoLibrary.shared().performChanges({
+                                      PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL:URL(
+                                          fileURLWithPath: filePath))
+                                  }) { completed, error in
+                                      if completed {
+                                          print("Video is saved!")
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+                  else if forwardChatPhoto != "" {
+                      
+                      UIImageWriteToSavedPhotosAlbum(uiimage.image!, self, #selector(image(_:withPotentialError:contextInfo:)), nil)
+                  }
+              }
+              
+              let forward = UIAction(title: "Forward",
+                                   image: UIImage(systemName: "arrowshape.turn.up.right")) { action in
+                                       // Perform action
+                                       let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCodeForward") as? UserDetailsCodeForward
+                                       print("users ",self.usersDetails)
+                                       vc?.usersDetails = self.usersLists
+                                       vc?.allUserOfContact = self.allUserOfContact
+                                       vc?.phones = self.phones
+                                       vc?.msgIdList = self.msgIdList
+                                       vc?.uid = self.ui
+                                       vc?.forwardChat = self.forwardChat
+                                       vc?.forwardChatVideo = self.forwardChatVideo
+                                       vc?.forwardChatPhoto = self.forwardChatPhoto
+                                       vc?.forwardChatKey = self.forwardChatKey
+                                       
+                                       self.navigationController?.present(vc!, animated: true, completion: nil)
+                                   }
+
+              let delete = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { action in
+                  print("Delete")
+                  let ref = Database.database().reference().child("Chats").child("\(self.mid)").child("chatting").child("\(uniqueKey)")
+                  
+                  ref.setValue(nil)
+                  self.chatMap.remove(at: indexPath!)
+                  self.chatMapKey.remove(at: indexPath!)
+                  self.key.remove(at: indexPath!)
+                  //                        self.data.remove(at: indexPath.row)
+                  let index = IndexPath(row: indexPath!, section: 0)
+                  self.chatTable.deleteRows(at: [index], with: .automatic)
+                  self.chatTable.reloadData()
+              }
+              if forwardChatPhoto != "" || forwardChatVideo != "" {
+                  return UIContextMenuConfiguration(identifier: nil,
+                                                    previewProvider: nil) { _ in
+                      UIMenu(title: "", children: [save, forward, delete])
+                  }
+              } else {
+                  return UIContextMenuConfiguration(identifier: nil,
+                                                    previewProvider: nil) { _ in
+                      UIMenu(title: "", children: [forward, delete])
+                  }
+              }
+        }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row < chatMap.count {
             let chat = chatMap[indexPath.row]
@@ -936,6 +1195,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                         let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
                         cell?.viewC.addGestureRecognizer(tapGesture)
                         cell?.viewC.tag = indexPath.row
+                        let interaction = UIContextMenuInteraction(delegate: self)
+                        cell?.viewC.addInteraction(interaction)
                         if groupK == "yes" {
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
@@ -1020,6 +1281,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                         let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
                         cell?.viewC.addGestureRecognizer(tapGesture)
                         cell?.viewC.tag = indexPath.row
+                        let interaction = UIContextMenuInteraction(delegate: self)
+                        cell?.viewC.addInteraction(interaction)
                         if groupK == "yes" {
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
@@ -1086,6 +1349,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                         let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
                         cell?.viewC.addGestureRecognizer(tapGesture)
                         cell?.viewC.tag = indexPath.row
+                        let interaction = UIContextMenuInteraction(delegate: self)
+                        cell?.viewC.addInteraction(interaction)
 //                        print("Of course jii \(chatText?["\(receiverid)"])")
                         if groupK == "yes" {
                             let checking = mid.split(separator: "+")
@@ -1170,6 +1435,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                         let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
                         cell?.viewC.addGestureRecognizer(tapGesture)
                         cell?.viewC.tag = indexPath.row
+                        let interaction = UIContextMenuInteraction(delegate: self)
+                        cell?.viewC.addInteraction(interaction)
                         if groupK == "yes" {
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
@@ -1232,6 +1499,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                     let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
                     cell?.viewC.addGestureRecognizer(tapGesture)
                     cell?.viewC.tag = indexPath.row
+                    let interaction = UIContextMenuInteraction(delegate: self)
+                    cell?.viewC.addInteraction(interaction)
                     if abc?["\(receiverid)"] == nil{
                         cell?.receiverMessages.text = abc?["\(phoneid)"] as? String
                         cell?.user.text = "You"
@@ -1376,6 +1645,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                     let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
                     cell?.viewC.addGestureRecognizer(tapGesture)
                     cell?.viewC.tag = indexPath.row
+                    let interaction = UIContextMenuInteraction(delegate: self)
+                    cell?.viewC.addInteraction(interaction)
                     if abc?["\(phoneid)"] == nil {
                         
                         cell?.senderMessages.text = abc?["\(receiverid)"] as? String
@@ -1454,6 +1725,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                             let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.imageTappSenderReceiver))
                             cell?.viewC.addGestureRecognizer(tapGesture)
                             cell?.viewC.tag = indexPath.row
+                            let interaction = UIContextMenuInteraction(delegate: self)
+                            cell?.viewC.addInteraction(interaction)
                             if receiverid.contains("text") || receiverid.contains("chatPhoto") {
                                 if receiverid.contains("text") {
                                     cell?.receiverComentImage.text = chatText?["\(receiverid)"] as? String
@@ -1499,6 +1772,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                             let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.imageTappSenderReceiver))
                             cell?.viewC.addGestureRecognizer(tapGesture)
                             cell?.viewC.tag = indexPath.row
+                            let interaction = UIContextMenuInteraction(delegate: self)
+                            cell?.viewC.addInteraction(interaction)
                             if groupK == "yes" {
 //                                cell?.senderNumber.text = "You"
                             }
@@ -1517,6 +1792,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                             let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.imageTappSenderReceiver))
                             cell?.viewC.addGestureRecognizer(tapGesture)
                             cell?.viewC.tag = indexPath.row
+                            let interaction = UIContextMenuInteraction(delegate: self)
+                            cell?.viewC.addInteraction(interaction)
                             cell?.photos.kf.setImage(with: url)
                             if groupK == "yes" {
                                 cell?.receiverNumber.text = "\(userNumberKey.replacingOccurrences(of: "chatPhoto", with: ""))"
@@ -1559,6 +1836,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                             let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.videoTappSenderReceiver))
                             cell?.viewC.addGestureRecognizer(tapGesture)
                             cell?.viewC.tag = indexPath.row
+                            let interaction = UIContextMenuInteraction(delegate: self)
+                            cell?.viewC.addInteraction(interaction)
                             if groupK == "yes" {
                                 cell?.receiverNumber.text = "\(userNumberKey.replacingOccurrences(of: "chatVideo", with: ""))"
 //                                if nameString != "" {
@@ -1599,6 +1878,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                             cell?.viewC.addGestureRecognizer(tapGesture)
                             cell?.viewC.tag = indexPath.row
                             cell?.viewC.isUserInteractionEnabled = true
+                            let interaction = UIContextMenuInteraction(delegate: self)
+                            cell?.viewC.addInteraction(interaction)
                             if groupK == "yes" {
 //                                cell?.senderNumber.text = "You"
                             }
@@ -1651,6 +1932,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                         let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
                         cell?.viewC.addGestureRecognizer(tapGesture)
                         cell?.viewC.tag = indexPath.row
+                        let interaction = UIContextMenuInteraction(delegate: self)
+                        cell?.viewC.addInteraction(interaction)
                         cell?.senderMessage.text = "\(txtChat!)"
                         cell?.selectionStyle = .none
                         if groupK == "yes" {
@@ -1669,6 +1952,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
                         let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
                         cell?.viewC.addGestureRecognizer(tapGesture)
                         cell?.viewC.tag = indexPath.row
+                        let interaction = UIContextMenuInteraction(delegate: self)
+                        cell?.viewC.addInteraction(interaction)
                         if groupK == "yes" {
                             cell?.receiverNumber.text = "\(userNumberKey)"
                             _ = allUserOfContact.filter {user in
@@ -1701,310 +1986,310 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
         cell?.selectionStyle = .none
         return cell!
     }
-    func tableView(_ tableView: UITableView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        
-        guard let indexPath = configuration.identifier as? IndexPath else {
-            return nil
-        }
-        let chat = chatMap[indexPath.row]
-        let userNumberKey = chatMapKey[indexPath.row]
-        let uniqueKey = key[indexPath.row]
-        let chatText = chat[uniqueKey]
-        let txtChat = chatText?[userNumberKey]
-        let abc = chatText?[userNumberKey]  as? [String : Any]
-        print("txtChat \(txtChat)  UserNumberKay - \(userNumberKey) | UniqueKey - \(uniqueKey)")
-        print("Chattext \(chatText)")
-        if let cell = chatTable.cellForRow(at: indexPath) as? SenderViewCell {
-            forwardChat = ""
-            forwardChatPhoto = ""
-            forwardChatVideo = ""
-            forwardChatKey = ""
-            let parameters = UIPreviewParameters()
-            parameters.backgroundColor = .clear
-            forwardChat = "\(txtChat ?? "")"
-            forwardChatKey = "\(phones)"
-            forwardCell = "SenderViewCell"
-            print("SenderViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-            
-        return UITargetedPreview(view: cell.viewC, parameters: parameters)
-        }
-        if let cell = chatTable.cellForRow(at: indexPath) as? SenderImageChatCell {
-            forwardChat = ""
-            forwardChatPhoto = ""
-            forwardChatVideo = ""
-            forwardChatKey = ""
-            let parameters = UIPreviewParameters()
-            parameters.backgroundColor = .clear
-            forwardChat = "\(chatText?["\(userNumberKey.replacingOccurrences(of: "chatPhoto", with: "text"))"] ?? "")"
-            forwardChatPhoto = "\(chatText?["\(userNumberKey)"] ?? "")"
-            let url = URL(string: forwardChatPhoto)
-            uiimage.kf.setImage(with: url)
-            forwardChatKey = "\(phones)"
-            forwardCell = "SenderImageChatCell"
-            print("SenderImageChatCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-            return UITargetedPreview(view: cell.viewC, parameters: parameters)
-        }
-        if let cell = chatTable.cellForRow(at: indexPath) as? SenderReplyImageCell {
-            forwardChat = ""
-            forwardChatPhoto = ""
-            forwardChatVideo = ""
-            forwardChatKey = ""
-            let parameters = UIPreviewParameters()
-            parameters.backgroundColor = .clear
-            forwardChat = "\(chatText?["\(phones)"] ?? "")"
-            forwardChatKey = "\(phones)"
-            forwardCell = "SenderReplyImageCell"
-            print("SenderReplyImageCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-        return UITargetedPreview(view: cell.viewC, parameters: parameters)
-        }
-        if let cell = chatTable.cellForRow(at: indexPath) as? SenderVideoCell {
-            forwardChat = ""
-            forwardChatPhoto = ""
-            forwardChatVideo = ""
-            forwardChatKey = ""
-            let parameters = UIPreviewParameters()
-            parameters.backgroundColor = .clear
-            forwardChatVideo = "\(chatText?["\(userNumberKey)"] ?? "")"
-            forwardChatKey = phones
-            print("SenderVideoCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-        return UITargetedPreview(view: cell.viewC, parameters: parameters)
-        }
-        if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverViewCell {
-            forwardChat = ""
-            forwardChatPhoto = ""
-            forwardChatVideo = ""
-            forwardChatKey = ""
-            let parameters = UIPreviewParameters()
-            parameters.backgroundColor = .clear
-            if groupK == "yes" {
-                let checking = mid.split(separator: "+")
-                for i in  0...checking.count-1 {
-                    if chatText?["+\(checking[i])"] != nil {
-                        print("OKOKKOOOOK")
-                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
-                        forwardChatKey = "\(phones)"
-                        break
-                    }
-                }
-            } else {
-                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
-                forwardChatKey = "\(phones)"
-                
-            }
-            print("ReceiverViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-        return UITargetedPreview(view: cell.viewC, parameters: parameters)
-        }
-        if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverReplyViewCell {
-            forwardChat = ""
-            forwardChatPhoto = ""
-            forwardChatVideo = ""
-            forwardChatKey = ""
-            let parameters = UIPreviewParameters()
-            parameters.backgroundColor = .clear
-            if groupK == "yes" {
-                let checking = mid.split(separator: "+")
-                for i in  0...checking.count-1 {
-                    if chatText?["+\(checking[i])"] != nil {
-                        print("OKOKKOOOOK")
-                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
-                        forwardChatKey = "\(phones)"
-                        break
-                    }
-                }
-            } else {
-                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
-                forwardChatKey = "\(phones)"
-                
-            }
-            print("ReceiverReplyViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-        return UITargetedPreview(view: cell.viewC, parameters: parameters)
-        }
-        if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverVideoCell {
-            forwardChat = ""
-            forwardChatPhoto = ""
-            forwardChatVideo = ""
-            forwardChatKey = ""
-            let parameters = UIPreviewParameters()
-            parameters.backgroundColor = .clear
-            if groupK == "yes" {
-                let checking = mid.split(separator: "+")
-                for i in  0...checking.count-1 {
-                    if chatText?["+\(checking[i])"] != nil {
-                        print("OKOKKOOOOK")
-                        forwardChatVideo = "\(chatText?["+\(checking[i])chatVideo"] ?? "")"
-                        forwardChatKey = "\(phones)"
-                        break
-                    }
-                }
-            } else {
-                forwardChatVideo = "\(chatText?["\(receiverUserid)"] ?? "")"
-                forwardChatKey = "\(phones)"
-                
-            }
-            print("ReceiverVideoCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-        return UITargetedPreview(view: cell.viewC, parameters: parameters)
-        }
-        if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverReplyImageCell {
-            forwardChat = ""
-            forwardChatPhoto = ""
-            forwardChatVideo = ""
-            forwardChatKey = ""
-            let parameters = UIPreviewParameters()
-            parameters.backgroundColor = .clear
-            if groupK == "yes" {
-                let checking = mid.split(separator: "+")
-                for i in  0...checking.count-1 {
-                    if chatText?["+\(checking[i])"] != nil {
-                        print("OKOKKOOOOK")
-                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
-                        forwardChatKey = "\(phones)"
-                        break
-                    }
-                }
-            } else {
-                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
-                forwardChatKey = "\(phones)"
-                
-            }
-            forwardCell = "ReceiverReplyImageCell"
-            print("ReceiverReplyImageCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-        return UITargetedPreview(view: cell.viewC, parameters: parameters)
-        }
-        if let cell = chatTable.cellForRow(at: indexPath) as? SenderReplyViewCell {
-            forwardChat = ""
-            forwardChatPhoto = ""
-            forwardChatVideo = ""
-            forwardChatKey = ""
-            let parameters = UIPreviewParameters()
-            parameters.backgroundColor = .clear
-            forwardChat = "\(chatText?["\(phones)"] ?? "")"
-            forwardChatKey = "\(phones)"
-            print("SenderReplyViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) | ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey) ")
-            return UITargetedPreview(view: cell.viewC, parameters: parameters)
-        } else {
-            
-            let cell = chatTable.cellForRow(at: indexPath) as? ImageTableViewCell
-            forwardChat = ""
-            forwardChatPhoto = ""
-            forwardChatVideo = ""
-            forwardChatKey = ""
-            let parameters = UIPreviewParameters()
-            parameters.backgroundColor = .clear
-            if groupK == "yes" {
-                let checking = mid.split(separator: "+")
-                for i in  0...checking.count-1 {
-                    if chatText?["+\(checking[i])chatPhoto"] != nil || chatText?["+\(checking[i])text"] != nil {
-                        print("OKOKKOOOOK")
-                        forwardChat = "\(chatText?["+\(checking[i])text"] ?? "")"
-                        forwardChatPhoto = "\(chatText?["+\(checking[i])chatPhoto"] ?? "")"
-                        let url = URL(string: forwardChatPhoto)
-                        uiimage.kf.setImage(with: url)
-                        //                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
-                        forwardChatKey = "\(phones)"
-                        break
-                    }
-                }
-            } else {
-                forwardChat = "\(chatText?["\(receiverUserid)text"] ?? "")"
-                forwardChatPhoto = "\(chatText?["\(receiverUserid)chatPhoto"] ?? "")"
-                let url = URL(string: forwardChatPhoto)
-                uiimage.kf.setImage(with: url)
-                //                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
-                forwardChatKey = "\(phones)"
-                
-            }
-            print("ImageTableViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-            return UITargetedPreview(view: cell!.viewC, parameters: parameters)
-        }
-        
-    }
-    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let chat = chatMap[indexPath.row]
-        let userNumberKey = chatMapKey[indexPath.row]
-        let uniqueKey = key[indexPath.row]
-        let chatText = chat[uniqueKey]
-        let txtChat = chatText?[userNumberKey]
-        let abc = chatText?[userNumberKey]  as? [String : Any]
-        // Selected Drug and notes
-        var titleString = "\(uniqueKey)"
-        print("key", titleString)
-        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil) { _ in
-            return UIMenu(title: "", children: [
-                UIAction(title: "Save", image: UIImage(systemName: "square.and.arrow.down")) { [self] action in
-                    if forwardChatVideo != "" {
-                        DispatchQueue.global(qos: .background).async {
-                            if let url = URL(string: forwardChatVideo), let urIData = NSData(contentsOf: url) {
-                                let documentsPath=NSSearchPathForDirectoriesInDomains(.documentDirectory,
-                                                                                      .userDomainMask, true)[0];
-                                let filePath="\(documentsPath)/\(UUID().uuidString).MOV"
-                                DispatchQueue.main.async{
-                                    urIData.write(toFile: filePath, atomically: true)
-                                    PHPhotoLibrary.shared().performChanges({
-                                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL:URL(
-                                            fileURLWithPath: filePath))
-                                    }) { completed, error in
-                                        if completed {
-                                            print("Video is saved!")
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else if forwardChatPhoto != "" {
-                        
-                        UIImageWriteToSavedPhotosAlbum(uiimage.image!, self, #selector(image(_:withPotentialError:contextInfo:)), nil)
-                    }
-                },
-                UIAction(title: "Forward",
-                         image: UIImage(systemName: "arrowshape.turn.up.right")) { action in
-                             // Perform action
-                             let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCodeForward") as? UserDetailsCodeForward
-                             print("users ",self.usersDetails)
-                             vc?.usersDetails = self.usersLists
-                             vc?.allUserOfContact = self.allUserOfContact
-                             vc?.phones = self.phones
-                             vc?.msgIdList = self.msgIdList
-                             vc?.uid = self.ui
-                             vc?.forwardChat = self.forwardChat
-                             vc?.forwardChatVideo = self.forwardChatVideo
-                             vc?.forwardChatPhoto = self.forwardChatPhoto
-                             vc?.forwardChatKey = self.forwardChatKey
-                             
-                             self.navigationController?.present(vc!, animated: true, completion: nil)
-                         },
-                UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { action in
-                    print("Delete")
-                    let ref = Database.database().reference().child("Chats").child("\(self.mid)").child("chatting").child("\(uniqueKey)")
-                    
-                    ref.setValue(nil)
-                    self.chatMap.remove(at: indexPath.row)
-                    self.chatMapKey.remove(at: indexPath.row)
-                    self.key.remove(at: indexPath.row)
-                    //                        self.data.remove(at: indexPath.row)
-                    self.chatTable.deleteRows(at: [indexPath], with: .automatic)
-                    self.chatTable.reloadData()
-                }
-            ])
-        }
-    }
+//    func tableView(_ tableView: UITableView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+//
+//        guard let indexPath = configuration.identifier as? IndexPath else {
+//            return nil
+//        }
+//        let chat = chatMap[indexPath.row]
+//        let userNumberKey = chatMapKey[indexPath.row]
+//        let uniqueKey = key[indexPath.row]
+//        let chatText = chat[uniqueKey]
+//        let txtChat = chatText?[userNumberKey]
+//        let abc = chatText?[userNumberKey]  as? [String : Any]
+//        print("txtChat \(txtChat)  UserNumberKay - \(userNumberKey) | UniqueKey - \(uniqueKey)")
+//        print("Chattext \(chatText)")
+//        if let cell = chatTable.cellForRow(at: indexPath) as? SenderViewCell {
+//            forwardChat = ""
+//            forwardChatPhoto = ""
+//            forwardChatVideo = ""
+//            forwardChatKey = ""
+//            let parameters = UIPreviewParameters()
+//            parameters.backgroundColor = .clear
+//            forwardChat = "\(txtChat ?? "")"
+//            forwardChatKey = "\(phones)"
+//            forwardCell = "SenderViewCell"
+//            print("SenderViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+//
+//        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+//        }
+//        if let cell = chatTable.cellForRow(at: indexPath) as? SenderImageChatCell {
+//            forwardChat = ""
+//            forwardChatPhoto = ""
+//            forwardChatVideo = ""
+//            forwardChatKey = ""
+//            let parameters = UIPreviewParameters()
+//            parameters.backgroundColor = .clear
+//            forwardChat = "\(chatText?["\(userNumberKey.replacingOccurrences(of: "chatPhoto", with: "text"))"] ?? "")"
+//            forwardChatPhoto = "\(chatText?["\(userNumberKey)"] ?? "")"
+//            let url = URL(string: forwardChatPhoto)
+//            uiimage.kf.setImage(with: url)
+//            forwardChatKey = "\(phones)"
+//            forwardCell = "SenderImageChatCell"
+//            print("SenderImageChatCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+//            return UITargetedPreview(view: cell.viewC, parameters: parameters)
+//        }
+//        if let cell = chatTable.cellForRow(at: indexPath) as? SenderReplyImageCell {
+//            forwardChat = ""
+//            forwardChatPhoto = ""
+//            forwardChatVideo = ""
+//            forwardChatKey = ""
+//            let parameters = UIPreviewParameters()
+//            parameters.backgroundColor = .clear
+//            forwardChat = "\(chatText?["\(phones)"] ?? "")"
+//            forwardChatKey = "\(phones)"
+//            forwardCell = "SenderReplyImageCell"
+//            print("SenderReplyImageCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+//        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+//        }
+//        if let cell = chatTable.cellForRow(at: indexPath) as? SenderVideoCell {
+//            forwardChat = ""
+//            forwardChatPhoto = ""
+//            forwardChatVideo = ""
+//            forwardChatKey = ""
+//            let parameters = UIPreviewParameters()
+//            parameters.backgroundColor = .clear
+//            forwardChatVideo = "\(chatText?["\(userNumberKey)"] ?? "")"
+//            forwardChatKey = phones
+//            print("SenderVideoCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+//        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+//        }
+//        if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverViewCell {
+//            forwardChat = ""
+//            forwardChatPhoto = ""
+//            forwardChatVideo = ""
+//            forwardChatKey = ""
+//            let parameters = UIPreviewParameters()
+//            parameters.backgroundColor = .clear
+//            if groupK == "yes" {
+//                let checking = mid.split(separator: "+")
+//                for i in  0...checking.count-1 {
+//                    if chatText?["+\(checking[i])"] != nil {
+//                        print("OKOKKOOOOK")
+//                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+//                        forwardChatKey = "\(phones)"
+//                        break
+//                    }
+//                }
+//            } else {
+//                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+//                forwardChatKey = "\(phones)"
+//
+//            }
+//            print("ReceiverViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+//        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+//        }
+//        if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverReplyViewCell {
+//            forwardChat = ""
+//            forwardChatPhoto = ""
+//            forwardChatVideo = ""
+//            forwardChatKey = ""
+//            let parameters = UIPreviewParameters()
+//            parameters.backgroundColor = .clear
+//            if groupK == "yes" {
+//                let checking = mid.split(separator: "+")
+//                for i in  0...checking.count-1 {
+//                    if chatText?["+\(checking[i])"] != nil {
+//                        print("OKOKKOOOOK")
+//                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+//                        forwardChatKey = "\(phones)"
+//                        break
+//                    }
+//                }
+//            } else {
+//                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+//                forwardChatKey = "\(phones)"
+//
+//            }
+//            print("ReceiverReplyViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+//        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+//        }
+//        if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverVideoCell {
+//            forwardChat = ""
+//            forwardChatPhoto = ""
+//            forwardChatVideo = ""
+//            forwardChatKey = ""
+//            let parameters = UIPreviewParameters()
+//            parameters.backgroundColor = .clear
+//            if groupK == "yes" {
+//                let checking = mid.split(separator: "+")
+//                for i in  0...checking.count-1 {
+//                    if chatText?["+\(checking[i])"] != nil {
+//                        print("OKOKKOOOOK")
+//                        forwardChatVideo = "\(chatText?["+\(checking[i])chatVideo"] ?? "")"
+//                        forwardChatKey = "\(phones)"
+//                        break
+//                    }
+//                }
+//            } else {
+//                forwardChatVideo = "\(chatText?["\(receiverUserid)"] ?? "")"
+//                forwardChatKey = "\(phones)"
+//
+//            }
+//            print("ReceiverVideoCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+//        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+//        }
+//        if let cell = chatTable.cellForRow(at: indexPath) as? ReceiverReplyImageCell {
+//            forwardChat = ""
+//            forwardChatPhoto = ""
+//            forwardChatVideo = ""
+//            forwardChatKey = ""
+//            let parameters = UIPreviewParameters()
+//            parameters.backgroundColor = .clear
+//            if groupK == "yes" {
+//                let checking = mid.split(separator: "+")
+//                for i in  0...checking.count-1 {
+//                    if chatText?["+\(checking[i])"] != nil {
+//                        print("OKOKKOOOOK")
+//                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+//                        forwardChatKey = "\(phones)"
+//                        break
+//                    }
+//                }
+//            } else {
+//                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+//                forwardChatKey = "\(phones)"
+//
+//            }
+//            forwardCell = "ReceiverReplyImageCell"
+//            print("ReceiverReplyImageCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+//        return UITargetedPreview(view: cell.viewC, parameters: parameters)
+//        }
+//        if let cell = chatTable.cellForRow(at: indexPath) as? SenderReplyViewCell {
+//            forwardChat = ""
+//            forwardChatPhoto = ""
+//            forwardChatVideo = ""
+//            forwardChatKey = ""
+//            let parameters = UIPreviewParameters()
+//            parameters.backgroundColor = .clear
+//            forwardChat = "\(chatText?["\(phones)"] ?? "")"
+//            forwardChatKey = "\(phones)"
+//            print("SenderReplyViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) | ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey) ")
+//            return UITargetedPreview(view: cell.viewC, parameters: parameters)
+//        } else {
+//
+//            let cell = chatTable.cellForRow(at: indexPath) as? ImageTableViewCell
+//            forwardChat = ""
+//            forwardChatPhoto = ""
+//            forwardChatVideo = ""
+//            forwardChatKey = ""
+//            let parameters = UIPreviewParameters()
+//            parameters.backgroundColor = .clear
+//            if groupK == "yes" {
+//                let checking = mid.split(separator: "+")
+//                for i in  0...checking.count-1 {
+//                    if chatText?["+\(checking[i])chatPhoto"] != nil || chatText?["+\(checking[i])text"] != nil {
+//                        print("OKOKKOOOOK")
+//                        forwardChat = "\(chatText?["+\(checking[i])text"] ?? "")"
+//                        forwardChatPhoto = "\(chatText?["+\(checking[i])chatPhoto"] ?? "")"
+//                        let url = URL(string: forwardChatPhoto)
+//                        uiimage.kf.setImage(with: url)
+//                        //                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+//                        forwardChatKey = "\(phones)"
+//                        break
+//                    }
+//                }
+//            } else {
+//                forwardChat = "\(chatText?["\(receiverUserid)text"] ?? "")"
+//                forwardChatPhoto = "\(chatText?["\(receiverUserid)chatPhoto"] ?? "")"
+//                let url = URL(string: forwardChatPhoto)
+//                uiimage.kf.setImage(with: url)
+//                //                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+//                forwardChatKey = "\(phones)"
+//
+//            }
+//            print("ImageTableViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+//            return UITargetedPreview(view: cell!.viewC, parameters: parameters)
+//        }
+//
+//    }
+//    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+//        let chat = chatMap[indexPath.row]
+//        let userNumberKey = chatMapKey[indexPath.row]
+//        let uniqueKey = key[indexPath.row]
+//        let chatText = chat[uniqueKey]
+//        let txtChat = chatText?[userNumberKey]
+//        let abc = chatText?[userNumberKey]  as? [String : Any]
+//        // Selected Drug and notes
+//        var titleString = "\(uniqueKey)"
+//        print("key", titleString)
+//        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil) { _ in
+//            return UIMenu(title: "", children: [
+//                UIAction(title: "Save", image: UIImage(systemName: "square.and.arrow.down")) { [self] action in
+//                    if forwardChatVideo != "" {
+//                        DispatchQueue.global(qos: .background).async {
+//                            if let url = URL(string: forwardChatVideo), let urIData = NSData(contentsOf: url) {
+//                                let documentsPath=NSSearchPathForDirectoriesInDomains(.documentDirectory,
+//                                                                                      .userDomainMask, true)[0];
+//                                let filePath="\(documentsPath)/\(UUID().uuidString).MOV"
+//                                DispatchQueue.main.async{
+//                                    urIData.write(toFile: filePath, atomically: true)
+//                                    PHPhotoLibrary.shared().performChanges({
+//                                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL:URL(
+//                                            fileURLWithPath: filePath))
+//                                    }) { completed, error in
+//                                        if completed {
+//                                            print("Video is saved!")
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                    else if forwardChatPhoto != "" {
+//
+//                        UIImageWriteToSavedPhotosAlbum(uiimage.image!, self, #selector(image(_:withPotentialError:contextInfo:)), nil)
+//                    }
+//                },
+//                UIAction(title: "Forward",
+//                         image: UIImage(systemName: "arrowshape.turn.up.right")) { action in
+//                             // Perform action
+//                             let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCodeForward") as? UserDetailsCodeForward
+//                             print("users ",self.usersDetails)
+//                             vc?.usersDetails = self.usersLists
+//                             vc?.allUserOfContact = self.allUserOfContact
+//                             vc?.phones = self.phones
+//                             vc?.msgIdList = self.msgIdList
+//                             vc?.uid = self.ui
+//                             vc?.forwardChat = self.forwardChat
+//                             vc?.forwardChatVideo = self.forwardChatVideo
+//                             vc?.forwardChatPhoto = self.forwardChatPhoto
+//                             vc?.forwardChatKey = self.forwardChatKey
+//
+//                             self.navigationController?.present(vc!, animated: true, completion: nil)
+//                         },
+//                UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { action in
+//                    print("Delete")
+//                    let ref = Database.database().reference().child("Chats").child("\(self.mid)").child("chatting").child("\(uniqueKey)")
+//
+//                    ref.setValue(nil)
+//                    self.chatMap.remove(at: indexPath.row)
+//                    self.chatMapKey.remove(at: indexPath.row)
+//                    self.key.remove(at: indexPath.row)
+//                    //                        self.data.remove(at: indexPath.row)
+//                    self.chatTable.deleteRows(at: [indexPath], with: .automatic)
+//                    self.chatTable.reloadData()
+//                }
+//            ])
+//        }
+//    }
 
     @objc func image(_ image: UIImage, withPotentialError error: NSErrorPointer, contextInfo: UnsafeRawPointer) {
         let alert = UIAlertController(title: "Image Saved", message: "Image successfully saved to Photos library", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-     func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-         guard let indexPath = configuration.identifier as? IndexPath, let cell = chatTable.cellForRow(at: indexPath) as? SenderViewCell else {
-             return nil
-         }
-         
-         let parameters = UIPreviewParameters()
-         parameters.backgroundColor = .clear
-         
-     return UITargetedPreview(view: cell.viewC, parameters: parameters)
-    }
-  
+//     func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+//         guard let indexPath = configuration.identifier as? IndexPath, let cell = chatTable.cellForRow(at: indexPath) as? SenderViewCell else {
+//             return nil
+//         }
+//
+//         let parameters = UIPreviewParameters()
+//         parameters.backgroundColor = .clear
+//
+//     return UITargetedPreview(view: cell.viewC, parameters: parameters)
+//    }
+//
 
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let chat = chatMap[indexPath.row]
@@ -2241,6 +2526,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource {
     func imageShow(url:String) {
         let vc = storyboard?.instantiateViewController(withIdentifier: "ImageVc") as? ImageVc
         vc?.str = url
+        vc?.modalPresentationStyle = .overFullScreen
         present(vc!, animated: true)
     }
     
@@ -2305,11 +2591,11 @@ extension ChatConversionCode {
     //  MARK: - FooterView For Seen, Delivered Status
     private func msgsSeenfooterview() -> UIView {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 30))
-        let seeninmsg = UILabel(frame: CGRect(x: chatTable.frame.width-82, y: 0, width: 80, height: 20))
+        let seeninmsg = UILabel(frame: CGRect(x: chatTable.frame.width-85, y: 0, width: 80, height: 20))
         seeninmsg.textAlignment = .right
         seeninmsg.font = UIFont.systemFont(ofSize: 14)
         seeninmsg.text = seenStatusLabel
-        seeninmsg.textColor = .black
+        seeninmsg.textColor = .systemBlue
         view.backgroundColor = .none
         view.addSubview(seeninmsg)
         return view
