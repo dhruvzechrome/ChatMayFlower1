@@ -205,7 +205,7 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 0 {
             
             
-            if currentUserData["statuskey"] != ""  {
+            if currentUserData["statuskey"] != "" && currentUserStatus["\(currentUserData["statuskey"] ?? "")"] != nil {
 //                let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
                 print("frdddddd = \(currentUserStatus)- - - \(currentUserData)")
                 let vc = storyboard?.instantiateViewController(withIdentifier: "StatusCollectionVC") as? StatusCollectionVC
@@ -260,8 +260,8 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             let cell = statusTableView.dequeueReusableCell(withIdentifier: "StatusPutCell") as? StatusPutCell
                 let url = URL(string: currentUserData["profilepic"] ?? "")
                 cell?.profileImage.kf.setImage(with: url)
-                    print("Come on yaar ")
-                    if currentUserData["statuskey"] != ""  {
+                    print("Come on yaar \(currentUserStatus)")
+            if currentUserData["statuskey"] != ""  && currentUserStatus["\(currentUserData["statuskey"] ?? "")"] != nil{
                         let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
                         print("frdddddd = \(currentUserStatus)- - - \(frd)")
                         
@@ -306,6 +306,4 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             return cell!
         }
     }
-    
-    
 }

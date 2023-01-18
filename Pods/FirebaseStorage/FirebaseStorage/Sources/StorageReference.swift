@@ -49,7 +49,7 @@ import Foundation
    * In `gs://bucket/path/to/object.txt`, the name of the object would be `object.txt`.
    */
   @objc public var name: String {
-    return (path.object as? NSString)?.lastPathComponent ?? ""
+      return (path.object as NSString?)?.lastPathComponent ?? ""
   }
 
   /**

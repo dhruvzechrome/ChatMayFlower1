@@ -94,7 +94,7 @@ internal class StorageUpdateMetadataTask: StorageTask, StorageTaskManagement {
       fetcher.comment = "UpdateMetadataTask"
 
       self.fetcher?.beginFetch { [weak self] data, error in
-        self?.fetcherCompletion?(data, error as? NSError)
+          self?.fetcherCompletion?(data, error as NSError?)
       }
     }
   }

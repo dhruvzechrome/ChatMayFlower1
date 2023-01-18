@@ -31,9 +31,8 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     }
     
     func delete() {
-        let ref = Database.database().reference().child("Contact List")
-        ref.child("\(phones)").child("status").setValue(nil)
-        ref.child("\(phones)").setValue(["statusKey" : nil])
+        let ref = Database.database().reference().child("Contact List").child("\(phones)")
+        ref.child("status").removeValue()
     }
     var databaseRef: DatabaseReference!
     var phones = ""
@@ -49,6 +48,7 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     var screenStatus = false
     var uiimage = UIImageView()
     var videoUrl : String?
+    var player = AVPlayer()
     override func viewDidLoad() {
         super.viewDidLoad()
         detailsCollection.delegate = self
@@ -314,8 +314,6 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
 //        print("statusViedeo ... \(valll?["\(frd["statuskey"] ?? "")"] ?? "")")
 //        print("cnt  \(cnt)")
 //        print("Index Path \(indexPath.row)")
-        cell?.videoViewer.isHidden = true
-        cell?.videoImage.isHidden = true
         for i in 0...statuskey.count-1 {
             if valll?["\(statuskey[i])"] != nil {
                 if !seenStatuskey.contains("\(statuskey[i])") {
@@ -332,16 +330,17 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                         url = URL(string: "\(photo?["statusPhoto"] ?? "")")
                         uiimage.kf.setImage(with: url)
                         cell?.videoImage.kf.setImage(with: url)
-                        
+                        player.pause()
+                        player.volume  = 0
                     } else {
                         cell?.videoViewer.isHidden = false
                         cell?.videoImage.isHidden = true
                         print("video")
                         videoUrl = "\(photo?["statusVideo"] ?? "")"
                         url = URL(string: "\(photo?["statusVideo"] ?? "")")
-                        let player = AVPlayer(url: url!)
+                        player = AVPlayer(url: url!)
                         let playerLayer = AVPlayerLayer(player: player)
-                        cell?.videoViewer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.65)
+                        cell?.videoViewer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                         playerLayer.frame = (cell?.videoViewer.bounds)!
                         playerLayer.videoGravity = .resizeAspect
                         cell?.videoViewer.layer.addSublayer(playerLayer)

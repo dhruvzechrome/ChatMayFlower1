@@ -312,7 +312,7 @@ import FirebaseAuthInterop
       // GTMSessionFetcher does not consider being offline a retryable error, but we do, so we
       // special-case it here.
       if !shouldRetry, error != nil {
-        shouldRetry = (error as? NSError)?.code == URLError.notConnectedToInternet.rawValue
+          shouldRetry = (error as NSError?)?.code == URLError.notConnectedToInternet.rawValue
       }
       response(shouldRetry)
   }

@@ -162,7 +162,7 @@ internal class StoragePath: NSCopying, Equatable {
       return copy() as! StoragePath
     }
     var childObject: String
-    if let object = object as? NSString {
+      if let object = object as NSString? {
       childObject = object.appendingPathComponent(path)
     } else {
       childObject = path

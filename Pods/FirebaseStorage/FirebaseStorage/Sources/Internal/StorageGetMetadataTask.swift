@@ -84,7 +84,7 @@ internal class StorageGetMetadataTask: StorageTask, StorageTaskManagement {
       }
 
       self.fetcher?.beginFetch { [weak self] data, error in
-        self?.fetcherCompletion?(data, error as? NSError)
+          self?.fetcherCompletion?(data, error as NSError?)
       }
     }
   }

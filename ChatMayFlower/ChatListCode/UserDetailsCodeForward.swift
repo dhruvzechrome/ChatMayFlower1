@@ -44,7 +44,7 @@ class UserDetailsCodeForward: UIViewController {
     @IBAction func forwardButton(_ sender: UIButton) {
         print("Yes \(msgIdList)")
         chats()
-        var database = Database.database().reference()
+        let database = Database.database().reference()
         print("ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) | ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
         if forwardChatPhoto != "" {
             boolforPhoto = false
@@ -175,6 +175,7 @@ extension UserDetailsCodeForward : UITableViewDelegate, UITableViewDataSource {
         if frd["profilepic"]! == "" {
             cell?.profile.image = UIImage(named: "person")
         } else {
+            print()
             let url = URL(string: frd["profilepic"]! )
             cell?.profile.kf.setImage(with: url)
         }

@@ -41,7 +41,7 @@ internal class StorageTokenAuthorizer: NSObject, GTMSessionFetcherAuthorizer {
     if let auth = auth {
       fetchTokenGroup.enter()
       auth.getToken(forcingRefresh: false) { token, error in
-        if let error = error as? NSError {
+          if let error = error as NSError? {
           var errorDictionary = error.userInfo
           errorDictionary["ResponseErrorDomain"] = error.domain
           errorDictionary["ResponseErrorCode"] = error.code

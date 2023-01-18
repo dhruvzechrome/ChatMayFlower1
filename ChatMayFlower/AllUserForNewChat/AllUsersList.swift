@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 import FirebaseDatabase
-
+import Kingfisher
 class AllUsersList: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UISearchControllerDelegate{
     
     var databaseRef: DatabaseReference!
