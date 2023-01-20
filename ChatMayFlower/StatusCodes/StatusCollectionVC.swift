@@ -32,7 +32,7 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     
     func delete() {
         let ref = Database.database().reference().child("Contact List").child("\(phones)")
-        ref.child("status").removeValue()
+        ref.child("status").removeValue() 
     }
     var databaseRef: DatabaseReference!
     var phones = ""
