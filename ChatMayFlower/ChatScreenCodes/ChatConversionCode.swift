@@ -602,7 +602,7 @@ extension ChatConversionCode {
         if let  videoURL = info[.mediaURL] as? URL
         {
             let localFile = URL(string: "\(videoURL)")!
-            print("Video Url is -=-=-=-=-=-=-=-==-=-= \(videoURL)")
+            print("Video Url is -=-=-=-=-=-=-=-==-=-= \(localFile)")
             //            let asset = AVURLAsset(url: videoURL,options: nil)
             //            let imgGenerator = AVAssetImageGenerator(asset: asset)
             //            imgGenerator.appliesPreferredTrackTransform = true
@@ -618,8 +618,7 @@ extension ChatConversionCode {
             if groupK == "yes" {
                 mid = groupMsgId
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.mbProgressHUD(text: "")
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
                 let uploadTask = fileRef.putFile(from: localFile, metadata: nil){metadata, error in
                     var urlpth = ""
                     if error == nil && metadata != nil {
@@ -638,7 +637,6 @@ extension ChatConversionCode {
                                     print("data written seccess ")
                                     DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                                         picker.dismiss(animated: true)
-                                        hideProgress()
                                     }
                                 })
                             } else {
@@ -2219,181 +2217,273 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
     }
 
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let chat = chatMap[indexPath.row]
-        let userNumberKey = chatMapKey[indexPath.row]
-        let uniqueKey = key[indexPath.row]
-        let myyo = chat[uniqueKey]
-        let txtChat = myyo?[userNumberKey] as? String
-        let abc = myyo?[userNumberKey]  as? [String : Any]
-        replyChat = myyo as? [String : String]
-        replyText = uniqueKey
-          print("receiver message is \(myyo?["\(receiverid)"])")
-          print("Sender  message is \(myyo?["\(phoneid)"])")
-          print("MYYO  is the ----  \(myyo)")
-          print("ABC IS THE ====  \(abc)")
-          print("TEXTCHAT IS ///////    \(txtChat)")
-          print("userNumberKey IS THE \\\\\\  \(userNumberKey)---\(receiverid)")
-        oppositeSeenStatus = true
-        lcb = false
-        chatTable.tableFooterView = msgsseenfhidefooterview()
-        if abc?["\(phoneid)"] != nil || abc?["\(receiverid)"] != nil  {
-            print("reply chat photo") // || myyo?["\(phoneid)"] != nil || myyo?["\(receiverid)"] != nil
-            if myyo?["\(phoneid)"] == nil {
-                //                print("Phone ID chat === \(myyo?["\(phoneid)"])")
-                var msg = ""
-                if myyo!["\(self.receiverid)"] == nil {
-                    replyChat = ["\(self.receiverid)" : "\(myyo!["\(self.phoneid)"]!)"]
-                    msg = "\(myyo!["\(self.phoneid)"]!)"
-                } else {
-                    replyChat = ["\(self.receiverid)" : "\(myyo!["\(self.receiverid)"]!)"]
-                    msg = "\(myyo!["\(self.receiverid)"]!)"
+        let indexPath = indexPath.row
+        let chat = chatMap[indexPath]
+        let userNumberKey = chatMapKey[indexPath]
+        let uniqueKey = key[indexPath]
+        let chatText = chat[uniqueKey]
+        let txtChat = chatText?[userNumberKey]
+        _ = chatText?[userNumberKey]  as? [String : Any]
+        // Selected Drug and notes
+        _ = "\(uniqueKey)"
+        let indexPathRow = IndexPath(row: indexPath, section: 0)
+        
+        if (chatTable.cellForRow(at: indexPathRow) as? SenderViewCell) != nil {
+            forwardChat = ""
+            forwardChatPhoto = ""
+            forwardChatVideo = ""
+            forwardChatKey = ""
+            forwardChat = "\(txtChat ?? "")"
+            forwardChatKey = "\(phones)"
+            forwardCell = "SenderViewCell"
+            print("SenderViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+            let action = UIContextualAction(style: .normal,
+                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+                self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:userNumberKey)
+                completionHandler(true)
+            }
+            action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
+            return UISwipeActionsConfiguration(actions: [action])
+        }
+        if (chatTable.cellForRow(at: indexPathRow) as? SenderImageChatCell) != nil {
+            forwardChat = ""
+            forwardChatPhoto = ""
+            forwardChatVideo = ""
+            forwardChatKey = ""
+            forwardChat = "\(chatText?["\(userNumberKey.replacingOccurrences(of: "chatPhoto", with: "text"))"] ?? "")"
+            forwardChatPhoto = "\(chatText?["\(userNumberKey)"] ?? "")"
+            let url = URL(string: forwardChatPhoto)
+            uiimage.kf.setImage(with: url)
+            forwardChatKey = "\(phones)"
+            forwardCell = "SenderImageChatCell"
+            print("SenderImageChatCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+            print("my  IOIOIOIOIOIOIs")
+            let action = UIContextualAction(style: .normal,
+                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+                self?.replyforPhotos(chats: self?.forwardChat ?? "" , user:userNumberKey.replacingOccurrences(of: "chatPhoto", with: "") ,photourl: self?.forwardChatPhoto ?? "")
+                completionHandler(true)
+            }
+            action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
+            return UISwipeActionsConfiguration(actions: [action])
+        }
+        if (chatTable.cellForRow(at: indexPathRow) as? SenderReplyImageCell) != nil {
+            forwardChat = ""
+            forwardChatPhoto = ""
+            forwardChatVideo = ""
+            forwardChatKey = ""
+            forwardChat = "\(chatText?["\(phones)"] ?? "")"
+            forwardChatKey = "\(phones)"
+            forwardCell = "SenderReplyImageCell"
+            print("SenderReplyImageCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+            let action = UIContextualAction(style: .normal,
+                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+                self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:"You")
+                completionHandler(true)
+            }
+            action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
+            return UISwipeActionsConfiguration(actions: [action])
+        }
+        if (chatTable.cellForRow(at: indexPathRow) as? SenderVideoCell) != nil {
+            forwardChat = ""
+            forwardChatPhoto = ""
+            forwardChatVideo = ""
+            forwardChatKey = ""
+            forwardChatVideo = "\(chatText?["\(userNumberKey)"] ?? "")"
+            forwardChatKey = phones
+            print("SenderVideoCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+            let action = UIContextualAction(style: .normal,
+                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+                self?.replyforVideo(chats: "Video" , user:"You",photourl: self?.forwardChatVideo ?? "")
+                completionHandler(true)
+            }
+            action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
+            return UISwipeActionsConfiguration(actions: [action])
+        }
+        if (chatTable.cellForRow(at: indexPathRow) as? ReceiverVideoCell) != nil {
+            forwardChat = ""
+            forwardChatPhoto = ""
+            forwardChatVideo = ""
+            forwardChatKey = ""
+            if groupK == "yes" {
+                let checking = mid.split(separator: "+")
+                for i in  0...checking.count-1 {
+                    if chatText?["+\(checking[i])chatVideo"] != nil {
+                        print("OKOKKOOOOK")
+                        forwardChatVideo = "\(chatText?["+\(checking[i])chatVideo"] ?? "")"
+                        forwardChatKey = "\(phones)"
+                        break
+                    }
                 }
-                replyText = uniqueKey
-                let action = UIContextualAction(style: .normal,
-                                                title: "↩️") { [weak self] (action, view, completionHandler) in
-                    self?.handleMarkAsFavourite(chats: msg , user: self!.receiverid)
-                    completionHandler(true)
-                }
-                action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
-                return UISwipeActionsConfiguration(actions: [action])
             } else {
-                //                print("Obviously")
-                var msg = ""
-                if myyo!["\(self.phoneid)"] == nil {
-                    replyChat = ["\(self.phoneid)" : "\(myyo!["\(self.receiverid)"]!)"]
-                    msg = myyo!["\(self.receiverid)"] as! String
-                } else {
-                    replyChat = ["\(self.phoneid)" : "\(myyo!["\(self.phoneid)"]!)"]
-                    msg = myyo!["\(self.phoneid)"] as! String
-                }
-                replyText = uniqueKey
-                let action = UIContextualAction(style: .normal,
-                                                title: "↩️") { [weak self] (action, view, completionHandler) in
-                    self?.handleMarkAsFavourite(chats: msg , user: self!.phoneid)
-                    completionHandler(true)
-                }
-                action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
-                return UISwipeActionsConfiguration(actions: [action])
+                forwardChatVideo = "+\(chatText?["\(receiverUserid)chatVideo"] ?? "")"
+                forwardChatKey = "\(phones)"
+                
             }
-        } else {
-            if userNumberKey == "\(phoneid)chatPhoto" || userNumberKey == "\(receiverid)chatPhoto" || userNumberKey.contains("chatPhoto"){
-                print("my chat photo, \(userNumberKey)------chat \(replyChat)===")
-                if userNumberKey == "\(phoneid)chatPhoto" {
-                    
-                    if replyChat?["\(phoneid)text"] == nil{
-                        print("my photo")
-                        let action = UIContextualAction(style: .normal,
-                                                        title: "↩️") { [weak self] (action, view, completionHandler) in
-                            self?.replyforPhotos(chats: "Photo" , user:userNumberKey.replacingOccurrences(of: "chatPhoto", with: "") ,photourl: txtChat ?? "")
-                            completionHandler(true)
-                        }
-                        action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
-                        return UISwipeActionsConfiguration(actions: [action])
-                    } else {
-                        print("my  IOIOIOIOIOIOIs")
-                        let action = UIContextualAction(style: .normal,
-                                                        title: "↩️") { [weak self] (action, view, completionHandler) in
-                            self?.replyforPhotos(chats: self?.replyChat?["\(self!.phoneid)text"] ?? "" , user:userNumberKey.replacingOccurrences(of: "chatPhoto", with: "") ,photourl: txtChat ?? "")
-                            completionHandler(true)
-                        }
-                        action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
-                        return UISwipeActionsConfiguration(actions: [action])
-                    }
-                } else {
-                    if replyChat?["\(receiverid)text"] == nil  {
-                        print("rec photo")
-                        let action = UIContextualAction(style: .normal,
-                                                        title: "↩️") { [weak self] (action, view, completionHandler) in
-                            self?.replyforPhotos(chats: "" , user:userNumberKey.replacingOccurrences(of: "chatPhoto", with: "") ,photourl: txtChat ?? "")
-                            completionHandler(true)
-                        }
-                        action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
-                        return UISwipeActionsConfiguration(actions: [action])
-                    } else {
-                        print("rec  IOIOIOIOIOIOIs")
-                        let action = UIContextualAction(style: .normal,
-                                                        title: "↩️") { [weak self] (action, view, completionHandler) in
-                            self?.replyforPhotos(chats: self?.replyChat?["\(self!.receiverid)text"] ?? "" , user:userNumberKey.replacingOccurrences(of: "chatPhoto", with: "") ,photourl: txtChat ?? "")
-                            completionHandler(true)
-                        }
-                        action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
-                        return UISwipeActionsConfiguration(actions: [action])
-                    }
-                }
-            }else if userNumberKey == "\(phoneid)chatVideo" || userNumberKey == "\(receiverid)chatVideo" || userNumberKey.contains("chatVideo") {
-                print("My video")
-                if  userNumberKey == "\(phoneid)chatVideo" {
-                    
-                    if replyChat?["\(phoneid)text"] == nil{
-                        print("my videp")
-                        let action = UIContextualAction(style: .normal,
-                                                        title: "↩️") { [weak self] (action, view, completionHandler) in
-                            
-                            self?.replyforVideo(chats: "Video" , user:userNumberKey.replacingOccurrences(of: "chatVideo", with: "") ,photourl: txtChat ?? "")
-                            
-                            completionHandler(true)
-                        }
-                        action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
-                        return UISwipeActionsConfiguration(actions: [action])
-                    } else {
-                        print("my IOIOIOIOIOIOIs")
-                        let action = UIContextualAction(style: .normal,
-                                                        title: "↩️") { [weak self] (action, view, completionHandler) in
-                            
-                            self?.replyforVideo(chats: self?.replyChat?["\(self!.phoneid)text"] ?? "" , user:userNumberKey.replacingOccurrences(of: "chatVideo", with: "") ,photourl: txtChat ?? "")
-                            
-                            completionHandler(true)
-                        }
-                        action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
-                        return UISwipeActionsConfiguration(actions: [action])
-                    }
-                    
-                }else {
-                    if replyChat?["\(receiverid)text"] == nil || userNumberKey == "\(receiverid)chatVideo" {
-                        print("rec video")
-                        let action = UIContextualAction(style: .normal,
-                                                        title: "↩️") { [weak self] (action, view, completionHandler) in
-                            
-                            self?.replyforVideo(chats: "Video" , user:userNumberKey.replacingOccurrences(of: "chatVideo", with: "") ,photourl: txtChat ?? "")
-                            
-                            completionHandler(true)
-                        }
-                        action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
-                        return UISwipeActionsConfiguration(actions: [action])
-                    } else {
-                        print("recc vid IOIOIOIOIOIOIs")
-                        let action = UIContextualAction(style: .normal,
-                                                        title: "↩️") { [weak self] (action, view, completionHandler) in
-                            
-                            self?.replyforVideo(chats: self?.replyChat?["\(self!.receiverid)text"] ?? "" , user:userNumberKey.replacingOccurrences(of: "chatVideo", with: "") ,photourl: txtChat ?? "")
-                            
-                            completionHandler(true)
-                        }
-                        action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
-                        return UISwipeActionsConfiguration(actions: [action])
-                    }
-                }
+            print("ReceiverVideoCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+            let action = UIContextualAction(style: .normal,
+                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+                self?.replyforVideo(chats: "Video" , user:userNumberKey.replacingOccurrences(of: "chatVideo", with: "") ,photourl: self?.forwardChatVideo ?? "")
+                completionHandler(true)
             }
-            else {
-                print("New ")
-                let action = UIContextualAction(style: .normal,
-                                                title: "↩️") { [weak self] (action, view, completionHandler) in
-                    
-                    self?.handleMarkAsFavourite(chats: txtChat ?? "" , user:userNumberKey)
-                    
-                    completionHandler(true)
+            action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
+            return UISwipeActionsConfiguration(actions: [action])
+        }
+        if (chatTable.cellForRow(at: indexPathRow) as? ReceiverViewCell) != nil {
+            forwardChat = ""
+            forwardChatPhoto = ""
+            forwardChatVideo = ""
+            forwardChatKey = ""
+            if groupK == "yes" {
+                let checking = mid.split(separator: "+")
+                for i in  0...checking.count-1 {
+                    if chatText?["+\(checking[i])"] != nil {
+                        print("OKOKKOOOOK")
+                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+                        forwardChatKey = "\(phones)"
+                        break
+                    }
                 }
-                action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
-                return UISwipeActionsConfiguration(actions: [action])
+            } else {
+                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+                forwardChatKey = "\(phones)"
+                
             }
-            
+            print("ReceiverViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+            let action = UIContextualAction(style: .normal,
+                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+                self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:userNumberKey)
+                completionHandler(true)
+            }
+            action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
+            return UISwipeActionsConfiguration(actions: [action])
+        }
+        if (chatTable.cellForRow(at: indexPathRow) as? ReceiverReplyViewCell) != nil {
+            forwardChat = ""
+            forwardChatPhoto = ""
+            forwardChatVideo = ""
+            forwardChatKey = ""
+            var newUser = ""
+            if groupK == "yes" {
+                let checking = mid.split(separator: "+")
+                for i in  0...checking.count-1 {
+                    if chatText?["+\(checking[i])"] != nil {
+                        print("OKOKKOOOOK")
+                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+                        newUser = "+\(checking[i])"
+                        forwardChatKey = "\(phones)"
+                        break
+                    }
+                }
+            } else {
+                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+                newUser = "\(receiverUserid)"
+                forwardChatKey = "\(phones)"
+                
+            }
+            print("ReceiverReplyViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+            let action = UIContextualAction(style: .normal,
+                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+                self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:newUser)
+                completionHandler(true)
+            }
+            action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
+            return UISwipeActionsConfiguration(actions: [action])
+        }
+        if (chatTable.cellForRow(at: indexPathRow) as? ReceiverReplyImageCell) != nil {
+            forwardChat = ""
+            forwardChatPhoto = ""
+            forwardChatVideo = ""
+            forwardChatKey = ""
+            var newUser = ""
+            if groupK == "yes" {
+                let checking = mid.split(separator: "+")
+                for i in  0...checking.count-1 {
+                    if chatText?["+\(checking[i])"] != nil {
+                        print("OKOKKOOOOK")
+                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+                        newUser = "+\(checking[i])"
+                        forwardChatKey = "\(phones)"
+                        break
+                    }
+                }
+            } else {
+                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+                newUser = "\(receiverUserid)"
+                forwardChatKey = "\(phones)"
+                
+            }
+            forwardCell = "ReceiverReplyImageCell"
+            print("ReceiverReplyImageCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+            let action = UIContextualAction(style: .normal,
+                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+                self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:newUser)
+                completionHandler(true)
+            }
+            action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
+            return UISwipeActionsConfiguration(actions: [action])
+        }
+        if (chatTable.cellForRow(at: indexPathRow) as? SenderReplyViewCell) != nil {
+            forwardChat = ""
+            forwardChatPhoto = ""
+            forwardChatVideo = ""
+            forwardChatKey = ""
+            forwardChat = "\(chatText?["\(phones)"] ?? "")"
+            forwardChatKey = "\(phones)"
+            print("SenderReplyViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) | ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey) ")
+            let action = UIContextualAction(style: .normal,
+                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+                self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:userNumberKey)
+                completionHandler(true)
+            }
+            action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
+            return UISwipeActionsConfiguration(actions: [action])
         }
         
-        
+        if  (chatTable.cellForRow(at: indexPathRow) as? ImageTableViewCell) != nil {
+            forwardChat = ""
+            forwardChatPhoto = ""
+            forwardChatVideo = ""
+            forwardChatKey = ""
+            var newUser = ""
+            if groupK == "yes" {
+                let checking = mid.split(separator: "+")
+                for i in  0...checking.count-1 {
+                    if chatText?["+\(checking[i])chatPhoto"] != nil || chatText?["+\(checking[i])text"] != nil {
+                        print("OKOKKOOOOK")
+                        newUser = "+\(checking[i])"
+                        forwardChat = "\(chatText?["+\(checking[i])text"] ?? "")"
+                        forwardChatPhoto = "\(chatText?["+\(checking[i])chatPhoto"] ?? "")"
+                        let url = URL(string: forwardChatPhoto)
+                        uiimage.kf.setImage(with: url)
+                        //                        forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+                        forwardChatKey = "\(phones)"
+                        break
+                    }
+                }
+            } else {
+                forwardChat = "\(chatText?["\(receiverUserid)text"] ?? "")"
+                newUser = "\(receiverUserid)"
+                forwardChatPhoto = "\(chatText?["\(receiverUserid)chatPhoto"] ?? "")"
+                let url = URL(string: forwardChatPhoto)
+                uiimage.kf.setImage(with: url)
+                //                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+                forwardChatKey = "\(phones)"
+                
+            }
+            print("ImageTableViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+            let action = UIContextualAction(style: .normal,
+                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+                self?.replyforPhotos(chats: self?.forwardChat ?? "" , user: newUser ,photourl: self?.forwardChatPhoto ?? "")
+                completionHandler(true)
+            }
+            action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
+            return UISwipeActionsConfiguration(actions: [action])
+        }
+        return UISwipeActionsConfiguration()
     }
     
     func replyforPhotos(chats:String, user: String,photourl:String){
-        keyBoardStatus = false
+//        keyBoardStatus = false
         chatField.becomeFirstResponder()
         chatTable.tableFooterView = imgReplyFooterView()
         scrollToBottom()
@@ -2406,7 +2496,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
         replyImageView.kf.setImage(with: url)
     }
     func replyforVideo(chats:String, user: String,photourl:String){
-        keyBoardStatus = false
+//        keyBoardStatus = false
         chatField.becomeFirstResponder()
         chatTable.tableFooterView = imgReplyFooterView()
         scrollToBottom()
@@ -2419,7 +2509,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
         replyImageView.kf.setImage(with: AVAssetImageDataProvider(assetURL: url!, seconds: 1))
     }
     func handleMarkAsFavourite(chats:String, user: String) {
-        keyBoardStatus = false
+//        keyBoardStatus = false
         chatField.becomeFirstResponder()
         chatTable.tableFooterView = footerview()
         scrollToBottom()
