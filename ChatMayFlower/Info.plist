@@ -2,20 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSFileProviderDomainUsageDescription</key>
-	<string></string>
-	<key>UIRequiresFullScreen</key>
-	<true/>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Allow Microphone Access</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow Photos</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Allow camera Access</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>NSContactsUsageDescription</key>
-	<string>App want to use your contact list</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
