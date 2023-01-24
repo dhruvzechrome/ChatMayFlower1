@@ -35,11 +35,9 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
         }
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         profileImage.addGestureRecognizer(tapGesture)
-        
         initializeHideKeyboard()
         //Subscribe to a Notification which will fire before the keyboard will show
         subscribeToNotification(UIResponder.keyboardWillShowNotification, selector: #selector(keyboardWillShowOrHide))
-        
         //Subscribe to a Notification which will fire before the keyboard will hide
         subscribeToNotification(UIResponder.keyboardWillHideNotification, selector: #selector(keyboardWillShowOrHide))
         
@@ -80,30 +78,25 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
     var filename : String?
     var didselectedImage : UIImage?
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
         if let selectedImage =  info[.originalImage] as? UIImage{
             print("Selected image ",selectedImage)
             profileImage.image = selectedImage
             didselectedImage = selectedImage
-//            let localPath = info[.imageURL] as? NSURL
-//            _ = info[.imageURL] as? URL
-//            print("Local Path  > ",localPath!)
+            //            let localPath = info[.imageURL] as? NSURL
+            //            _ = info[.imageURL] as? URL
+            //            print("Local Path  > ",localPath!)
             
-//            print("Name of Image --->>> ",filename!)
+            //            print("Name of Image --->>> ",filename!)
             picker.dismiss(animated: true, completion: nil)
-            
         }
         else{
             print("Image not found...!")
         }
-        
     }
     
     @IBAction func submit(_ sender: UIBarButtonItem) {
-        
         guard didselectedImage != nil else{
             if tName.text != "" && tPhoneNumber.text != ""{
-                
                 let ref = Database.database().reference().child("Contact List").child(number)
                 ref.updateChildValues(["Phone number": number,"Name":tName.text!,"photo url":"","location" : ""], withCompletionBlock: { error, _ in
                     guard error == nil else {
@@ -111,7 +104,6 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
                         return
                     }
                     print("data written seccess")
-
                 })
                 DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.number,name: tName.text!,profileImage : photoUrlPath, location: filename!))
                 //                let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
@@ -120,13 +112,9 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
             }
             return
         }
-        
         // Create Firebase Storage Reference
         let storageRef = Storage.storage().reference()
-        
-        
         let imageData = didselectedImage!.jpegData(compressionQuality: 0.4)
-        
         guard imageData != nil else {
             return
         }
@@ -144,8 +132,6 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
             // Check error
             if error == nil && metadata != nil {
                 if tName.text != "" && tPhoneNumber.text != ""{
-                    
-                    
                     fileRef.downloadURL {
                         url, error in
                         if let error = error {
@@ -161,12 +147,9 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
                                     return
                                 }
                                 print("data written seccess")
-
                             })
-                            
                             self.navigationController?.popViewController(animated: true)
                         }
-                        
                     }
                     //                    print("Urllll ---sdsdfsdf-->",urlpth)
                     
@@ -177,9 +160,6 @@ class EditProfileInformation: UIViewController,UIImagePickerControllerDelegate &
             }
             print("Error ====== \(String(describing: error))")
         }
-        
-        
-        
     }
 }
 
@@ -215,17 +195,13 @@ extension EditProfileInformation {
     @objc func keyboardWillShowOrHide(notification: NSNotification) {
         // Get required info out of the notification
         if let scrollView = backgroundSv, let userInfo = notification.userInfo, let endValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey], let durationValue = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey], let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] {
-            
             // Transform the keyboard's frame into our view's coordinate system
             let endRect = view.convert((endValue as AnyObject).cgRectValue, from: view.window)
-            
             // Find out how much the keyboard overlaps our scroll view
             let keyboardOverlap = scrollView.frame.maxY - endRect.origin.y
-            
             // Set the scroll view's content inset & scroll indicator to avoid the keyboard
             scrollView.contentInset.bottom = keyboardOverlap
             scrollView.verticalScrollIndicatorInsets.bottom = keyboardOverlap
-            
             let duration = (durationValue as AnyObject).doubleValue
             let options = UIView.AnimationOptions(rawValue: UInt((curveValue as AnyObject).integerValue << 16))
             UIView.animate(withDuration: duration!, delay: 0, options: options, animations: {
@@ -233,5 +209,4 @@ extension EditProfileInformation {
             }, completion: nil)
         }
     }
-    
 }

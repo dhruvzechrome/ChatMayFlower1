@@ -20,6 +20,7 @@ class OtpVerifyCode: UIViewController {
         tabBarController?.tabBar.isHidden = true
         // Do any additional setup after loading the view.
     }
+    
     @IBAction func otpVeri(_ sender: UIButton) {
         print(verification)
         let num = txtOtp.text
@@ -28,7 +29,6 @@ class OtpVerifyCode: UIViewController {
             verificationCode: num!
         )
         // OTP Verification Process
-        
         Auth.auth().signIn(with: credential) {[self] authResult, error in
             if let error = error {
                 let authError = error as NSError
@@ -43,7 +43,6 @@ class OtpVerifyCode: UIViewController {
                     }
                 }
                 let  alert = UIAlertController (title: "OTP Incorrect!!", message: "Enter valid OTP!!", preferredStyle: .alert)
-                
                 alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: {_ in            }))
                 self.present(alert, animated: true)
                 return
@@ -78,8 +77,6 @@ class OtpVerifyCode: UIViewController {
             self.navigationController?.pushViewController(vc!, animated: true)
         }
     }
-    
-    
 }
 
 

@@ -11,7 +11,6 @@ import FirebaseAuth
 import FirebaseDatabase
 import MBProgressHUD
 class VideoSentCode: UIViewController {
-    
     @IBOutlet weak var commentField: UITextField!
     @IBOutlet weak var videoImage: UIImageView!
     var navselectedImage : UIImage?
@@ -43,7 +42,6 @@ class VideoSentCode: UIViewController {
             return
         }
         let filename = "chatVideos/\(UUID().uuidString).mov"
-        
         let fileRef = storageRef.child(filename)
         print("\(fileRef)")
         // This is equivalent to creating the full reference
@@ -90,7 +88,6 @@ class VideoSentCode: UIViewController {
                         }
                         // DataBaseManager.shared.mychatting(with: Message(messagid: mesId, chats: commentField.text!, sender: "ul", uii: uid, chatPhotos: urlpth))
                     }
-                    
                 }
                 //  print("Urllll ----->",urlpth)
                 //  let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail

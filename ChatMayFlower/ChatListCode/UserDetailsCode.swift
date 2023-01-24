@@ -78,7 +78,6 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         if authorize == .notDetermined {
             storeC.requestAccess(for: .contacts) { (chk, error) in
                 if error == nil {
-                    
                 }
             }
         } else if authorize == .authorized {
@@ -89,10 +88,8 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
     func getContactList() {
         let predicate = CNContact.predicateForContactsInContainer(withIdentifier: storeC.defaultContainerIdentifier())
         let contct = try! storeC.unifiedContacts(matching: predicate, keysToFetch: [CNContactPhoneNumbersKey as CNKeyDescriptor,CNContactGivenNameKey as CNKeyDescriptor,CNContactMiddleNameKey as CNKeyDescriptor,CNContactFamilyNameKey as CNKeyDescriptor])
-        
         for con in contct {
             print("*Name of contact number ")
-            
             for phNO in con.phoneNumbers {
                 var hib =  phNO.value.stringValue
                 hib = hib.replacingOccurrences(of: " ", with: "")
@@ -103,7 +100,6 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                     hib = "+91\(hib)"
                 }
                 allUser.append(["Name" : "\(con.givenName) \(con.middleName) \(con.familyName)","Phone number": hib])
-                
             }
         }
         print("List of all user ===========  \(allUser)")
@@ -111,69 +107,63 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
     
     var currentUserData : [String:String] = [:]
     func getData() {
-        
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded) {[weak self](snapshot) in
             //            self!.mbProgressHUD(text: "Loading.")
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
-                
                 for _ in snapshots {
                     //   let cata = snap.key
                     //   let ques = snap.value!
-                    
                     let infoMap = snapshot.value! as! [String:Any]
-                    
                     if snapshot.key == self!.phones {
                         self?.currentUserData["Name"] = "\(infoMap["Name"] ?? "")"
                         self?.currentUserData["Phone number"] = "\(infoMap["Phone number"] ?? "")"
                         self?.currentUserData["profilepic"] = "\(infoMap["photo url"] ?? "")"
                     }
-                    
                     if snapshot.key != self!.phones {
                         
                         if !self!.keyArray.contains("\(snapshot.key)") {
-                            
                             self!.keyArray.append("\(snapshot.key)")
                             print("Aray of number is \(self!.keyArray)")
                             
                             if self!.allUser.count > 1 {
-                            for i in 0...self!.allUser.count-1 {
-                                let frd = self!.allUser[i]
-                                if frd["Phone number"] == infoMap["Phone number"] as? String {
-                                    if infoMap["Name"] != nil {
-                                        
-                                        if infoMap["photo url"] != nil {
-                                            self!.allUserOfFirebase.append(["Name" : "\(infoMap["Name"]!)" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": "\(infoMap["photo url"]!)"])
-                                            //                                    print("usersDetails----------->>>\(self!.usersDetails)")
-                                        } else {
-                                            self!.allUserOfFirebase.append(["Name" : "\(infoMap["Name"]!)" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": ""])
-                                            //                                    print("usersDetails----------->>>\(self!.usersDetails)")
+                                for i in 0...self!.allUser.count-1 {
+                                    let frd = self!.allUser[i]
+                                    if frd["Phone number"] == infoMap["Phone number"] as? String {
+                                        if infoMap["Name"] != nil {
+                                            
+                                            if infoMap["photo url"] != nil {
+                                                self!.allUserOfFirebase.append(["Name" : "\(infoMap["Name"]!)" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": "\(infoMap["photo url"]!)"])
+                                                //                                    print("usersDetails----------->>>\(self!.usersDetails)")
+                                            } else {
+                                                self!.allUserOfFirebase.append(["Name" : "\(infoMap["Name"]!)" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": ""])
+                                                //                                    print("usersDetails----------->>>\(self!.usersDetails)")
+                                            }
+                                            break
+                                        } else if infoMap["group name"] != nil {
+                                            let grps = "\(infoMap["group user"]!)"
+                                            let ffhhf = grps.split(separator: "+")
+                                            print("=====ffhhf=======\(ffhhf.count)")
+                                            //                                        for i in 0...ffhhf.count-1 {
+                                            //                                            if self!.phones == "+\(ffhhf[i])" {
+                                            //                                                print("yes")
+                                            //                                                self!.allUserOfFirebase.append(["group name" : "\(infoMap["group name"]!)" , "Phone number": infoMap["group user"]!, "profilepic": ""])
+                                            //                                                break
+                                            //                                            } else {
+                                            //                                                print("god")
+                                            //                                            }
+                                            //
+                                            //                                        }
+                                            break
                                         }
-                                        break
-                                    } else if infoMap["group name"] != nil {
-                                        let grps = "\(infoMap["group user"]!)"
-                                        let ffhhf = grps.split(separator: "+")
-                                        print("=====ffhhf=======\(ffhhf.count)")
-                                        //                                        for i in 0...ffhhf.count-1 {
-                                        //                                            if self!.phones == "+\(ffhhf[i])" {
-                                        //                                                print("yes")
-                                        //                                                self!.allUserOfFirebase.append(["group name" : "\(infoMap["group name"]!)" , "Phone number": infoMap["group user"]!, "profilepic": ""])
-                                        //                                                break
-                                        //                                            } else {
-                                        //                                                print("god")
-                                        //                                            }
-                                        //
-                                        //                                        }
-                                        break
+                                        else {
+                                            self!.allUserOfFirebase.append(["Name" : "" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": ""])
+                                            print("usersDetails----------->>>\(self!.usersDetails)")
+                                            break
+                                        }
+                                        //                                    break
                                     }
-                                    else {
-                                        self!.allUserOfFirebase.append(["Name" : "" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": ""])
-                                        print("usersDetails----------->>>\(self!.usersDetails)")
-                                        break
-                                    }
-//                                    break
-                                }
-                            }}
+                                }}
                             
                             if infoMap["Name"] != nil {
                                 
@@ -184,7 +174,6 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                                     self!.usersDetails.append(["Name" : "\(infoMap["Name"]!)" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": ""])
                                     //                                    print("usersDetails----------->>>\(self!.usersDetails)")
                                 }
-                                
                             } else if infoMap["group name"] != nil {
                                 let grps = "\(infoMap["group user"]!)"
                                 let ffhhf = grps.split(separator: "+")
@@ -200,21 +189,16 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                                     }
                                     
                                 }
-                                
                             }
                             else {
                                 self!.usersDetails.append(["Name" : "" , "Phone number": "\(infoMap["Phone number"]!)", "profilepic": ""])
-                                
                             }
-                            
                         }
                     }
-                    
-                    
                 }
             }
-//            print("Sbapshot is ", snapshot.value!)
-//            print("usersDetails----------->>>\(self!.usersDetails)")
+            //            print("Sbapshot is ", snapshot.value!)
+            //            print("usersDetails----------->>>\(self!.usersDetails)")
             //            self?.tabelView.reloadData()
         }
     }
@@ -234,73 +218,73 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
             }
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
                 if (self?.usersDetails.count)! > 0 {
-                for data in snapshots {
-                    var cata = key
-                    if cata.prefix(3) != "+91" {
-                        cata = "\(infoMap!["groupMesId"]!)"
-                        print("Key cata = \(cata)")
-                    }
-                    if !(self?.msgIdList.contains("\(cata)"))! {
-                        self?.msgIdList.append("\(cata)")
-                        print("key ================-== \(cata)")
+                    for data in snapshots {
+                        var cata = key
+                        if cata.prefix(3) != "+91" {
+                            cata = "\(infoMap!["groupMesId"]!)"
+                            print("Key cata = \(cata)")
+                        }
+                        if !(self?.msgIdList.contains("\(cata)"))! {
+                            self?.msgIdList.append("\(cata)")
+                            print("key ================-== \(cata)")
+                            
+                            
+                        }
                         
-                        
-                    }
-                   
-                    if !(self?.msgkey.contains("\(cata)"))! {
-                      
-                        
-                        let splt = cata.split(separator: "+")
-                        if splt.count == 2 {
-                            for i in 0...splt.count-1 {
-                                if self!.phones == "+\(splt[i])" {
-//                                    print("iii \(i)")
-                                    self!.msgkey.append("\(cata)")
-                                    for int in 0...self!.usersDetails.count-1 {
-                                        let fhg = self?.usersDetails[int]
-//                                        print("int \(int)]]]]] ")
-                                        
-                                        for op in 0...splt.count-1 {
+                        if !(self?.msgkey.contains("\(cata)"))! {
+                            
+                            
+                            let splt = cata.split(separator: "+")
+                            if splt.count == 2 {
+                                for i in 0...splt.count-1 {
+                                    if self!.phones == "+\(splt[i])" {
+                                        //                                    print("iii \(i)")
+                                        self!.msgkey.append("\(cata)")
+                                        for int in 0...self!.usersDetails.count-1 {
+                                            let fhg = self?.usersDetails[int]
+                                            //                                        print("int \(int)]]]]] ")
                                             
-                                            if "+\(splt[op])" == fhg?["Phone number"] {
-//                                                print("fhg is \(fhg?["Phone number"])=====\(splt[op])")
-                                                self?.listOfData.append(fhg!)
-                                                if !self!.allUserOfFirebase.contains(fhg!) {
-                                                    self?.allUserOfFirebase.append(fhg!)
-                                                }
-                                                self?.hideProgress()
+                                            for op in 0...splt.count-1 {
                                                 
-                                                break
+                                                if "+\(splt[op])" == fhg?["Phone number"] {
+                                                    //                                                print("fhg is \(fhg?["Phone number"])=====\(splt[op])")
+                                                    self?.listOfData.append(fhg!)
+                                                    if !self!.allUserOfFirebase.contains(fhg!) {
+                                                        self?.allUserOfFirebase.append(fhg!)
+                                                    }
+                                                    self?.hideProgress()
+                                                    
+                                                    break
+                                                }
+                                                
                                             }
                                             
                                         }
-                                        
+                                        break
                                     }
-                                    break
                                 }
                             }
+                            else {
+                                if self!.usersDetails.count > 1 {
+                                    for int in 0...self!.usersDetails.count-1 {
+                                        let fhg = self?.usersDetails[int]
+                                        if cata == fhg?["Phone number"] {
+                                            if !(self?.listOfData.contains(fhg!))! {
+                                                self!.msgkey.append("\(cata)")
+                                                self?.listOfData.append(fhg!)
+                                                self?.hideProgress()
+                                                
+                                            }
+                                            break
+                                        }
+                                    }}
+                            }
                         }
-                        else {
-                            if self!.usersDetails.count > 1 {
-                            for int in 0...self!.usersDetails.count-1 {
-                                let fhg = self?.usersDetails[int]
-                                if cata == fhg?["Phone number"] {
-                                    if !(self?.listOfData.contains(fhg!))! {
-                                        self!.msgkey.append("\(cata)")
-                                        self?.listOfData.append(fhg!)
-                                        self?.hideProgress()
-                                        
-                                    }
-                                    break
-                                }
-                            }}
-                        }
-                    }
-                }}
+                    }}
             } else {
                 print("No data Found")
             }
-//                        print("msg \(self?.msgkey)--------\(self?.listOfData)")
+            //                        print("msg \(self?.msgkey)--------\(self?.listOfData)")
             self?.searchList = self!.listOfData
             print("List of data      \(self?.msgIdList)")
             self?.tabelView.reloadData()
@@ -316,26 +300,19 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         tabelView.delegate = self
         tabelView.dataSource = self
         tabBarController?.delegate = self
-        
         print(friends)
-        
-       
-        
         searchController.searchResultsUpdater = self
         searchController.searchBar.sizeToFit()
         tabelView.tableHeaderView = searchController.searchBar
-        
-//        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
-//            if cnt == 30 {
-//                print("cu \(phones)")
-//            
-//                Database.database().reference().child("Contact List").child("\(phones)").child("status").setValue(nil)
-//                Database.database().reference().child("Contact List").child("\(phones)").child("statuskey").setValue(nil)
-//               
-//            }
-//            print(cnt)
-//            cnt += 1
-//        })
+        //        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
+        //            if cnt == 30 {
+        //                print("cu \(phones)")
+        //                Database.database().reference().child("Contact List").child("\(phones)").child("status").setValue(nil)
+        //                Database.database().reference().child("Contact List").child("\(phones)").child("statuskey").setValue(nil)
+        //            }
+        //            print(cnt)
+        //            cnt += 1
+        //        })
         //                let refreshControl = UIRefreshControl()
         //                refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
         //                   self.tabelView.refreshControl = refreshControl
@@ -348,23 +325,20 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         
     }
     
-    
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         tabBarController?.tabBar.isHidden = false
-        
         print("current User",phones)
         
     }
+    
     var receiverName = ""
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         validAuth()
         tabelView.contentOffset = CGPoint(x: 0, y: searchController.searchBar.frame.height);
         tabBarController?.tabBarItem.accessibilityElementIsFocused()
-        
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
             if newMsg == true {
                 print("Yes \(newMsg)")
@@ -378,9 +352,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
                 self.navigationController?.pushViewController(vc!, animated: true)
             }
         })
-        
         navigationItem.hidesBackButton = true
-        
     }
     func validAuth(){
         if FirebaseAuth.Auth.auth().currentUser == nil {
@@ -392,7 +364,6 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
             getData()
             phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
         }
-        
     }
     
     @IBAction func newChat(_ sender: UIBarButtonItem) {
@@ -405,13 +376,13 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         vc?.allUserOfFirebase = allUserOfFirebase
         let navVC = UINavigationController(rootViewController: vc!)
         self.present(navVC, animated:true, completion: nil)
-        
     }
     
 }
 
 
-extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
+extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listOfData.count
     }
@@ -419,12 +390,10 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let frd = listOfData[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TableViewCell
-        
         cell?.userLabel.text = frd["Phone number"]
         _ = allUser.filter { user in
             //            print("user is \(user)")
             let hib =  user["Phone number"]
-            
             if hib == frd["Phone number"] {
                 cell?.userLabel.text = user["Name"]
             }
@@ -447,7 +416,6 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         return cell!
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         tabelView.deselectRow(at: indexPath, animated: true)
         let frd = listOfData[indexPath.row]
         usersNumber = frd["Phone number"]!
@@ -477,7 +445,6 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         } else {
             vc?.receiverName = usersNumber
         }
-        
         vc?.urlPath = frd["profilepic"] ?? ""
         vc?.fileName = frd["fileName"] ?? ""
         vc?.receiverid = usersNumber
@@ -509,7 +476,6 @@ extension UserDetailsCode: UITableViewDelegate, UITableViewDataSource{
         navigationController?.pushViewController(vc!, animated: true)
         hideProgress()
     }
-    
     
     func mychat() {
         if msgstatus == false {

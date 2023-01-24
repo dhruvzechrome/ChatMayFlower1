@@ -12,7 +12,6 @@ class ReceiverProfileViewCell: UITableViewCell {
     @IBOutlet weak var profileName: UILabel!
     @IBOutlet weak var profileNumber: UILabel!
     @IBOutlet weak var profilePic: UIImageView!
-    
     @IBOutlet weak var participant: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -21,19 +20,13 @@ class ReceiverProfileViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
 
 }
 
-
 class GroupUserCell : UITableViewCell {
-    
     @IBOutlet weak var groupUserProfile: UIImageView!
-    
     @IBOutlet weak var groupUserName: UILabel!
-    
     @IBOutlet weak var admin: UILabel!
-    
 }

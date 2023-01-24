@@ -8,35 +8,26 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
         tabBarController?.tabBar.isHidden = true
-        
         initializeHideKeyboard()
         // Do any additional setup after loading the view.
     }
     
     @IBAction func login(_ sender: UIButton) {
-        
         let vc = storyboard?.instantiateViewController(withIdentifier: "PhoneVerificationCode") as? PhoneVerificationCode
         navigationController?.pushViewController(vc!, animated: true)
-        
     }
-    
-    
-    
 }
 
 extension ViewController {
-    
     func initializeHideKeyboard(){
         //Declare a Tap Gesture Recognizer which will trigger our dismissMyKeyboard() function
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(
             target: self,
             action: #selector(dismissMyKeyboard))
-        
         //Add this tap gesture recognizer to the parent view
         view.addGestureRecognizer(tap)
     }
@@ -46,5 +37,4 @@ extension ViewController {
         //In short- Dismiss the active keyboard.
         view.endEditing(true)
     }
-    
 }

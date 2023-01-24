@@ -20,6 +20,5 @@ class StatusViewCell: UITableViewCell {
 
 class StatusPutCell : UITableViewCell {
     @IBOutlet weak var profileImage: UIImageView!
-    
     @IBOutlet weak var subLable: UILabel!
 }

@@ -10,7 +10,6 @@ import FirebaseAuth
 import FirebaseDatabase
 import Kingfisher
 class AllUsersList: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UISearchControllerDelegate{
-    
     var databaseRef: DatabaseReference!
     var usersNumber = ""
     var usersDetails = [[String:String]]()
@@ -33,7 +32,6 @@ class AllUsersList: UIViewController, UISearchBarDelegate, UISearchResultsUpdati
         searchController.searchResultsUpdater = self
         navigationItem.searchController = searchController
         title = "New Chat"
-       
         if allUser.count > 0 {
             let UserList = usersDetails
             usersDetails.removeAll()
@@ -45,7 +43,6 @@ class AllUsersList: UIViewController, UISearchBarDelegate, UISearchResultsUpdati
                     usersDetails.append(frd)
                 }
             }
-            
             for use in 0...allUserOfFirebase.count-1 {
                 //                print("User List  --- \(use)")
                 let frd = allUserOfFirebase[use]
@@ -59,7 +56,6 @@ class AllUsersList: UIViewController, UISearchBarDelegate, UISearchResultsUpdati
                         let str = user["Name"]
                         allUserOfFirebase[use] = ["Name": "\(str!)","Phone number": "\(myNumber!)","profilepic": "\(frd["profilepic"]!)"]
                     } else {
-                        
                         _ = msgIdList.filter { user in
                             let str = user.split(separator: "+")
                             if str.count == 2 {
@@ -137,10 +133,8 @@ extension AllUsersList : UITableViewDelegate , UITableViewDataSource {
                 cell?.name.text = frd["Phone number"]
             }
         }
-        
         for i in 0...allUserOfFirebase.count-1 {
             let chekFrd = allUserOfFirebase[i]
-            
             if frd["Phone number"] == chekFrd["Phone number"] {
                 cell?.otherUser.text = ""
                 break
@@ -154,7 +148,6 @@ extension AllUsersList : UITableViewDelegate , UITableViewDataSource {
         }
         if frd["profilepic"] == nil {
             cell?.profileImage.image = UIImage(systemName: "person.circle.fill")
-            
             if indexPath.row == 0 {
                 cell?.profileImage.image = UIImage(systemName: "person.2.circle.fill")
             }
@@ -169,7 +162,6 @@ extension AllUsersList : UITableViewDelegate , UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         tableViewCell.deselectRow(at: indexPath, animated: true)
         let frd = usersLists[indexPath.row]
         if frd["Phone number"] == nil {
@@ -188,7 +180,6 @@ extension AllUsersList : UITableViewDelegate , UITableViewDataSource {
                 let hib =  user["Phone number"]
                 print("Phonne number   \(hib)")
                 if hib == frd["Phone number"] {
-                    
                     if let vc = self.presentingViewController as? UITabBarController {
                         if let pv = vc.viewControllers?.first as? UINavigationController {
                             if let pvc = pv.viewControllers.first as? UserDetailsCode {
@@ -214,7 +205,6 @@ extension AllUsersList : UITableViewDelegate , UITableViewDataSource {
                         alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
                         self.present(alert, animated: true, completion: nil)
                     }
-                    
                 }
                 return true
             }
@@ -259,7 +249,6 @@ extension AllUsersList {
                     usersLists.append(frd)
                 }
             }
-            
         }
         self.tableViewCell.reloadData()
     }

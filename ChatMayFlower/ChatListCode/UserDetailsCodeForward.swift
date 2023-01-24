@@ -28,6 +28,7 @@ class UserDetailsCodeForward: UIViewController {
     var boolforPhoto = false
     @IBOutlet weak var forwardView: UIView!
     @IBOutlet weak var selectedUser: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         userTable.dataSource = self
@@ -46,6 +47,7 @@ class UserDetailsCodeForward: UIViewController {
         chats()
         let database = Database.database().reference()
         print("ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) | ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+        
         if forwardChatPhoto != "" {
             boolforPhoto = false
             print("ForwardChatPhoto - \(forwardChatPhoto)")
@@ -55,7 +57,6 @@ class UserDetailsCodeForward: UIViewController {
                 database.child("Chats").child(messageId).child("chatting").child("\(uid!)").setValue(["\(forwardChatKey)chatPhoto": forwardChatPhoto], withCompletionBlock: { error, _ in
                     guard error == nil else {
                         print("Failed to write data")
-                        
                         return
                     }
                     print("data written seccess")
@@ -76,7 +77,6 @@ class UserDetailsCodeForward: UIViewController {
                 database.child("Chats").child(messageId).child("chatting").child("\(uid!)").setValue(["\(forwardChatKey)text": forwardChat,"\(forwardChatKey)chatPhoto": forwardChatPhoto], withCompletionBlock: { error, _ in
                     guard error == nil else {
                         print("Failed to write data")
-                        
                         return
                     }
                     print("data written seccess")
@@ -93,7 +93,7 @@ class UserDetailsCodeForward: UIViewController {
                 })
             }
         }
-       else if forwardChatVideo != "" {
+        else if forwardChatVideo != "" {
             print("ForwardChatVideo - \(forwardChatVideo)")
             uid! += 1
             database.child("Uid").setValue(uid)
@@ -122,12 +122,10 @@ class UserDetailsCodeForward: UIViewController {
             database.child("Chats").child(messageId).child("chatting").child("\(uid!)").setValue(["\(forwardChatKey)": forwardChat], withCompletionBlock: { error, _ in
                 guard error == nil else {
                     print("Failed to write data")
-                    
                     return
                 }
                 print("data written seccess")
                 DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
-                    
                     if let vc = self.presentingViewController as? UITabBarController {
                         if let cvc = vc.viewControllers?.first as? UINavigationController {
                             if let cv = cvc.viewControllers.last as? ChatConversionCode {
@@ -143,7 +141,7 @@ class UserDetailsCodeForward: UIViewController {
     @IBAction func cancel(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
-
+    
 }
 
 extension UserDetailsCodeForward : UITableViewDelegate, UITableViewDataSource {
@@ -154,24 +152,20 @@ extension UserDetailsCodeForward : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let frd = usersDetails[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "UserForwardCell", for: indexPath) as? UserForwardCell
-        
         cell?.nsme.text = frd["Phone number"]
         _ = allUserOfContact.filter { user in
             //            print("user is \(user)")
             let hib =  user["Phone number"]
-            
             if hib == frd["Phone number"] {
                 cell?.nsme.text = user["Name"]
             }
             return true
         }
         if frd["group name"] == nil {
-            
         } else {
             cell?.nsme.text = frd["group name"]
         }
         print("my image is \(frd["profilepic"]!)")
-        
         if frd["profilepic"]! == "" {
             cell?.profile.image = UIImage(named: "person")
         } else {
@@ -186,7 +180,6 @@ extension UserDetailsCodeForward : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let frd = usersDetails[indexPath.row]
         let num = (frd["Phone number"])!
-        
         if !userKey.contains(num) {
             userKey.append(num)
             selectedUsers.append(frd)
@@ -219,7 +212,6 @@ extension UserDetailsCodeForward : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let frd = usersDetails[indexPath.row]
         let num = (frd["Phone number"])!
-        
         for i in 0...userKey.count-1 {
             if num == userKey[i] {
                 userKey.remove(at: i)
@@ -269,7 +261,7 @@ extension UserDetailsCodeForward : UITableViewDelegate, UITableViewDataSource {
                 print("msgkey at index  \(msgIdList[avl]) - \(phones) - \(userNumber)")
                 if msgIdList[avl] == "\(phones)\(userNumber)" || msgIdList[avl] == "\(userNumber)\(phones)" || msgIdList[avl] == "\(userNumber)" {
                     messageId = msgIdList[avl]
-                     print("True ----------- \(messageId)")
+                    print("True ----------- \(messageId)")
                     msgstatus = true
                     break
                 }
@@ -287,17 +279,10 @@ extension UserDetailsCodeForward : UITableViewDelegate, UITableViewDataSource {
                 })
             }
         }
-        
-    }
-    func mychat() {
-        
     }
 }
 
 class UserForwardCell : UITableViewCell {
-    
     @IBOutlet weak var profile: UIImageView!
     @IBOutlet weak var nsme: UILabel!
-    
-    
 }

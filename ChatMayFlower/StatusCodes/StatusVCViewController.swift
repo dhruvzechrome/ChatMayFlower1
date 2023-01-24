@@ -32,7 +32,7 @@ class StatusVCViewController: UIViewController {
         print("Image Tapped")
         let vc = storyboard?.instantiateViewController(withIdentifier: "CameraAndLibraryController") as? CameraAndLibraryController
         vc?.modalPresentationStyle = .overFullScreen
-//            navigationController?.show(vc!, sender: nil)
+        //            navigationController?.show(vc!, sender: nil)
         vc?.currentUserData = currentUserData
         vc?.currentUser = currentUser
         navigationController?.present(vc!, animated: true, completion: nil)
@@ -45,7 +45,7 @@ class StatusVCViewController: UIViewController {
         statusTableView.dataSource = self
         getContact()
         getData()
-
+        
     }
     
     func my() {
@@ -71,7 +71,6 @@ class StatusVCViewController: UIViewController {
             vc?.modalPresentationStyle = .fullScreen
             navigationController?.present(vc!, animated: true, completion: nil)
         }
-        
         getData()
         print("Current user == \(currentUser)")
     }
@@ -80,7 +79,6 @@ class StatusVCViewController: UIViewController {
         if authorize == .notDetermined {
             storeC.requestAccess(for: .contacts) { (chk, error) in
                 if error == nil {
-                    
                 }
             }
         } else if authorize == .authorized {
@@ -91,10 +89,8 @@ class StatusVCViewController: UIViewController {
     func getContactList() {
         let predicate = CNContact.predicateForContactsInContainer(withIdentifier: storeC.defaultContainerIdentifier())
         let contct = try! storeC.unifiedContacts(matching: predicate, keysToFetch: [CNContactPhoneNumbersKey as CNKeyDescriptor,CNContactGivenNameKey as CNKeyDescriptor,CNContactMiddleNameKey as CNKeyDescriptor,CNContactFamilyNameKey as CNKeyDescriptor])
-        
         for con in contct {
-//            print("*Name of contact number ")
-            
+            //            print("*Name of contact number ")
             for phNO in con.phoneNumbers {
                 var hib =  phNO.value.stringValue
                 hib = hib.replacingOccurrences(of: " ", with: "")
@@ -105,7 +101,6 @@ class StatusVCViewController: UIViewController {
                     hib = "+91\(hib)"
                 }
                 allUser.append(["Name" : "\(con.givenName) \(con.middleName) \(con.familyName)","Phone number": hib])
-                
             }
         }
         print("List of all user ===========  \(allUser)")
@@ -115,39 +110,34 @@ class StatusVCViewController: UIViewController {
     var statusDetail = [[String:String]]()
     func getData() {
         // Create Firebase Storage Reference
-//        statuskey.removeAll()
-//        statusDetail.removeAll()
-//        currentUserData.removeAll()
-//        currentAData.removeAll()
-//        currentUserStatus.removeAll()
-//        key.removeAll()
-//        statusData.removeAll()
-//        details.removeAll()
+        //        statuskey.removeAll()
+        //        statusDetail.removeAll()
+        //        currentUserData.removeAll()
+        //        currentAData.removeAll()
+        //        currentUserStatus.removeAll()
+        //        key.removeAll()
+        //        statusData.removeAll()
+        //        details.removeAll()
         _ = Storage.storage().reference()
-        
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded){[self](snapshot) in
             _ = snapshot.key
             print("singh ji",snapshot)
-            
             guard let _ = snapshot.value as? [String:Any] else {return}
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
                 databaseRef.child("\(snapshot.key)").child("status").observe(.childAdded) { snaps in
                     _ = snaps.value
-                    
                     if !statuskey.contains("\(snaps.key)") {
                         print("my status1 \(snaps.key)")
                         statuskey.append("\(snaps.key)")
                         statusDetail.append(snaps.value as! [String:String])
                         print("All user of firebase 121212 \(details) --- \(statuskey)")
                     }
-                   
                 }
                 for snap in snapshots {
                     let _ = snap.key
                     let _ = snap.value!
                     let userMap = snapshot.value! as! [String:Any]
-                    
                     if snapshot.key == currentUser {
                         currentUserData["Name"] = "\(userMap["Name"] ?? "")"
                         currentUserData["Phone number"] = "\(userMap["Phone number"] ?? "")"
@@ -163,10 +153,9 @@ class StatusVCViewController: UIViewController {
                         currentAData["profilepic"] = "\(userMap["photo url"] ?? "")"
                         currentAData["statuskey"] = "\(userMap["statuskey"] ?? "")"
                         currentAData["status"] = userMap["status"] as? [String:Any]
-//                            print("my status \(snaps.value)")
+                        //                            print("my status \(snaps.value)")
                         statusTableView.reloadData()
                     }
-                    
                     if !key.contains(snapshot.key) {
                         print("data of all firebase user \(userMap)")
                         if snapshot.key != currentUser {
@@ -176,17 +165,14 @@ class StatusVCViewController: UIViewController {
                                     let frd = user["Phone number"]
                                     if frd == snapshot.key && userMap["status"] != nil{
                                         key.append(snapshot.key)
-                                        
-//                                        print("Other user status \(snaps.value)")
+                                        //                                        print("Other user status \(snaps.value)")
                                         statusData.append(["Name": "\(user["Name"] ?? "")","Phone number":"\(userMap["Phone number"] ?? "")","status":userMap["status"]! ,"statuskey":"\(userMap["statuskey"] ?? "")","profilepic":"\(userMap["photo url"] ?? "")"])
                                     }
                                     return true
                                 }
                             }
                         }
-                        
                     }
-                    
                 }
             }
             details = [[currentUserData], statusData]
@@ -194,7 +180,6 @@ class StatusVCViewController: UIViewController {
             print("All user of firebase \(details) --- \(statuskey)")
         }
     }
-    
 }
 
 extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
@@ -204,10 +189,8 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             statusTableView.deselectRow(at: indexPath, animated: true)
         }
         if indexPath.section == 0 {
-            
-            
             if currentUserData["statuskey"] != "" && currentUserStatus["\(currentUserData["statuskey"] ?? "")"] != nil {
-//                let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
+                //                let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
                 print("frdddddd = \(currentUserStatus)- - - \(currentUserData)")
                 let vc = storyboard?.instantiateViewController(withIdentifier: "StatusCollectionVC") as? StatusCollectionVC
                 vc?.statusData = [currentAData]
@@ -217,18 +200,14 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
                 vc?.nameText = "You"
                 vc?.modalPresentationStyle = .overFullScreen
                 navigationController?.present(vc!, animated: true, completion: nil)
-                
             }
             else {
-                
                 let vc = storyboard?.instantiateViewController(withIdentifier: "CameraAndLibraryController") as? CameraAndLibraryController
                 vc?.modalPresentationStyle = .overFullScreen
                 //            navigationController?.show(vc!, sender: nil)
                 vc?.currentUserData = currentUserData
                 vc?.currentUser = currentUser
-                navigationController?.present(vc!, animated: true, completion: nil)
-                
-            }
+                navigationController?.present(vc!, animated: true, completion: nil)            }
         } else {
             let frd = details[indexPath.section][indexPath.row]
             let keyS = frd["statuskey"]
@@ -239,11 +218,11 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             vc?.statuskey = statuskey
             vc?.modalPresentationStyle = .overFullScreen
             navigationController?.present(vc!, animated: true, completion: nil)
-//            let img = valll?["\(keyS!)"] as? [String:String]
+            //            let img = valll?["\(keyS!)"] as? [String:String]
             print("datas    --- --- ---    \(indexPath.row)")
         }
     }
-
+    
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return self.section[section]
     }
@@ -256,35 +235,29 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        print("indexPath of section \(indexPath.section) \(indexPath.row)")
+        //        print("indexPath of section \(indexPath.section) \(indexPath.row)")
         if indexPath.section == 0 {
             let cell = statusTableView.dequeueReusableCell(withIdentifier: "StatusPutCell") as? StatusPutCell
-                let url = URL(string: currentUserData["profilepic"] ?? "")
-                cell?.profileImage.kf.setImage(with: url)
-                    print("Come on yaar \(currentUserStatus)")
+            let url = URL(string: currentUserData["profilepic"] ?? "")
+            cell?.profileImage.kf.setImage(with: url)
+            print("Come on yaar \(currentUserStatus)")
             if currentUserData["statuskey"] != ""  && currentUserStatus["\(currentUserData["statuskey"] ?? "")"] != nil{
-                        let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
-                        print("frdddddd = \(currentUserStatus)- - - \(frd)")
-                        
-                        if frd["statusPhoto"] != nil {
-                            let url = URL(string: frd["statusPhoto"]!)
-                            cell?.profileImage.kf.setImage(with: url)
-                        } else {
-                            let url = URL(string: frd["statusVideo"]!)!
-                            cell?.profileImage.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
-                        }
-                        cell?.profileImage.borderWidth = 3
-                        cell?.profileImage.borderColor = .blue
-                        
-                        cell?.subLable.text = "Tap to view status"
-                    } else {
-                        cell?.profileImage.image = UIImage(systemName: "person.circle.fill")
-                    }
+                let frd = currentUserStatus["\(currentUserData["statuskey"] ?? "")"] as! [String:String]
+                print("frdddddd = \(currentUserStatus)- - - \(frd)")
+                if frd["statusPhoto"] != nil {
+                    let url = URL(string: frd["statusPhoto"]!)
+                    cell?.profileImage.kf.setImage(with: url)
+                } else {
+                    let url = URL(string: frd["statusVideo"]!)!
+                    cell?.profileImage.kf.setImage(with: AVAssetImageDataProvider(assetURL: url, seconds: 1))
+                }
+                cell?.profileImage.borderWidth = 3
+                cell?.profileImage.borderColor = .blue
                 
-                
-                
-            
-            
+                cell?.subLable.text = "Tap to view status"
+            } else {
+                cell?.profileImage.image = UIImage(systemName: "person.circle.fill")
+            }
             return cell!
         }else {
             let frd = details[indexPath.section][indexPath.row]
@@ -294,7 +267,6 @@ extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {
             print("datas    --- --- ---    \(img)")
             let cell = statusTableView.dequeueReusableCell(withIdentifier: "StatusViewCell") as? StatusViewCell
             cell?.statusImage.image = UIImage(systemName: "circle")
-            
             if img?["statusPhoto"] != nil {
                 let url = URL(string: img?["statusPhoto"] ?? "")
                 print("Photo ")

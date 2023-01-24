@@ -13,7 +13,6 @@ import FirebaseStorage
 class GroupViewController: UIViewController,UIImagePickerControllerDelegate , UINavigationControllerDelegate{
     var name = ""
     @IBOutlet weak var createButton: UIBarButtonItem!
-    
     @IBOutlet weak var GroupImage: UIImageView!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var groupTableView: UITableView!
@@ -99,144 +98,95 @@ class GroupViewController: UIViewController,UIImagePickerControllerDelegate , UI
             print("Selected image ",selectedImage)
             GroupImage.image = selectedImage
             didselectedImage = selectedImage
-//            let localPath = info[.imageURL] as? NSURL
-//            _ = info[.imageURL] as? URL
-//            print("Local Path  > ",localPath!)
-            
-//            print("Name of Image --->>> ",filename!)
+            //            let localPath = info[.imageURL] as? NSURL
+            //            _ = info[.imageURL] as? URL
+            //            print("Local Path  > ",localPath!)
+            //            print("Name of Image --->>> ",filename!)
             picker.dismiss(animated: true, completion: nil)
-            
         }
         else{
             print("Image not found...!")
         }
-        
     }
     
     @IBAction func createButton(_ sender: UIBarButtonItem) {
-        
-            
         guard GroupImage.image != nil else{
-                if name == "" {
-                    let name = textField.text
-                    if textField.text  != "" && groupName != "" && groupUser.count > 0 {
-                        let str = "group\(UUID().uuidString)"
-                        databaseRef.child("Contact List").child("\(name!)").setValue(["uniqueid": "\(str)","admin":"\(phones)" , "group name": "\(name!)" , "group user":"\(phones)\(groupName)" , "photo url":"","location" : ""] , withCompletionBlock: { error, _ in
-                            guard error == nil else {
-                                print("Failed to write data")
-                                return
-                            }
-                            print("data written seccess")
-                        })
-                        databaseRef.child("Chats").child("\(str)").setValue(["groupMesId":"\(phones)\(groupName)"])
-                        databaseRef.child("Chats").child("\(str)").child("chatting").child("0").setValue(["\(phones)": "New Group Ceated by \(phones)"], withCompletionBlock: { error, _ in
-                            guard error == nil else {
-                                print("Failed to write data")
-                                
-                                return
-                            }
-                            self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
-                            print("data written seccess")
-                        })
-                    } else {
-                        let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
+            if name == "" {
+                let name = textField.text
+                if textField.text  != "" && groupName != "" && groupUser.count > 0 {
+                    let str = "group\(UUID().uuidString)"
+                    databaseRef.child("Contact List").child("\(name!)").setValue(["uniqueid": "\(str)","admin":"\(phones)" , "group name": "\(name!)" , "group user":"\(phones)\(groupName)" , "photo url":"","location" : ""] , withCompletionBlock: { error, _ in
+                        guard error == nil else {
+                            print("Failed to write data")
+                            return
+                        }
+                        print("data written seccess")
+                    })
+                    databaseRef.child("Chats").child("\(str)").setValue(["groupMesId":"\(phones)\(groupName)"])
+                    databaseRef.child("Chats").child("\(str)").child("chatting").child("0").setValue(["\(phones)": "New Group Ceated by \(phones)"], withCompletionBlock: { error, _ in
+                        guard error == nil else {
+                            print("Failed to write data")
+                            
+                            return
+                        }
+                        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+                        print("data written seccess")
+                    })
+                } else {
+                    let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            } else {
+                print("No")
+                let name = textField.text
+                if textField.text  != "" && groupName != "" && groupUser.count > 1 {
+                    databaseRef.child("Contact List").child("\(name!)").setValue(["uniqueid": "\(groupMsgId)","admin":"\(phones)" , "group name": "\(name!)" , "group user":"\(groupName)" , "photo url":"","location" : ""] , withCompletionBlock: { error, _ in
+                        guard error == nil else {
+                            print("Failed to write data")
+                            return
+                        }
+                        print("data written seccess")
+                    })
+                    let ref = databaseRef.child("Chats").child("\(groupMsgId)")
+                    ref.updateChildValues(["groupMesId":"\(groupName)"]) { error, _ in
+                        guard error == nil else {
+                            print("Failedt Update")
+                            return
+                        }
+                        print("Update Successfully")
+                        self.dismiss(animated: true)
                     }
                 } else {
-                    print("No")
-                    let name = textField.text
-                    if textField.text  != "" && groupName != "" && groupUser.count > 1 {
-                        databaseRef.child("Contact List").child("\(name!)").setValue(["uniqueid": "\(groupMsgId)","admin":"\(phones)" , "group name": "\(name!)" , "group user":"\(groupName)" , "photo url":"","location" : ""] , withCompletionBlock: { error, _ in
-                            guard error == nil else {
-                                print("Failed to write data")
-                                return
-                            }
-                            print("data written seccess")
-                        })
-                        let ref = databaseRef.child("Chats").child("\(groupMsgId)")
-                        ref.updateChildValues(["groupMesId":"\(groupName)"]) { error, _ in
-                            guard error == nil else {
-                                print("Failedt Update")
-                                return
-                            }
-                            print("Update Successfully")
-                            self.dismiss(animated: true)
-                        }
-                    } else {
-                        let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                    }
+                    let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
                 }
-                return
             }
-            
-            // Create Firebase Storage Reference
-            let storageRef = Storage.storage().reference()
-            
-            
-            let imageData = didselectedImage!.jpegData(compressionQuality: 0.4)
-            
-            guard imageData != nil else {
-                return
-            }
-            // imagesRef still points to "images"
-            if photoUrlPath == "" {
-                filename = "groupImages/\(UUID().uuidString).jpg"
-            }
-            let fileRef = storageRef.child(filename!)
-            print("\(fileRef)")
-            
-            // This is equivalent to creating the full reference
-            // Upload data
-            let _ = fileRef.putData(imageData!, metadata: nil) { [self] metadata, error in
-                var urlpth = ""
-                // Check error
-                if error == nil && metadata != nil {
-                    if name == "" {
-                        
-                        let name = textField.text
-                        print("my group name  \(groupName)")
-                        if textField.text  != "" && groupName != "" && groupUser.count > 0 {
-                            fileRef.downloadURL {
-                                url, error in
-                                if let error = error {
-                                    // Handle any errors
-                                    print(error)
-                                } else {
-                                    // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
-                                    urlpth = "\(url!)"
-                                    let str = "group\(UUID().uuidString)"
-                                    databaseRef.child("Contact List").child("\(name!)").setValue(["uniqueid": "\(str)","admin":"\(phones)" , "group name": "\(name!)" , "group user":"\(phones)\(groupName)" , "photo url":"\(url!)","location" : "\(filename!)"] , withCompletionBlock: { error, _ in
-                                        guard error == nil else {
-                                            print("Failed to write data")
-                                            return
-                                        }
-                                        print("data written seccess")
-                                    })
-                                    databaseRef.child("Chats").child("\(str)").setValue(["groupMesId":"\(phones)\(groupName)"])
-                                    databaseRef.child("Chats").child("\(str)").child("chatting").child("0").setValue(["\(phones)": "New Group Ceated by \(phones)"], withCompletionBlock: { error, _ in
-                                        guard error == nil else {
-                                            print("Failed to write data")
-                                            
-                                            return
-                                        }
-                                        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
-                                        print("data written seccess")
-                                    })
-                                    self.navigationController?.popViewController(animated: true)
-                                }
-                                
-                            }
-                           
-                        } else {
-                            let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
-                            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                            self.present(alert, animated: true, completion: nil)
-                        }
-                    } else {
-                        print("No")
+            return
+        }
+        // Create Firebase Storage Reference
+        let storageRef = Storage.storage().reference()
+        let imageData = didselectedImage!.jpegData(compressionQuality: 0.4)
+        guard imageData != nil else {
+            return
+        }
+        // imagesRef still points to "images"
+        if photoUrlPath == "" {
+            filename = "groupImages/\(UUID().uuidString).jpg"
+        }
+        let fileRef = storageRef.child(filename!)
+        print("\(fileRef)")
+        // This is equivalent to creating the full reference
+        // Upload data
+        let _ = fileRef.putData(imageData!, metadata: nil) { [self] metadata, error in
+            var urlpth = ""
+            // Check error
+            if error == nil && metadata != nil {
+                if name == "" {
+                    let name = textField.text
+                    print("my group name  \(groupName)")
+                    if textField.text  != "" && groupName != "" && groupUser.count > 0 {
                         fileRef.downloadURL {
                             url, error in
                             if let error = error {
@@ -245,41 +195,73 @@ class GroupViewController: UIViewController,UIImagePickerControllerDelegate , UI
                             } else {
                                 // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
                                 urlpth = "\(url!)"
-                                let name = textField.text
-                                if textField.text  != "" && groupName != "" && groupUser.count > 1 {
-                                    databaseRef.child("Contact List").child("\(name!)").setValue(["uniqueid": "\(groupMsgId)","admin":"\(phones)" , "group name": "\(name!)" , "group user":"\(groupName)" , "photo url":"\(url!)","location" : "\(filename!)"] , withCompletionBlock: { error, _ in
-                                        guard error == nil else {
-                                            print("Failed to write data")
-                                            return
-                                        }
-                                        print("data written seccess")
-                                    })
-                                    let ref = databaseRef.child("Chats").child("\(groupMsgId)")
-                                    ref.updateChildValues(["groupMesId":"\(groupName)"]) { error, _ in
-                                        guard error == nil else {
-                                            print("Failedt Update")
-                                            return
-                                        }
-                                        print("Update Successfully")
-                                        self.dismiss(animated: true)
+                                let str = "group\(UUID().uuidString)"
+                                databaseRef.child("Contact List").child("\(name!)").setValue(["uniqueid": "\(str)","admin":"\(phones)" , "group name": "\(name!)" , "group user":"\(phones)\(groupName)" , "photo url":"\(url!)","location" : "\(filename!)"] , withCompletionBlock: { error, _ in
+                                    guard error == nil else {
+                                        print("Failed to write data")
+                                        return
                                     }
-                                } else {
-                                    let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
-                                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                                    self.present(alert, animated: true, completion: nil)
-                                }
-                                self.navigationController?.dismiss(animated: true, completion: nil)
+                                    print("data written seccess")
+                                })
+                                databaseRef.child("Chats").child("\(str)").setValue(["groupMesId":"\(phones)\(groupName)"])
+                                databaseRef.child("Chats").child("\(str)").child("chatting").child("0").setValue(["\(phones)": "New Group Ceated by \(phones)"], withCompletionBlock: { error, _ in
+                                    guard error == nil else {
+                                        print("Failed to write data")
+                                        
+                                        return
+                                    }
+                                    self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+                                    print("data written seccess")
+                                })
+                                self.navigationController?.popViewController(animated: true)
                             }
-                            
                         }
-                        
+                    } else {
+                        let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                } else {
+                    print("No")
+                    fileRef.downloadURL {
+                        url, error in
+                        if let error = error {
+                            // Handle any errors
+                            print(error)
+                        } else {
+                            // Get the download URL for 'Lessons_Lesson1_Class1.mp3'
+                            urlpth = "\(url!)"
+                            let name = textField.text
+                            if textField.text  != "" && groupName != "" && groupUser.count > 1 {
+                                databaseRef.child("Contact List").child("\(name!)").setValue(["uniqueid": "\(groupMsgId)","admin":"\(phones)" , "group name": "\(name!)" , "group user":"\(groupName)" , "photo url":"\(url!)","location" : "\(filename!)"] , withCompletionBlock: { error, _ in
+                                    guard error == nil else {
+                                        print("Failed to write data")
+                                        return
+                                    }
+                                    print("data written seccess")
+                                })
+                                let ref = databaseRef.child("Chats").child("\(groupMsgId)")
+                                ref.updateChildValues(["groupMesId":"\(groupName)"]) { error, _ in
+                                    guard error == nil else {
+                                        print("Failedt Update")
+                                        return
+                                    }
+                                    print("Update Successfully")
+                                    self.dismiss(animated: true)
+                                }
+                            } else {
+                                let alert = UIAlertController(title: "Alert", message: "Enter Group Name", preferredStyle: UIAlertController.Style.alert)
+                                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                            self.navigationController?.dismiss(animated: true, completion: nil)
+                        }
                     }
                 }
-                print("Error ====== \(String(describing: error))")
             }
-            
+            print("Error ====== \(String(describing: error))")
+        }
     }
-
 }
 
 extension GroupViewController : UITableViewDelegate, UITableViewDataSource {
@@ -290,8 +272,8 @@ extension GroupViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let frd = selecetdUser[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupViewCell", for: indexPath) as? GroupViewCell
-//        print("my image is \(frd["profilepic"]!)")
-            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        //        print("my image is \(frd["profilepic"]!)")
+        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         if frd["Name"] == nil {
             cell?.name.text = frd["Phone number"]
         } else {

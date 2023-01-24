@@ -28,10 +28,7 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
                     if let error = error {
                         print("fail otp sent",error)
                         let  alert = UIAlertController (title: "Otp cannot sent!", message: "", preferredStyle: .alert)
-                        
-                        alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: {_ in
-                            
-                        }))
+                        alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: {_ in}))
                         self.present(alert, animated: true)
                         return
                     }
@@ -55,9 +52,7 @@ class PhoneVerificationCode: UIViewController, UITextFieldDelegate {
             present(alert, animated: true)
         }
     }
-    
 }
-
 
 extension String {
     //    var isPhoneNumber: Bool {

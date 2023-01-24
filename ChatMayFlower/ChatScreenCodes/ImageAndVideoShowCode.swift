@@ -32,7 +32,6 @@ class ImageAndVideoShowCode: UIViewController {
             selectedImage.image = navselectedImage
         }
         else {
-            
         }
         
         commentField.delegate = self
@@ -40,28 +39,22 @@ class ImageAndVideoShowCode: UIViewController {
         initializeHideKeyboard()
         num = FirebaseAuth.Auth.auth().currentUser!.phoneNumber!
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil);
-        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil);
     }
     
     @IBAction func sent(_ sender: UIButton) {
-        
         guard selectedImage != nil else{
             self.navigationController?.popViewController(animated: true)
-            
             return
         }
         mbProgressHUD(text: "Loading..")
         let storageRef = Storage.storage().reference()
-        
         let imageData = navselectedImage?.jpegData(compressionQuality: 0.4)
-        
         guard imageData != nil else {
             return
         }
         //        var path = ""
         let filename = "chatImages/\(UUID().uuidString).jpg"
-        
         let fileRef = storageRef.child(filename)
         print("\(fileRef)")
         let _ = fileRef.putData(imageData!, metadata: nil) { [self] metadata, error in
@@ -78,12 +71,11 @@ class ImageAndVideoShowCode: UIViewController {
                         urlpth = "\(url!)"
                         uid = uid! + 1
                         database.child("Uid").setValue(uid)
-//                        database.child("Chats").child(mesId).child("status").setValue(["\(num)":true,"\(num)":false])
+                        //                        database.child("Chats").child(mesId).child("status").setValue(["\(num)":true,"\(num)":false])
                         if commentField.text == "" {
                             database.child("Chats").child(mesId).child("chatting").child("\(uid!)").setValue(["\(num)chatPhoto": urlpth], withCompletionBlock: { error, _ in
                                 guard error == nil else {
                                     print("Failed to write data")
-                                    
                                     return
                                 }
                                 print("data written seccess")
@@ -96,7 +88,6 @@ class ImageAndVideoShowCode: UIViewController {
                             database.child("Chats").child(mesId).child("chatting").child("\(uid!)").setValue(["\(num)text":commentField.text!,"\(num)chatPhoto": urlpth], withCompletionBlock: { error, _ in
                                 guard error == nil else {
                                     print("Failed to write data")
-                                    
                                     return
                                 }
                                 print("data written seccess")
@@ -110,7 +101,6 @@ class ImageAndVideoShowCode: UIViewController {
                     }
                 }
                 //                    print("Urllll ---sdsdfsdf-->",urlpth)
-                
                 //                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "ShowProfileDetail") as? ShowProfileDetail
                 //                    vc?.phones = self.number
             }
@@ -148,7 +138,8 @@ extension ImageAndVideoShowCode : UITextFieldDelegate {
         if keyBoardStatus == true {
             print("YESSTR")
             view.endEditing(true)
-        }        }
+        }
+    }
     
     func subscribeToNotification(_ notification: NSNotification.Name, selector: Selector) {
         NotificationCenter.default.addObserver(self, selector: selector, name: notification, object: nil)

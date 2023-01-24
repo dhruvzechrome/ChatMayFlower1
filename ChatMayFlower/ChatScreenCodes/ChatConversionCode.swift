@@ -28,10 +28,8 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     var allUserOfFirebase = [[String:String]]()
     var phones = ""
     var groupMsgId = ""
-    
     var urlPath = ""
     var fileName = ""
-    
     var databaseRef: DatabaseReference!
     var usersNumber = ""
     var msgIdList = [String]()
@@ -86,12 +84,14 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         navigationItem.backButtonTitle = ""
         tabBarController?.tabBar.isHidden = true
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         print("true")
     }
+    
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
-         print("Hello World - \(receiverid) - \(receiverName)")
+        print("Hello World - \(receiverid) - \(receiverName)")
         let vc = storyboard?.instantiateViewController(withIdentifier: "ReceiverEditCode") as? ReceiverEditCode
         vc?.urlPath = urlPath
         vc?.fileName = fileName
@@ -127,30 +127,26 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         receiverUserid = receiverid
         print("All user of contact is \(allUserOfContact)")
-//        titl.titleView?.addGestureRecognizer(tap)
+        //        titl.titleView?.addGestureRecognizer(tap)
         navigationController?.navigationBar.addGestureRecognizer(tap)
         if usersNumber.prefix(3) != "+91" {
             print("+91\(usersNumber) ----")
             usersNumber = "+91\(usersNumber)"
             receiverid = "+91\(receiverid)"
         }
-        
         codeFlex()
         print("\(usersNumber)")
         keyboardheight = 0
         seenVcStatus = true
         print("all user \(allUserOfContact)")
-//        print("\(mid)!!! \(receiverid)---- \(usersNumber)====\(phoneid)-----\(msgIdList)")
+        //        print("\(mid)!!! \(receiverid)---- \(usersNumber)====\(phoneid)-----\(msgIdList)")
         chatField.delegate = self
         if mid != "" {
-        
             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
-                
                 if seenVcStatus == true {
                     //                    if groupK != "yes" {
                     status()
                     //                    }
-                   
                     if textFieldBtnStatus == true {
                         let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
                         chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
@@ -174,21 +170,15 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                 hideProgress()
             }
         })
-        
-        
-        
         //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         //        addImageVideo.addGestureRecognizer(tapGesture)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil);
-        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil);
-        
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
-
-            //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
-            //tap.cancelsTouchesInView = false
+        //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
+        //tap.cancelsTouchesInView = false
         backgroundImage.addGestureRecognizer(tap1)
-//        chatTable.addGestureRecognizer(tap1)
+        //        chatTable.addGestureRecognizer(tap1)
         if allUser.count > 0 {
             let UserList = usersDetails
             usersDetails.removeAll()
@@ -200,7 +190,6 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     usersDetails.append(frd)
                 }
             }
-            
             for use in 0...allUserOfFirebase.count-1 {
                 //                print("User List  --- \(use)")
                 let frd = allUserOfFirebase[use]
@@ -214,7 +203,6 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                         let str = user["Name"]
                         allUserOfFirebase[use] = ["Name": "\(str!)","Phone number": "\(myNumber!)","profilepic": "\(frd["profilepic"]!)"]
                     } else {
-                        
                         _ = msgIdList.filter { user in
                             let str = user.split(separator: "+")
                             if str.count == 2 {
@@ -238,18 +226,14 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     return true
                 }
             }
-            
         }
-        
     }
     @IBOutlet weak var backgroundImage: UIImageView!
-    
-    
     override func viewWillDisappear(_ animated: Bool) {
         hideProgress()
         print("disappear")
         seenVcStatus = false
-//        view.endEditing(true)
+        //        view.endEditing(true)
     }
     var jist = false
     var myBoolStatus = [Bool]()
@@ -260,7 +244,6 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
         counter = 0
         database.child("Chats").child(mid).child("status").observe(.childAdded) {[weak self](snapshot) in
             if let _ = snapshot.value {
-                
                 if !(self?.arrayStatus.contains(snapshot.key.replacingOccurrences(of: "chatPhoto", with: "")))! {
                     self?.arrayStatus.append(snapshot.key.replacingOccurrences(of: "chatPhoto", with: ""))
                     self?.seen.append(["\(snapshot.key.replacingOccurrences(of: "chatPhoto", with: ""))":snapshot.value as! Bool])
@@ -272,35 +255,33 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     if self?.counter == 2 {
                         self?.counter = 0
                     }
-                    
-//                    print("Snap shot of the seen status \(snapshot.key.replacingOccurrences(of: "chatPhoto", with: ""))")
+                    //                    print("Snap shot of the seen status \(snapshot.key.replacingOccurrences(of: "chatPhoto", with: ""))")
                     if  smf != nil && smf == false {
-                                                print("all done")
+                        print("all done")
                         self?.database.child("Chats").child(self!.mid).child("status").setValue(["\(self!.phoneid)":true, "\(self!.receiverid)":true])
                     }
                     if self?.groupK == "yes" {
                         if smf == false && snapshot.key.replacingOccurrences(of: "chatPhoto", with: "") == self?.phoneid {
-//                            print("groupK")
+                            //                            print("groupK")
                             self?.database.child("Chats").child(self!.mid).child("status").setValue(["\(self!.phoneid)":true, "\(self!.receiverid.replacingOccurrences(of: "chatPhoto", with: ""))":true])
-                            
                         }
                         if (self?.myBoolStatus.count)! > 1 && (self?.arrayStatus.count)! > 1 {
-//                            print("not found \(self!.myBoolStatus) -- \(self!.arrayStatus) -- \(self!.phoneid)")
+                            //                            print("not found \(self!.myBoolStatus) -- \(self!.arrayStatus) -- \(self!.phoneid)")
                             if self?.arrayStatus[0] == "\(self!.phoneid)" {
-//                                print("yyyyiu")
+                                //                                print("yyyyiu")
                                 if self?.myBoolStatus[0] == false  {
-//                                    print("one")
+                                    //                                    print("one")
                                     self?.database.child("Chats").child(self!.mid).child("status").setValue(["\(self!.phoneid)":true, "\(self!.receiverid.replacingOccurrences(of: "chatPhoto", with: ""))":true])
                                 }
                             }
                             else if self?.arrayStatus[1] == "\(self!.phoneid)" {
-//                                print("uiiiiiiy")
+                                //                                print("uiiiiiiy")
                                 if self?.myBoolStatus[1] == false {
-//                                    print("two1")
+                                    //                                    print("two1")
                                     self?.database.child("Chats").child(self!.mid).child("status").setValue(["\(self!.phoneid)":true, "\(self!.receiverid.replacingOccurrences(of: "chatPhoto", with: ""))":true])
                                 }
                             } else {
-//                                print("userlo")
+                                //                                print("userlo")
                                 self?.database.child("Chats").child(self!.mid).child("status").setValue(["\(self!.phoneid)":true, "\(self!.receiverid.replacingOccurrences(of: "chatPhoto", with: ""))":true])
                             }
                         }
@@ -311,9 +292,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     if self?.groupK == "yes" {
                         let aStatus = self?.myBoolStatus[0]
                         let bStatus = self?.myBoolStatus[1]
-//                        if (aStatus?["\(self!.receiverid.replacingOccurrences(of: "chatPhoto", with: ""))"] == true || bStatus?["\(self!.receiverid.replacingOccurrences(of: "chatPhoto", with: ""))"] == true) && ( aStatus?["\(self!.phoneid)"] == false || bStatus?["\(self!.phoneid)"] == false) {
-//                            self?.chatTable.tableFooterView = self?.msgsseenfhidefooterview()
-//                        } else
+                        //                        if (aStatus?["\(self!.receiverid.replacingOccurrences(of: "chatPhoto", with: ""))"] == true || bStatus?["\(self!.receiverid.replacingOccurrences(of: "chatPhoto", with: ""))"] == true) && ( aStatus?["\(self!.phoneid)"] == false || bStatus?["\(self!.phoneid)"] == false) {
+                        //                            self?.chatTable.tableFooterView = self?.msgsseenfhidefooterview()
+                        //                        } else
                         if aStatus == true  &&  bStatus == true {
                             self?.seenStatusLabel = "seen"
                             if self?.oppositeSeenStatus == false {
@@ -343,7 +324,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                             if self?.lcb == false {
                                 if self?.oppositeSeenStatus == false {
                                     if self?.toggle == true {
-//                                        print("yes ")
+                                        //                                        print("yes ")
                                         self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
                                         self?.scrollToBottom()
                                         //                                self?.toggle = false
@@ -393,7 +374,7 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                             if self?.lcb == false {
                                 if self?.oppositeSeenStatus == false {
                                     if self?.toggle == true {
-//                                        print("yes ")
+                                        //                                        print("yes ")
                                         self?.chatTable.tableFooterView = self?.msgsSeenfooterview()
                                         self?.scrollToBottom()
                                         //                                self?.toggle = false
@@ -446,8 +427,8 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                 if let snapshots = snapshot.children.allObjects as? [DataSnapshot] {
                     for snap in snapshots {
                         let cata = snap.key
-//                        let ques = snap.value!
-//                        let  json = snapshot.value as? [String:Any]
+                        //                        let ques = snap.value!
+                        //                        let  json = snapshot.value as? [String:Any]
                         if !(self?.key.contains(snapshot.key))! {
                             self?.chatMap.append([snapshot.key :snapshot.value as! [String:Any]])
                             self?.key.append(snapshot.key)
@@ -459,10 +440,10 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                         self?.textFieldBtnStatus = true
                     }
                 }
-                if self?.chatMapKey.count != 0 {
-//                    print("key is \(self!.key)")
-//                    print("chatMapKey is \(self!.chatMapKey)")
-                }
+                //                if self?.chatMapKey.count != 0 {
+                //                    print("key is \(self!.key)")
+                //                    print("chatMapKey is \(self!.chatMapKey)")
+                //                }
             }
         }
     }
@@ -470,10 +451,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
     func codeFlex(){
         if msgIdList.count > 0 {
             for avl in 0...msgIdList.count - 1 {
-//                print("msgkey at index  \(msgIdList[avl])")
+                //                print("msgkey at index  \(msgIdList[avl])")
                 if msgIdList[avl] == "\(phoneid)\(usersNumber)" || msgIdList[avl] == "\(usersNumber)\(phoneid)" || msgIdList[avl] == "\(usersNumber)" {
                     mid = msgIdList[avl]
-                    // print("True -----------")
                     msgstatus = true
                     break
                 }else {
@@ -481,13 +461,12 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                 }
             }
         }
-//        mychat()
+        //        mychat()
     }
     func mychat() {
         if msgstatus == false {
-            
             mid = "\(phoneid)\(usersNumber)"
-                    DataBaseManager.shared.createNewChat(with: Message( messagid: self.mid, chats: "", sender: "",uii: 0, chatPhotos: ""))
+            DataBaseManager.shared.createNewChat(with: Message( messagid: self.mid, chats: "", sender: "",uii: 0, chatPhotos: ""))
         }
     }
     
@@ -511,7 +490,6 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
             chatTable.tableFooterView = msgsSeenfooterview()
             database.child("Uid").setValue(ui)
             database.child("Chats").child(mymid).child("status").setValue(["\(phoneid)":true,"\(receiverid)":false])
-            
             if replyChat == nil {
                 database.child("Chats").child(mymid).child("chatting").child("\(ui)").setValue(["\(phoneid)": chatField.text!], withCompletionBlock: { error, _ in
                     guard error == nil else {
@@ -541,16 +519,9 @@ class ChatConversionCode: UIViewController ,UIImagePickerControllerDelegate & UI
                     chatField.text = ""
                     print("data written seccess")
                 })
-                
             }
         }
     }
-    
-    
-    
-    
-    
-    
 }
 
 // MARK: - ImagePicker Codes
@@ -561,11 +532,9 @@ extension ChatConversionCode {
     @objc
     func imageTapped()
     {
-        
         keyBoardStatus = true
         view.endEditing(true)
         print("Image Tapped...!")
-        
         let ac = UIAlertController(title: "Select Image From", message: "", preferredStyle: .actionSheet)
         let cameraBtn = UIAlertAction(title: "Camera", style: .default){(_) in
             print("Camera Press")
@@ -581,7 +550,6 @@ extension ChatConversionCode {
         ac.addAction(cancelBtn)
         self.present(ac, animated: true, completion: nil)
     }
-    
     func showImagePicker(selectSource:UIImagePickerController.SourceType)
     {
         guard UIImagePickerController.isSourceTypeAvailable(selectSource) else {
@@ -595,8 +563,6 @@ extension ChatConversionCode {
         imagePickerController.allowsEditing = false
         self.present(imagePickerController, animated: true, completion: nil)
     }
-    
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         print("inside")
         if let  videoURL = info[.mediaURL] as? NSURL
@@ -606,7 +572,6 @@ extension ChatConversionCode {
             //            let asset = AVURLAsset(url: videoURL,options: nil)
             //            let imgGenerator = AVAssetImageGenerator(asset: asset)
             //            imgGenerator.appliesPreferredTrackTransform = true
-            
             //            let cgImage = try  imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
             //                let thumbnail = UIImage(cgImage: cgImage)
             //                print("asset -----===== \(asset)")
@@ -622,7 +587,6 @@ extension ChatConversionCode {
                 let uploadTask = fileRef.putFile(from: localFile , metadata: nil){metadata, error in
                     var urlpth = ""
                     if error == nil && metadata != nil {
-                        
                         fileRef.downloadURL(completion: { [self](url,error) in
                             if error == nil {
                                 urlpth = "\(url!)"
@@ -646,7 +610,7 @@ extension ChatConversionCode {
                     } else {
                         print("Error for uploading \(String(describing: error))-----------")
                         picker.dismiss(animated: true, completion: nil)
-//                        print("Metadata is >>>>>>>>>>>>> \(metadata)")
+                        //                        print("Metadata is >>>>>>>>>>>>> \(metadata)")
                     }
                 }
                 _ = uploadTask
@@ -655,15 +619,13 @@ extension ChatConversionCode {
         } else {
             print("*** Error generating thumbnail: ")
         }
-        
         if let selectedImage =  info[.originalImage] as? UIImage{
             print("Selected image ",selectedImage)
             //            add.image = selectedImage
             didselectedImage = selectedImage
-//            let localPath = info[.imageURL] as? NSURL
-//            _ = info[.imageURL] as? URL
-//            print("Local Path  > ",localPath!)
-            
+            //            let localPath = info[.imageURL] as? NSURL
+            //            _ = info[.imageURL] as? URL
+            //            print("Local Path  > ",localPath!)
             picker.dismiss(animated: true, completion: nil)
             keyboardheight = 0
             let imgVc = storyboard?.instantiateViewController(withIdentifier: "ImageAndVideoShowCode") as? ImageAndVideoShowCode
@@ -673,17 +635,13 @@ extension ChatConversionCode {
             } else {
                 imgVc?.mesId = mid
             }
-            
             imgVc?.uid = ui
             self.show(imgVc!, sender: self)
-            
         }
         else{
             print("Image not found...!")
         }
-        
     }
-    
     func afterForwardPop() {
         navigationController?.popViewController(animated: true)
     }
@@ -695,7 +653,6 @@ extension ChatConversionCode : UITextFieldDelegate{
     //        view.endEditing(true)
     //    }
     @objc func keyboardWillShow(sender: NSNotification) {
-        
         if keyBoardStatus == false {
             keyBoardStatus = true
             if let keyboardSize = (sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -713,7 +670,6 @@ extension ChatConversionCode : UITextFieldDelegate{
                 chatTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
             }
         }
-        
     }
     
     @objc func keyboardWillHide(sender: NSNotification) {
@@ -736,9 +692,6 @@ extension ChatConversionCode : UITextFieldDelegate{
         } else {
             return true
         }
-        
-        
-        
     }
     
 }
@@ -750,30 +703,30 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
         return chatMap.count
     }
     @objc func imgTap()
-        {
-            print("Hell World")
-//            let secondViewController = self.storyboard?.instantiateViewController(withIdentifier: "testViewController") as? testViewController
-//                let navController = UINavigationController(rootViewController: secondViewController!)
-//                navController.setViewControllers([secondViewController!], animated:true)
-//                self.revealViewController().setFront(navController, animated: true)
-//                revealViewController().pushFrontViewController(navController, animated: true)
-//            secondViewController?.movmentId = Id1stMove
-//            updateCount(itemId: Id1stMove)
-
-        }
+    {
+        print("Hell World")
+        //            let secondViewController = self.storyboard?.instantiateViewController(withIdentifier: "testViewController") as? testViewController
+        //                let navController = UINavigationController(rootViewController: secondViewController!)
+        //                navController.setViewControllers([secondViewController!], animated:true)
+        //                self.revealViewController().setFront(navController, animated: true)
+        //                revealViewController().pushFrontViewController(navController, animated: true)
+        //            secondViewController?.movmentId = Id1stMove
+        //            updateCount(itemId: Id1stMove)
+        
+    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let chat = chatMap[indexPath.row]
         let userNumberKey = chatMapKey[indexPath.row]
         let uniqueKey = key[indexPath.row]
         let chatText = chat[uniqueKey]
         _ = chatText?[userNumberKey]
-//                print("chat length is =====------------> \(chat)")
-//                print("userNumberKey INDEX is =====--=-= \(userNumberKey)")
-//                print("uniqueKey is =====-------> \(uniqueKey)")
-//                print("chatText =================......\(String(describing: chatText))")
-//                print("txtchat is ======----> \(txtChat)")
-//                print("key chat is =======--- \(key)")
-//                print("chatMapKey is ..........  \(chatMapKey)--")
+        //                print("chat length is =====------------> \(chat)")
+        //                print("userNumberKey INDEX is =====--=-= \(userNumberKey)")
+        //                print("uniqueKey is =====-------> \(uniqueKey)")
+        //                print("chatText =================......\(String(describing: chatText))")
+        //                print("txtchat is ======----> \(txtChat)")
+        //                print("key chat is =======--- \(key)")
+        //                print("chatMapKey is ..........  \(chatMapKey)--")
         view.endEditing(true)
         if keyBoardStatus == true {
             keyBoardStatus = false
@@ -781,51 +734,46 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
     }
     
     @objc func videoTappSenderReceiver(_ sender: UITapGestureRecognizer) {
-//        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
-
+        //        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
+        
         guard let indexPathRow = sender.view?.tag else {
             return
         }
-        
         let chat = chatMap[indexPathRow]
         let userNumberKey = chatMapKey[indexPathRow]
         let uniqueKey = key[indexPathRow]
         let chatText = chat[uniqueKey]
         let txtChat = chatText?[userNumberKey]
-        
         videoPlayer(videoUrl: txtChat! as! String)
         print("MY URL IS ++++ \(txtChat ?? "")")
     }
+    
     @objc func imageTappSenderReceiver(_ sender: UITapGestureRecognizer) {
-//        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
-
+        //        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
+        
         guard let indexPathRow = sender.view?.tag else {
             return
         }
-        
         let chat = chatMap[indexPathRow]
         let userNumberKey = chatMapKey[indexPathRow]
         let uniqueKey = key[indexPathRow]
         let chatText = chat[uniqueKey]
         let txtChat = chatText?[userNumberKey]
-        
         keyBoardStatus = true
         view.endEditing(true)
         imageShow(url:txtChat! as! String)
     }
+    
     @objc func messageTapp(_ sender: UITapGestureRecognizer) {
-//        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
-
+        //        print("\(sender.view?.tag) Tapped    \(chatMap.count)")
         guard let indexPathRow = sender.view?.tag else {
             return
         }
-        
         let chat = chatMap[indexPathRow]
         let userNumberKey = chatMapKey[indexPathRow]
         let uniqueKey = key[indexPathRow]
         let chatText = chat[uniqueKey]
         _ = chatText?[userNumberKey]
-        
         for i in 0...key.count-1 {
             if key[i] == userNumberKey {
                 //                print("userNumberKey is =====-------> \(userNumberKey)")
@@ -844,8 +792,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             }
         }
     }
+    
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
-          configurationForMenuAtLocation location: CGPoint)
+                                configurationForMenuAtLocation location: CGPoint)
     -> UIContextMenuConfiguration? {
         let indexPath = interaction.view?.tag
         let chat = chatMap[indexPath!]
@@ -857,7 +806,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
         // Selected Drug and notes
         _ = "\(uniqueKey)"
         let indexPathRow = IndexPath(row: indexPath!, section: 0)
-        
         if (chatTable.cellForRow(at: indexPathRow) as? SenderViewCell) != nil {
             forwardChat = ""
             forwardChatPhoto = ""
@@ -867,7 +815,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             forwardChatKey = "\(phones)"
             forwardCell = "SenderViewCell"
             print("SenderViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-            
         }
         if (chatTable.cellForRow(at: indexPathRow) as? SenderImageChatCell) != nil {
             forwardChat = ""
@@ -963,7 +910,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             } else {
                 forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
                 forwardChatKey = "\(phones)"
-                
             }
             print("ReceiverReplyViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
         }
@@ -985,7 +931,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             } else {
                 forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
                 forwardChatKey = "\(phones)"
-                
             }
             forwardCell = "ReceiverReplyImageCell"
             print("ReceiverReplyImageCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
@@ -1026,19 +971,14 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                 uiimage.kf.setImage(with: url)
                 //                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
                 forwardChatKey = "\(phones)"
-                
             }
             print("ImageTableViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
         }
-        
-        //
-        
         let save = UIAction(title: "Save", image: UIImage(systemName: "square.and.arrow.down")) { [self] action in
             if forwardChatVideo != "" {
                 DispatchQueue.global(qos: .background).async {
                     if let url = URL(string: forwardChatVideo), let urIData = NSData(contentsOf: url) {
-                        let documentsPath=NSSearchPathForDirectoriesInDomains(.documentDirectory,
-                                                                              .userDomainMask, true)[0];
+                        let documentsPath=NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0];
                         let filePath="\(documentsPath)/\(UUID().uuidString).MOV"
                         DispatchQueue.main.async{
                             urIData.write(toFile: filePath, atomically: true)
@@ -1055,7 +995,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                 }
             }
             else if forwardChatPhoto != "" {
-                
                 UIImageWriteToSavedPhotosAlbum(uiimage.image!, self, #selector(image(_:withPotentialError:contextInfo:)), nil)
             }
         }
@@ -1066,8 +1005,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                 self.showToast(message: "Copy Message to Clipboard", font: .systemFont(ofSize: 12.0))
             }
         }
-        let forward = UIAction(title: "Forward",
-                               image: UIImage(systemName: "arrowshape.turn.up.right")) { action in
+        let forward = UIAction(title: "Forward", image: UIImage(systemName: "arrowshape.turn.up.right")) { action in
             // Perform action
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCodeForward") as? UserDetailsCodeForward
             print("users ",self.usersDetails)
@@ -1080,14 +1018,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             vc?.forwardChatVideo = self.forwardChatVideo
             vc?.forwardChatPhoto = self.forwardChatPhoto
             vc?.forwardChatKey = self.forwardChatKey
-            
             self.navigationController?.present(vc!, animated: true, completion: nil)
         }
-        
         let delete = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { action in
             print("Delete")
             let ref = Database.database().reference().child("Chats").child("\(self.mid)").child("chatting").child("\(uniqueKey)")
-            
             ref.setValue(nil)
             self.chatMap.remove(at: indexPath!)
             self.chatMapKey.remove(at: indexPath!)
@@ -1097,21 +1032,18 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             self.chatTable.deleteRows(at: [index], with: .automatic)
             self.chatTable.reloadData()
         }
-        
         if forwardChatPhoto != "" || forwardChatVideo != "" {
-            return UIContextMenuConfiguration(identifier: nil,
-                                              previewProvider: nil) { _ in
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
                 UIMenu(title: "", children: [save, copy, forward, delete])
             }
         } else {
-            return UIContextMenuConfiguration(identifier: nil,
-                                              previewProvider: nil) { _ in
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
                 UIMenu(title: "", children: [copy, forward, delete])
             }
         }
     }
+    
     func showToast(message : String, font: UIFont) {
-
         let toastLabel = UILabel(frame: CGRect(x: 20, y: self.view.frame.size.height-100, width: UIScreen.main.bounds.width-100, height: 35))
         toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         toastLabel.textColor = UIColor.white
@@ -1123,11 +1055,12 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
         toastLabel.clipsToBounds  =  true
         self.view.addSubview(toastLabel)
         UIView.animate(withDuration: 4.0, delay: 0.1, options: .curveEaseOut, animations: {
-             toastLabel.alpha = 0.0
+            toastLabel.alpha = 0.0
         }, completion: {(isCompleted) in
             toastLabel.removeFromSuperview()
         })
     }
+    //MARK: - CellForRowAt
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row < chatMap.count {
             let chat = chatMap[indexPath.row]
@@ -1137,14 +1070,13 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             let txtChat = chatText?[userNumberKey]
             let abc = chatText?[userNumberKey]  as? [String : Any]  // Use for replying chats
             //            if groupK == "no" {
-            
-//            print("chat ================-------\(chat)")
-//            print("userNumberKey ================-------\(userNumberKey)")
-//            print("uniqueKey ================-------\(uniqueKey)")
-//            print("chatText ================-------\(String(describing: chatText?[phoneid]))")
-//            print("abc?[phoneid] ================-------\(String(describing: abc?["\(phoneid)"]))")
-//            print("abc?[receiverid] ================-------\(String(describing: abc?["\(receiverid)"]))")
-//            print("abc ================-------\(String(describing: abc))")
+            //            print("chat ================-------\(chat)")
+            //            print("userNumberKey ================-------\(userNumberKey)")
+            //            print("uniqueKey ================-------\(uniqueKey)")
+            //            print("chatText ================-------\(String(describing: chatText?[phoneid]))")
+            //            print("abc?[phoneid] ================-------\(String(describing: abc?["\(phoneid)"]))")
+            //            print("abc?[receiverid] ================-------\(String(describing: abc?["\(receiverid)"]))")
+            //            print("abc ================-------\(String(describing: abc))")
             var bollk = false
             var folk = false
             var forfolk = false
@@ -1158,13 +1090,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             let str = user["Phone number"]
                             if receiverid.contains(str!){
                                 nameString = user["Name"]!
-//                                print("name of messager is \(user["Name"])--")
+                                //                                print("name of messager is \(user["Name"])--")
                             }
                             return true
-                            
                         }
-                        
-//                        print("receiver id --=-=-=-=-=--------*********** \(receiverid)")
+                        //                        print("receiver id --=-=-=-=-=--------*********** \(receiverid)")
                         bollk = true
                         folk = true
                         break
@@ -1174,15 +1104,14 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                     for i in 0...checkForReply.count-1 {
                         if "+\(checkForReply[i])" != phoneid && "+\(checkForReply[i])chatPhoto" == userNumberKey{
                             receiverid = "+\(checkForReply[i])chatPhoto"
-//                            print(" photo is \(receiverid)")
+                            //                            print(" photo is \(receiverid)")
                             _ = allUserOfContact.filter {user in
                                 let str = user["Phone number"]
                                 if receiverid.contains(str!){
                                     nameString = user["Name"]!
-//                                    print("--name of messager is \(user["Name"])")
+                                    //                                    print("--name of messager is \(user["Name"])")
                                 }
                                 return true
-                                
                             }
                             bollk = true
                             break
@@ -1193,17 +1122,15 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                     for i in 0...checkForReply.count-1 {
                         if "+\(checkForReply[i])" != phoneid && "+\(checkForReply[i])chatVideo" == userNumberKey{
                             receiverid = "+\(checkForReply[i])chatVideo"
-//                            print(" video is \(receiverid)")
+                            //                            print(" video is \(receiverid)")
                             _ = allUserOfContact.filter {user in
                                 let str = user["Phone number"]
                                 if receiverid.contains(str!){
                                     nameString = user["Name"]!
-//                                    print("name of messager is \(user["Name"])")
+                                    //                                    print("name of messager is \(user["Name"])")
                                 }
                                 return true
-                                
                             }
-                            
                             folk = true
                             forfolk = true
                             break
@@ -1211,7 +1138,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                     }
                 }
             }
-            
             if abc?["\(phoneid)"] != nil || abc?["\(receiverid)"] != nil ||  abc?["\(receiverid)chatPhoto"] != nil || abc?["\(phoneid)chatPhoto"] != nil || abc?["\(receiverid)chatVideo"] != nil || abc?["\(phoneid)chatVideo"] != nil {
                 
                 if abc?["\(receiverid)chatPhoto"] != nil || abc?["\(phoneid)chatPhoto"] != nil {
@@ -1230,20 +1156,20 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
                                 if chatText?["+\(checking[i])"] != nil {
-//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    //                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
                                     cell?.receiverreply.text = chatText?["+\(checking[i])"] as? String
                                     cell?.receiverNumber.text = "+\(checking[i])"
-//                                    if nameString != ""{
-//                                        cell?.receiverNumber.text = "\(nameString)"
-//                                    }
+                                    //                                    if nameString != ""{
+                                    //                                        cell?.receiverNumber.text = "\(nameString)"
+                                    //                                    }
                                     _ = allUserOfContact.filter { user in
                                         let str = user["Phone number"]
                                         
                                         if "+\(checking[i])" == str {
                                             nameString = user["Name"]!
-            //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                            //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                             if user["Name"] != ""  {
-//                                                print("Yes ")
+                                                //                                                print("Yes ")
                                                 cell?.receiverNumber.text = "\(nameString)"
                                             }
                                         }
@@ -1264,24 +1190,23 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             //                            print("-=-=-=-====-=-= \(bar!)")
                             cell?.confi(videoUrl: bar!)
                             cell?.user.text = "\(receiverid)"
-//                            if nameString != ""{
-//                                cell?.user.text = "\(nameString)"
-//                            }
+                            //                            if nameString != ""{
+                            //                                cell?.user.text = "\(nameString)"
+                            //                            }
                             _ = allUserOfContact.filter { user in
                                 let str = user["Phone number"]
                                 
                                 if "\(receiverid.replacingOccurrences(of: "chatPhoto", with: ""))" == str {
                                     nameString = user["Name"]!
-    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                     if user["Name"] != ""  {
-//                                        print("Yes ")
+                                        //                                        print("Yes ")
                                         cell?.user.text = "\(nameString)"
                                     }
                                 }
                                 return true
                             }
                         }
-                        
                         if abc?["\(receiverid)text"] == nil {
                             cell?.receivermsg.text = abc?["\(phoneid)text"] as? String
                             
@@ -1310,7 +1235,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                                 toggle = false
                             }
                         }
-                        
                         return cell!
                     } else {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyImageCell") as? SenderReplyImageCell
@@ -1326,9 +1250,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
                                 if chatText?["+\(checking[i])"] != nil {
-//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    //                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
                                     cell?.senderreply.text = chatText?["+\(checking[i])"] as? String
-//                                    cell?.senderNumber.text = "you"
+                                    //                                    cell?.senderNumber.text = "you"
                                     break
                                 }
                             }
@@ -1344,17 +1268,16 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             print("-=-=-=-====-=-= \(bar!)")
                             cell?.confi(videoUrl: bar!)
                             cell?.user.text = "\(receiverid)"
-//                            if nameString != ""{
-//                                cell?.user.text = "\(nameString)"
-//                            }
+                            //                            if nameString != ""{
+                            //                                cell?.user.text = "\(nameString)"
+                            //                            }
                             _ = allUserOfContact.filter { user in
                                 let str = user["Phone number"]
-                                
                                 if "\(receiverid.replacingOccurrences(of: "chatPhoto", with: ""))" == str {
                                     nameString = user["Name"]!
-    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                     if user["Name"] != ""  {
-//                                        print("Yes ")
+                                        //                                        print("Yes ")
                                         cell?.user.text = "\(nameString)"
                                     }
                                 }
@@ -1363,14 +1286,12 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                         }
                         if abc?["\(receiverid)text"] == nil {
                             cell?.sendermsg.text = abc?["\(phoneid)text"] as? String
-                            
                             if abc?["\(phoneid)text"] == nil {
                                 cell?.sendermsg.text = "📷 Photo"
                                 print("yahh")
                             }
                         } else {
                             cell?.sendermsg.text = abc?["\(receiverid)text"] as? String
-                            
                             if abc?["\(receiverid)text"] == nil {
                                 cell?.sendermsg.text = "📷 Photo"
                             }
@@ -1399,25 +1320,25 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                         let tapGesture1 = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.openLink))
                         cell?.receiverreply.addGestureRecognizer(tapGesture1)
                         cell?.receiverreply.tag = indexPath.row
-//                        print("Of course jii \(chatText?["\(receiverid)"])")
+                        //                        print("Of course jii \(chatText?["\(receiverid)"])")
                         if groupK == "yes" {
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
                                 if chatText?["+\(checking[i])"] != nil {
-//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    //                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
                                     cell?.receiverreply.text = chatText?["+\(checking[i])"] as? String
                                     cell?.receiverNumber.text = "+\(checking[i])"
-//                                    if nameString != ""{
-//                                         cell?.receiverNumber.text = "\(nameString)"
-//                                    }
+                                    //                                    if nameString != ""{
+                                    //                                         cell?.receiverNumber.text = "\(nameString)"
+                                    //                                    }
                                     _ = allUserOfContact.filter { user in
                                         let str = user["Phone number"]
                                         
                                         if "+\(checking[i])" == str {
                                             nameString = user["Name"]!
-            //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                            //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                             if user["Name"] != ""  {
-//                                                print("Yes ")
+                                                //                                                print("Yes ")
                                                 cell?.user.text = "\(nameString)"
                                             }
                                         }
@@ -1436,17 +1357,16 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                         } else {
                             let bar = abc?["\(receiverid)chatVideo"] as? String
                             cell?.user.text = "\(receiverid)"
-//                            if nameString != ""{
-//                                cell?.user.text = "\(nameString)"
-//                            }
+                            //                            if nameString != ""{
+                            //                                cell?.user.text = "\(nameString)"
+                            //                            }
                             _ = allUserOfContact.filter { user in
                                 let str = user["Phone number"]
-                                
                                 if "\(receiverid.replacingOccurrences(of: "chatVideo", with: ""))" == str {
                                     nameString = user["Name"]!
-    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                     if user["Name"] != ""  {
-//                                        print("Yes ")
+                                        //                                        print("Yes ")
                                         cell?.user.text = "\(nameString)"
                                     }
                                 }
@@ -1454,7 +1374,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             }
                             cell?.videocon(videoUrl: bar!)
                         }
-                        
                         if abc?["\(receiverid)text"] == nil {
                             cell?.receivermsg.text = abc?["\(phoneid)text"] as? String
                             if abc?["\(phoneid)text"] == nil {
@@ -1498,9 +1417,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
                                 if chatText?["+\(checking[i])"] != nil {
-//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    //                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
                                     cell?.senderreply.text = chatText?["+\(checking[i])"] as? String
-//                                    cell?.senderNumber.text = "you"
+                                    //                                    cell?.senderNumber.text = "you"
                                     break
                                 }
                             }
@@ -1521,9 +1440,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                                 
                                 if "\(receiverid)" == str {
                                     nameString = user["Name"]!
-    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                     if user["Name"] != ""  {
-//                                        print("Yes ")
+                                        //                                        print("Yes ")
                                         cell?.user.text = "\(nameString)"
                                     }
                                 }
@@ -1558,7 +1477,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                     }
                 }
                 else if chatText?["\(phoneid)"] == nil {
-//                    print("Message Reply of receiver is \(abc?["\(receiverid)"])")
+                    //                    print("Message Reply of receiver is \(abc?["\(receiverid)"])")
                     let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverReplyViewCell") as? ReceiverReplyViewCell
                     let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
                     cell?.viewC.addGestureRecognizer(tapGesture)
@@ -1571,22 +1490,20 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                     if abc?["\(receiverid)"] == nil{
                         cell?.receiverMessages.text = abc?["\(phoneid)"] as? String
                         cell?.user.text = "You"
-                        
                     } else {
                         cell?.receiverMessages.text = abc?["\(receiverid)"] as? String
                         cell?.user.text = "\(receiverid)"
-//                        if nameString != "" {
-//                            cell?.user.text = "\(nameString)"
-//                            print("yup")
-//                        }
+                        //                        if nameString != "" {
+                        //                            cell?.user.text = "\(nameString)"
+                        //                            print("yup")
+                        //                        }
                         _ = allUserOfContact.filter { user in
                             let str = user["Phone number"]
-                            
                             if "\(receiverid)" == str {
                                 nameString = user["Name"]!
-//                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                 if user["Name"] != ""  {
-//                                    print("Yes ")
+                                    //                                    print("Yes ")
                                     cell?.user.text = "\(nameString)"
                                 }
                             }
@@ -1594,26 +1511,26 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                         }
                     }
                     if chatText?["\(receiverid)"] == nil {
-//                        print("nop   \(chatText?["\(phoneid)"])")
+                        //                        print("nop   \(chatText?["\(phoneid)"])")
                         if groupK == "yes" {
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
                                 if chatText?["+\(checking[i])"] != nil {
-//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    //                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
                                     cell?.receiverReply.text = chatText?["+\(checking[i])"] as? String
                                     cell?.receiverNumber.text = "+\(checking[i])"
-//                                    if nameString != "" {
-//                                        cell?.receiverNumber.text = "\(nameString)"
-//                                        print("yup 2323233 \(nameString)")
-//                                    }
+                                    //                                    if nameString != "" {
+                                    //                                        cell?.receiverNumber.text = "\(nameString)"
+                                    //                                        print("yup 2323233 \(nameString)")
+                                    //                                    }
                                     _ = allUserOfContact.filter { user in
                                         let str = user["Phone number"]
                                         
                                         if "+\(checking[i])" == str {
                                             nameString = user["Name"]!
-        //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                            //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                             if user["Name"] != ""  {
-//                                                print("Yes ")
+                                                //                                                print("Yes ")
                                                 cell?.receiverNumber.text = "\(nameString)"
                                             }
                                         }
@@ -1626,17 +1543,17 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             cell?.receiverReply.text = chatText?["\(phoneid)"] as? String
                             if groupK == "yes" {
                                 cell?.receiverNumber.text = "\(receiverid)"
-//                                if nameString != "" {
-//                                    cell?.receiverNumber.text = "\(nameString)"
-//                                }
+                                //                                if nameString != "" {
+                                //                                    cell?.receiverNumber.text = "\(nameString)"
+                                //                                }
                                 _ = allUserOfContact.filter { user in
                                     let str = user["Phone number"]
                                     
                                     if "\(receiverid)" == str {
                                         nameString = user["Name"]!
-        //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                        //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                         if user["Name"] != ""  {
-//                                            print("Yes ")
+                                            //                                            print("Yes ")
                                             cell?.receiverNumber.text = "\(nameString)"
                                         }
                                     }
@@ -1650,20 +1567,20 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
                                 if chatText?["+\(checking[i])"] != nil {
-//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    //                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
                                     cell?.receiverReply.text = chatText?["+\(checking[i])"] as? String
                                     cell?.receiverNumber.text = "+\(checking[i])"
-//                                    if nameString != "" {
-//                                        cell?.receiverNumber.text = "\(nameString)"
-//                                    }
+                                    //                                    if nameString != "" {
+                                    //                                        cell?.receiverNumber.text = "\(nameString)"
+                                    //                                    }
                                     _ = allUserOfContact.filter { user in
                                         let str = user["Phone number"]
                                         
                                         if "+\(checking[i])" == str {
                                             nameString = user["Name"]!
-        //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                            //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                             if user["Name"] != ""  {
-//                                                print("Yes ")
+                                                //                                                print("Yes ")
                                                 cell?.receiverNumber.text = "\(nameString)"
                                             }
                                         }
@@ -1684,9 +1601,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                                     
                                     if "\(receiverid.replacingOccurrences(of: "", with: ""))" == str {
                                         nameString = user["Name"]!
-    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                        //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                         if user["Name"] != ""  {
-//                                            print("Yes ")
+                                            //                                            print("Yes ")
                                             cell?.receiverNumber.text = "\(nameString)"
                                         }
                                     }
@@ -1710,11 +1627,10 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             toggle = false
                         }
                     }
-                    
                     return cell!
                 }
                 else if chatText?["\(receiverid)"] == nil {
-//                    print("Message Reply of sender is \(abc?["\(phoneid)"])")
+                    //                    print("Message Reply of sender is \(abc?["\(phoneid)"])")
                     let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderReplyViewCell") as? SenderReplyViewCell
                     let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.messageTapp))
                     cell?.viewC.addGestureRecognizer(tapGesture)
@@ -1725,20 +1641,19 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                     cell?.senderReply.addGestureRecognizer(tapGesture1)
                     cell?.senderReply.tag = indexPath.row
                     if abc?["\(phoneid)"] == nil {
-                        
                         cell?.senderMessages.text = abc?["\(receiverid)"] as? String
                         cell?.user.text = "\(receiverid)"
-//                        if nameString != "" {
-//                            cell?.user.text = "\(nameString)"
-//                        }
+                        //                        if nameString != "" {
+                        //                            cell?.user.text = "\(nameString)"
+                        //                        }
                         _ = allUserOfContact.filter { user in
                             let str = user["Phone number"]
                             
                             if "\(receiverid)" == str {
                                 nameString = user["Name"]!
-//                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                 if user["Name"] != ""  {
-//                                    print("Yes ")
+                                    //                                    print("Yes ")
                                     cell?.user.text = "\(nameString)"
                                 }
                             }
@@ -1747,14 +1662,14 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                     } else {
                         cell?.senderMessages.text = abc?["\(phoneid)"] as? String
                         cell?.user.text = "You"
-//                        print("\(mid) ================-------\(abc?["\(phoneid)"])")
+                        //                        print("\(mid) ================-------\(abc?["\(phoneid)"])")
                     }
                     if chatText?["\(phoneid)"] == nil {
                         if groupK == "yes"{
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
                                 if chatText?["+\(checking[i])"] != nil {
-//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    //                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
                                     cell?.senderReply.text = chatText?["+\(checking[i])"] as? String
                                     break
                                 }
@@ -1768,13 +1683,13 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
                                 if chatText?["+\(checking[i])"] != nil {
-//                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
+                                    //                                    print("_+_+_+ \(phoneid)  \(checking[i]) \(chatText?["+\(checking[i])"])")
                                     cell?.senderReply.text = chatText?["+\(checking[i])"] as? String
                                     break
                                 }
                             }
                         }else {
-//                            print("\(mid) ================-------\(chatText?["\(phoneid)"])")
+                            //                            print("\(mid) ================-------\(chatText?["\(phoneid)"])")
                             cell?.senderReply.text = chatText?["\(phoneid)"] as? String
                         }
                     }
@@ -1815,7 +1730,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                                 }
                             } else {
                                 cell?.receiverComentImage.text = chatText?["\(receiverid)text"] as? String
-                                
                             }
                             if let url = URL(string: "\(cell?.receiverComentImage.text ?? "")") {
                                 if UIApplication.shared.canOpenURL(url){
@@ -1828,12 +1742,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                                 cell?.receiverNumber.text = "\(userNumberKey.replacingOccurrences(of: "chatPhoto", with: ""))"
                                 _ = allUserOfContact.filter { user in
                                     let str = user["Phone number"]
-                                    
                                     if "\(userNumberKey.replacingOccurrences(of: "chatPhoto", with: ""))" == str {
                                         nameString = user["Name"]!
-    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                        //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                         if user["Name"] != ""  {
-//                                            print("Yes ")
+                                            //                                            print("Yes ")
                                             cell?.receiverNumber.text = "\(nameString)"
                                         }
                                     }
@@ -1853,22 +1766,16 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                     }
                     else  if userNumberKey == "\(phoneid)chatPhoto" {
                         if txtChat as! String != "" {
-                            
                             let cell = chatTable.dequeueReusableCell(withIdentifier: "SenderImageChatCell") as? SenderImageChatCell
                             cell?.senderImageComment.text = chatText?["\(phoneid)text"] as? String
                             let tapGesture1 = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.openLink))
                             cell?.senderImageComment.addGestureRecognizer(tapGesture1)
                             cell?.senderImageComment.tag = indexPath.row
-                            
-                            
                             let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.imageTappSenderReceiver))
                             cell?.viewC.addGestureRecognizer(tapGesture)
                             cell?.viewC.tag = indexPath.row
                             let interaction = UIContextMenuInteraction(delegate: self)
                             cell?.viewC.addInteraction(interaction)
-                            if groupK == "yes" {
-//                                cell?.senderNumber.text = "You"
-                            }
                             let url = URL(string: txtChat  as! String)
                             cell?.senderImage.kf.setImage(with: url)
                             cell?.selectionStyle = .none
@@ -1896,15 +1803,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             cell?.photos.kf.setImage(with: url)
                             if groupK == "yes" {
                                 cell?.receiverNumber.text = "\(userNumberKey.replacingOccurrences(of: "chatPhoto", with: ""))"
-//                                if nameString != "" {
-//                                    cell?.receiverNumber.text = "\(nameString)"
-//                                }
                                 _ = allUserOfContact.filter { user in
                                     let str = user["Phone number"]
-                                    
                                     if "\(userNumberKey.replacingOccurrences(of: "chatPhoto", with: ""))" == str {
                                         nameString = user["Name"]!
-    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                        //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                         if user["Name"] != ""  {
                                             print("Yes ")
                                             cell?.receiverNumber.text = "\(nameString)"
@@ -1924,12 +1827,11 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             return cell!
                         }
                     }
-                    
                 } else if userNumberKey == "\(phoneid)chatVideo" || userNumberKey == "\(receiverid)chatVideo" || (userNumberKey == receiverid && forfolk == true) {
                     print("video is colled")
                     if userNumberKey == "\(receiverid)chatVideo" || (userNumberKey == receiverid && forfolk == true){
                         if txtChat as! String != "" {
-//                            print("\(txtChat)")
+                            //                            print("\(txtChat)")
                             let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverVideoCell") as? ReceiverVideoCell
                             cell?.confi(videoUrl: txtChat  as! String)
                             let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.videoTappSenderReceiver))
@@ -1939,17 +1841,12 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             cell?.viewC.addInteraction(interaction)
                             if groupK == "yes" {
                                 cell?.receiverNumber.text = "\(userNumberKey.replacingOccurrences(of: "chatVideo", with: ""))"
-//                                if nameString != "" {
-//                                    cell?.receiverNumber.text = "\(nameString)"
-//                                }
                                 _ = allUserOfContact.filter { user in
                                     let str = user["Phone number"]
-                                    
                                     if "\(userNumberKey.replacingOccurrences(of: "chatVideo", with: ""))" == str {
                                         nameString = user["Name"]!
-    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                        //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                         if user["Name"] != ""  {
-//                                            print("Yes ")
                                             cell?.receiverNumber.text = "\(nameString)"
                                         }
                                     }
@@ -1980,7 +1877,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             let interaction = UIContextMenuInteraction(delegate: self)
                             cell?.viewC.addInteraction(interaction)
                             if groupK == "yes" {
-//                                cell?.senderNumber.text = "You"
+                                //                                cell?.senderNumber.text = "You"
                             }
                             cell?.selectionStyle = .none
                             if indexPath.row == chatMapKey.count-1 {
@@ -1995,17 +1892,16 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             cell?.photos.kf.setImage(with: url)
                             if groupK == "yes" {
                                 cell?.receiverNumber.text = "\(userNumberKey.replacingOccurrences(of: "chatVideo", with: ""))"
-//                                if nameString != "" {
-//                                    cell?.receiverNumber.text = "\(nameString)"
-//                                }
+                                //                                if nameString != "" {
+                                //                                    cell?.receiverNumber.text = "\(nameString)"
+                                //                                }
                                 _ = allUserOfContact.filter { user in
                                     let str = user["Phone number"]
-                                    
                                     if "\(userNumberKey.replacingOccurrences(of: "chatVideo", with: ""))" == str {
                                         nameString = user["Name"]!
-    //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
+                                        //                                    print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                         if user["Name"] != ""  {
-//                                            print("Yes ")
+                                            //                                            print("Yes ")
                                             cell?.receiverNumber.text = "\(nameString)"
                                         }
                                     }
@@ -2020,7 +1916,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                                     toggle = false
                                 }
                             }
-                            
                             return cell!
                         }
                     }
@@ -2046,7 +1941,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                         }
                         cell?.selectionStyle = .none
                         if groupK == "yes" {
-//                            cell?.senderNumber.text = "You"
+                            //                            cell?.senderNumber.text = "You"
                         }
                         if indexPath.row == chatMapKey.count-1 {
                             toggle = true
@@ -2065,8 +1960,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                         cell?.viewC.tag = indexPath.row
                         let interaction = UIContextMenuInteraction(delegate: self)
                         cell?.viewC.addInteraction(interaction)
-                        
-                        
                         if let url = URL(string: "\(txtChat ?? "")") {
                             if UIApplication.shared.canOpenURL(url){
                                 print("nesg")
@@ -2074,7 +1967,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                                 cell?.receiverMessages.attributedText = NSAttributedString(string: "\(txtChat ?? "")",attributes: [NSAttributedString.Key.underlineColor : UIColor.tintColor,NSAttributedString.Key.underlineStyle : true])
                             }
                         }
-                        
                         if groupK == "yes" {
                             cell?.receiverNumber.text = "\(userNumberKey)"
                             _ = allUserOfContact.filter {user in
@@ -2084,7 +1976,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                                     nameString = user["Name"]!
                                     print("yesyesyesyesyesyesyesyesyes \(nameString) --- \(userNumberKey)")
                                     if user["Name"] != ""  {
-//                                        print("Yes ")
+                                        //                                        print("Yes ")
                                         cell?.receiverNumber.text = "\(nameString)"
                                     }
                                 }
@@ -2115,10 +2007,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
         let uniqueKey = key[indexPath!]
         let chatText = chat[uniqueKey]
         let txtChat = chatText?[userNumberKey]
-        
         _ = chatText?[userNumberKey]  as? [String : Any]
-        
-        
         let indexPathRow = IndexPath(row: indexPath!, section: 0)
         
         if (chatTable.cellForRow(at: indexPathRow) as? SenderViewCell) != nil {
@@ -2173,7 +2062,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             } else {
                 forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
                 forwardChatKey = "\(phones)"
-                
             }
             print("ReceiverViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
         }
@@ -2195,7 +2083,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             } else {
                 forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
                 forwardChatKey = "\(phones)"
-                
             }
             print("ReceiverReplyViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
         }
@@ -2217,7 +2104,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             } else {
                 forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
                 forwardChatKey = "\(phones)"
-                
             }
             forwardCell = "ReceiverReplyImageCell"
             print("ReceiverReplyImageCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
@@ -2231,7 +2117,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             forwardChatKey = "\(phones)"
             print("SenderReplyViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) | ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey) ")
         }
-            
+        
         if  (chatTable.cellForRow(at: indexPathRow) as? ImageTableViewCell) != nil {
             forwardChat = ""
             forwardChatPhoto = ""
@@ -2258,7 +2144,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                 uiimage.kf.setImage(with: url)
                 //                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
                 forwardChatKey = "\(phones)"
-                
             }
             print("ImageTableViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
         }
@@ -2281,7 +2166,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-
+    
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let indexPath = indexPath.row
         let chat = chatMap[indexPath]
@@ -2341,8 +2226,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             forwardChatKey = "\(phones)"
             forwardCell = "SenderReplyImageCell"
             print("SenderReplyImageCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-            let action = UIContextualAction(style: .normal,
-                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+            let action = UIContextualAction(style: .normal, title: "↩️") { [weak self] (action, view, completionHandler) in
                 self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:"You")
                 completionHandler(true)
             }
@@ -2357,8 +2241,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             forwardChatVideo = "\(chatText?["\(userNumberKey)"] ?? "")"
             forwardChatKey = phones
             print("SenderVideoCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-            let action = UIContextualAction(style: .normal,
-                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+            let action = UIContextualAction(style: .normal, title: "↩️") { [weak self] (action, view, completionHandler) in
                 self?.replyforVideo(chats: "Video" , user:"You",photourl: self?.forwardChatVideo ?? "")
                 completionHandler(true)
             }
@@ -2383,7 +2266,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             } else {
                 forwardChatVideo = "+\(chatText?["\(receiverUserid)chatVideo"] ?? "")"
                 forwardChatKey = "\(phones)"
-                
             }
             print("ReceiverVideoCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
             let action = UIContextualAction(style: .normal,
@@ -2415,7 +2297,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                 forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
                 newUser = receiverName
                 forwardChatKey = "\(phones)"
-                
             }
             print("ReceiverViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
             let action = UIContextualAction(style: .normal,
@@ -2447,12 +2328,10 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                 forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
                 newUser = "\(receiverName)"
                 forwardChatKey = "\(phones)"
-                
             }
             print("ReceiverReplyViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
             print("chat \(forwardChat) user \(newUser)")
-            let action = UIContextualAction(style: .normal,
-                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+            let action = UIContextualAction(style: .normal, title: "↩️") { [weak self] (action, view, completionHandler) in
                 self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:newUser)
                 completionHandler(true)
             }
@@ -2480,12 +2359,10 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                 forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
                 newUser = "\(receiverUserid)"
                 forwardChatKey = "\(phones)"
-                
             }
             forwardCell = "ReceiverReplyImageCell"
             print("ReceiverReplyImageCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
-            let action = UIContextualAction(style: .normal,
-                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+            let action = UIContextualAction(style: .normal, title: "↩️") { [weak self] (action, view, completionHandler) in
                 self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:newUser)
                 completionHandler(true)
             }
@@ -2500,8 +2377,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             forwardChat = "\(chatText?["\(phones)"] ?? "")"
             forwardChatKey = "\(phones)"
             print("SenderReplyViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) | ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey) ")
-            let action = UIContextualAction(style: .normal,
-                                            title: "↩️") { [weak self] (action, view, completionHandler) in
+            let action = UIContextualAction(style: .normal, title: "↩️") { [weak self] (action, view, completionHandler) in
                 self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:userNumberKey)
                 completionHandler(true)
             }
@@ -2538,7 +2414,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                 uiimage.kf.setImage(with: url)
                 //                forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
                 forwardChatKey = "\(phones)"
-                
             }
             print("ImageTableViewCell  ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
             let action = UIContextualAction(style: .normal,
@@ -2553,7 +2428,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
     }
     
     func replyforPhotos(chats:String, user: String,photourl:String){
-//        keyBoardStatus = false
+        //        keyBoardStatus = false
         chatField.becomeFirstResponder()
         chatTable.tableFooterView = imgReplyFooterView()
         scrollToBottom()
@@ -2565,8 +2440,9 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
         let url = URL(string: photourl  )
         replyImageView.kf.setImage(with: url)
     }
+    
     func replyforVideo(chats:String, user: String,photourl:String){
-//        keyBoardStatus = false
+        //        keyBoardStatus = false
         chatField.becomeFirstResponder()
         chatTable.tableFooterView = imgReplyFooterView()
         scrollToBottom()
@@ -2578,16 +2454,17 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
         let url = URL(string: photourl)
         replyImageView.kf.setImage(with: AVAssetImageDataProvider(assetURL: url!, seconds: 1))
     }
+    
     func handleMarkAsFavourite(chats:String, user: String) {
-//        keyBoardStatus = false
+        //        keyBoardStatus = false
         chatField.becomeFirstResponder()
         chatTable.tableFooterView = footerview()
         scrollToBottom()
-        
         replyUser?.text = "\(user)"
         replytxt?.text = "\(chats)"
         
     }
+    
     func scrollToBottom() {
         let footerBounds = chatTable.tableFooterView?.bounds
         let footerRectInTable = chatTable.convert(footerBounds!, from: chatTable.tableFooterView!)
@@ -2665,6 +2542,7 @@ extension ChatConversionCode {
         oppositeSeenStatus = false
         lcb = false
     }
+    
     private func hidefooterview() -> UIView {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 0))
         let indexPath = IndexPath(item: chatMapKey.count-1, section: 0)
@@ -2684,6 +2562,7 @@ extension ChatConversionCode {
         view.addSubview(seeninmsg)
         return view
     }
+    
     private func msgsseenfhidefooterview() -> UIView {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 0))
         
@@ -2693,6 +2572,7 @@ extension ChatConversionCode {
 
 // MARK: - Loading Progress Indicator
 extension ChatConversionCode {
+    
     func mbProgressHUD(text: String){
         DispatchQueue.main.async {
             let progressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)

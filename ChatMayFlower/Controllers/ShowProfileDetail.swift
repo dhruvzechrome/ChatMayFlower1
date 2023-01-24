@@ -12,7 +12,6 @@ import FirebaseCoreInternal
 import FirebaseStorage
 
 class ShowProfileDetail: UIViewController {
-    
     @IBOutlet weak var profileImage: UIImageView!
     var urlPath = ""                    // url of photos
     var filename = ""                   // path of photo in firebase storage
@@ -29,25 +28,21 @@ class ShowProfileDetail: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.gestureRecognizers?.removeAll()
-            phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
-            phoneNumber.text = phones
-            getData()
-        
-        
+        phones = FirebaseAuth.Auth.auth().currentUser?.phoneNumber ?? ""
+        phoneNumber.text = phones
+        getData()
         // Do any additional setup after loading the view.
     }
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
-         print("Hello World ")
-        
+        print("Hello World ")
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-            tabBarController?.tabBar.isHidden = false
+        tabBarController?.tabBar.isHidden = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-       
     }
     
     func getData(){
@@ -59,14 +54,12 @@ class ShowProfileDetail: UIViewController {
             //            print("Key",key)
             guard let _ = snapshot.value as? [String:Any] else {return}
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
-                
                 for snap in snapshots {
                     let _ = snap.key
                     let _ = snap.value!
                     let userMap = snapshot.value! as! [String:Any]
                     if userMap["Phone number"] as? String ==  self?.phones {
                         self!.uphoneno = "\(userMap["Phone number"]!)"
-                        
                         if userMap["Name"] != nil {
                             if userMap["Name"] as! String != "" {
                                 self!.name.text = "\(userMap["Name"]!)"
@@ -98,7 +91,6 @@ class ShowProfileDetail: UIViewController {
         }
     }
     
-    
     @IBAction func logout(_ sender: UIButton) {
         let firebaseAuth = Auth.auth()
         do {
@@ -112,9 +104,7 @@ class ShowProfileDetail: UIViewController {
     }
     
     @IBAction func editProfile(_ sender: UIBarButtonItem) {
-        
         let vc = storyboard?.instantiateViewController(withIdentifier: "EditProfileInformation") as? EditProfileInformation
-        
         vc?.userImage = imag
         vc?.name = uname
         vc?.number = phones

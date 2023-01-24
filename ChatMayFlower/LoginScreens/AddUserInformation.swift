@@ -27,18 +27,14 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         tphoneNumber.text = phones
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         imgProfile.addGestureRecognizer(tapGesture)
         initializeHideKeyboard()
         //Subscribe to a Notification which will fire before the keyboard will show
         subscribeToNotification(UIResponder.keyboardWillShowNotification, selector: #selector(keyboardWillShowOrHide))
-        
         //Subscribe to a Notification which will fire before the keyboard will hide
         subscribeToNotification(UIResponder.keyboardWillHideNotification, selector: #selector(keyboardWillShowOrHide))
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,25 +48,19 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
     func getData(){
         // Create Firebase Storage Reference
         let _ = Storage.storage().reference()
-        
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded){[weak self](snapshot) in
             let _ = snapshot.key
             //            print("Key",key)
             guard let _ = snapshot.value as? [String:Any] else {return}
-            
-            
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
-                
                 for _ in snapshots {
                     //                    let cata = snap.key
                     //                    let ques = snap.value!
-                    
                     let userMap = snapshot.value! as! [String:Any]
                     if userMap["Phone number"] as? String ==  self?.phones{
                         //                        print("Ppppphhhhh :",userMap["Phone number"]!)
                         self!.tphoneNumber.text = "\(userMap["Phone number"] ?? "")"
-                        
                         if userMap["Name"] != nil {
                             if userMap["Name"] as! String != ""{
                                 self!.tname.text = "\(userMap["Name"] ?? "")"
@@ -135,7 +125,6 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
         if let selectedImage =  info[.originalImage] as? UIImage{
             print("Selected image ",selectedImage)
             imgProfile.image = selectedImage
@@ -144,10 +133,8 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
             _ = info[.imageURL] as? URL
             print("Local Path  > ",localPath!)
             filename = localPath?.lastPathComponent
-            
             print("Name of Image --->>> ",filename!)
             picker.dismiss(animated: true, completion: nil)
-            
         }
         else{
             print("Image not found...!")
@@ -157,11 +144,9 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
     
     
     @IBAction func submit(_ sender: UIButton) {
-        
         guard didselectedImage != nil else{
             if tname.text != "" && tphoneNumber.text != ""{
                 DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phones,name: tname.text!,profileImage : urlPath, location: location))
-                
                 tabBarController?.selectedIndex = 1
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
                 vc?.phones = self.phones
@@ -169,7 +154,6 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
             }
             return
         }
-        
         // Create Firebase Storage Reference
         let storageRef = Storage.storage().reference()
         let imageData = didselectedImage!.jpegData(compressionQuality: 0.4)
@@ -185,11 +169,9 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
         }
         let fileRef = storageRef.child(location)
         print("\(fileRef)")
-        
         // This is equivalent to creating the full reference
         // Upload data
         let _ = fileRef.putData(imageData!, metadata: nil) { [self] metadata, error in
-            
             // Check error
             if error == nil && metadata != nil {
                 var urlpth = ""
@@ -204,10 +186,8 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
                         urlpth = "\(url!)"
                         DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phones,name: tname.text!,profileImage : "\(urlpth)", location: location))
                     }
-                    
                 }
                 if tname.text != "" && tphoneNumber.text != ""{
-                    
                     tabBarController?.selectedIndex = 1
                     let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
                     vc?.phones = self.phones
@@ -215,9 +195,6 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
                 }
             }
         }
-        
-        
-        
     }
 }
 
@@ -228,11 +205,9 @@ extension AddUserInformation {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(
             target: self,
             action: #selector(dismissMyKeyboard))
-        
         //Add this tap gesture recognizer to the parent view
         view.addGestureRecognizer(tap)
     }
-    
     @objc func dismissMyKeyboard(){
         //endEditing causes the view (or one of its embedded text fields) to resign the first responder status.
         //In short- Dismiss the active keyboard.
@@ -240,15 +215,12 @@ extension AddUserInformation {
     }
 }
 extension AddUserInformation {
-    
     func subscribeToNotification(_ notification: NSNotification.Name, selector: Selector) {
         NotificationCenter.default.addObserver(self, selector: selector, name: notification, object: nil)
     }
-    
     func unsubscribeFromAllNotifications() {
         NotificationCenter.default.removeObserver(self)
     }
-    
     @objc func keyboardWillShowOrHide(notification: NSNotification) {
         // Get required info out of the notification
         if let scrollView = backgroundSv, let userInfo = notification.userInfo, let endValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey], let durationValue = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey], let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] {
@@ -270,5 +242,4 @@ extension AddUserInformation {
             }, completion: nil)
         }
     }
-    
 }

@@ -10,13 +10,13 @@ import FirebaseDatabase
 import FirebaseAuth
 import Kingfisher
 class ReceiverEditCode: UIViewController {
+    var int = 0
     var groupMsgId = ""
     var uid : Int?
     var currentUser = ""
     @IBOutlet weak var receITableView: UITableView!
     var nav = ""
     var groupK = "no"
-    
     var fileName = ""
     var urlPath = ""                    // url of photos
     var filename = ""                   // path of photo in firebase storage
@@ -34,15 +34,14 @@ class ReceiverEditCode: UIViewController {
     var currentUserData : [String:String] = [:]
     override func viewDidLoad() {
         super.viewDidLoad()
-     //   navigationController?.navigationBar.gestureRecognizers?.removeAll()
-//        navigationItem.hidesBackButton = false
+        //   navigationController?.navigationBar.gestureRecognizers?.removeAll()
+        //        navigationItem.hidesBackButton = false
         if phones == "" {
         } else {
             receITableView.delegate = self
             receITableView.dataSource = self
+            
             if groupK == "yes" {
-                
-                
                 edit.title = "Edit Group"
                 arrayList = phones.split(separator: "+")
                 receITableView.reloadData()
@@ -72,9 +71,7 @@ class ReceiverEditCode: UIViewController {
         }
     }
     
-    
     @IBAction func editButton(_ sender: Any) {
-        
         if groupK == "yes" {
             let vc = storyboard?.instantiateViewController(withIdentifier: "GroupCreationCode") as? GroupCreationCode
             vc?.groupUser = groupUser
@@ -90,13 +87,8 @@ class ReceiverEditCode: UIViewController {
             print("Url path of Photo of group ----------- \(fileName)")
             let newVc = UINavigationController(rootViewController: vc!)
             self.present(newVc, animated: true)
-            
         }
-        
     }
-    
-var int = 0
-
 }
 
 extension ReceiverEditCode : UITableViewDelegate, UITableViewDataSource {
@@ -113,6 +105,7 @@ extension ReceiverEditCode : UITableViewDelegate, UITableViewDataSource {
             receITableView.deselectRow(at: indexPath, animated: true)
         }
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("\(indexPath.row)")
         if groupK == "yes" {
@@ -120,7 +113,7 @@ extension ReceiverEditCode : UITableViewDelegate, UITableViewDataSource {
                 let cell = receITableView.dequeueReusableCell(withIdentifier: "ReceiverProfileViewCell", for: indexPath) as? ReceiverProfileViewCell
                 cell?.participant.text = "Participants"
                 cell?.profileName.text = uname
-//                cell?.profileNumber.text = phones
+                //                cell?.profileNumber.text = phones
                 if urlPath != "" {
                     let url = URL(string: urlPath)
                     cell?.profilePic.kf.setImage(with: url)
@@ -129,10 +122,8 @@ extension ReceiverEditCode : UITableViewDelegate, UITableViewDataSource {
                 return cell!
             } else {
                 let frd = groupUser[int]
-//                print("user \(frd)")
-               
+                //                print("user \(frd)")
                 let cell = receITableView.dequeueReusableCell(withIdentifier: "GroupUserCell", for: indexPath) as? GroupUserCell
-                
                 if frd == currentUserData["Phone number"] {
                     cell?.groupUserName.text = "You"
                     if currentUserData["profilepic"] != "" {
@@ -140,12 +131,10 @@ extension ReceiverEditCode : UITableViewDelegate, UITableViewDataSource {
                         cell?.groupUserProfile.kf.setImage(with: url)
                     }
                 }
-                
                 else {
                     cell?.groupUserName.text = "\(frd)"
                     _ = allUserOfFirebase.filter {user in
                         let number = user["Phone number"]
-                        
                         if number == frd {
                             if user["Name"] != "" {
                                 cell?.groupUserName.text = "\(user["Name"]!)"
@@ -167,7 +156,6 @@ extension ReceiverEditCode : UITableViewDelegate, UITableViewDataSource {
                 }
                 return cell!
             }
-
         }
         else {
             let cell = receITableView.dequeueReusableCell(withIdentifier: "ReceiverProfileViewCell", for: indexPath) as? ReceiverProfileViewCell

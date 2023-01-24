@@ -32,7 +32,6 @@ class GroupCreationCode: UIViewController, UISearchControllerDelegate, UISearchR
                     usersList.append(frd)
                 }
             }
-            
         }
         userTable.reloadData()
     }
@@ -91,9 +90,7 @@ class GroupCreationCode: UIViewController, UISearchControllerDelegate, UISearchR
     }
     
     @IBAction func createGrpButton(_ sender: UIBarButtonItem) {
-        
         if name == "" {
-            
             let vc = storyboard?.instantiateViewController(withIdentifier: "GroupViewController" ) as? GroupViewController
             vc?.selecetdUser = selecetdUser
             vc?.groupUser = groupUser
@@ -116,7 +113,6 @@ class GroupCreationCode: UIViewController, UISearchControllerDelegate, UISearchR
                     break
                 }
             }
-            
             vc?.selecetdUser = selecetdUser
             vc?.groupUser = groupUser
             vc?.phones = phones
@@ -128,7 +124,6 @@ class GroupCreationCode: UIViewController, UISearchControllerDelegate, UISearchR
             navigationController?.pushViewController(vc!, animated: true)
         }
     }
-    
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true)
     }
@@ -138,14 +133,12 @@ extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return usersList.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let frd = usersList[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupCreationTableViewCell", for: indexPath) as? GroupCreationTableViewCell
 //        print("my image is \(frd["profilepic"]!)")
         if groupUserSelected.count > 0 {
             _ = groupUserSelected.filter { list in
-                
                 if list == frd["Phone number"] {
                     tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
                     nextButton.isEnabled = true
@@ -153,7 +146,6 @@ extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
             return true
             }
         }
-        
         if frd["Name"] == nil {
             cell?.userTitle.text = frd["Phone number"]
         } else {
@@ -194,7 +186,6 @@ extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
                 break
             }
         }
-        
         for i in 0...selecetdUser.count-1 {
             let tds = selecetdUser[i]
             if frd["Phone number"] == tds["Phone number"] {
@@ -202,7 +193,6 @@ extension GroupCreationCode : UITableViewDelegate , UITableViewDataSource {
                 break
             }
         }
-        
         if groupUser.count == 0 {
             nextButton.isEnabled = false
         }

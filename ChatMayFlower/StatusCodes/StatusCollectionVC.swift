@@ -16,17 +16,14 @@ import AssetsLibrary
 class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     var stack = UIStackView()
     var progressViews = [UIProgressView()]
-//    @IBOutlet weak var progressCollection: UICollectionView!
+    //    @IBOutlet weak var progressCollection: UICollectionView!
     @IBOutlet weak var detailsCollection: UICollectionView!
-    
     public let percentThresholdDismiss: CGFloat = 0.3
     public var velocityDismiss: CGFloat = 300
     public var axis: NSLayoutConstraint.Axis = .vertical
-    
     let favorite = UIAction(title: "Delete",
                             image: UIImage(systemName: "trash.circle.fill")) { [self] _ in
         // Perform actio
-        
         StatusCollectionVC().alertView()
     }
     
@@ -59,7 +56,6 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
         stack.distribution = .fillProportionally
         stack.alignment = .fill
         view.addSubview(stack)
-        
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if self.screenStatus == false {
                 self.counter += 1
@@ -68,12 +64,10 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
                 if self.progressViews.count > 1 {
                     
                     for i in 0...self.progressViews.count-1 {
-                         if i == self.statuscount {
+                        if i == self.statuscount {
                             self.progressViews[self.statuscount].setProgress(Float(self.counter*4), animated: true)
                         }
                     }
-                    
-                    
                     print("statucount \(self.statuscount)")
                 } else {
                     self.progressViews[0].setProgress(Float(self.counter*4), animated: true)
@@ -87,7 +81,6 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
             }
         }
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(onDrag(_:))))
-        
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -95,8 +88,7 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        seenStatuskey.removeAll()
-        
+        //        seenStatuskey.removeAll()
     }
     
     func alertView(){
@@ -134,14 +126,12 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
     func saveAlertView(){
         let alert = UIAlertController(title: "", message: "Save Status!", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { [self]_ in
-            
             if videoUrl == nil {
                 UIImageWriteToSavedPhotosAlbum(uiimage.image!, self, #selector(image(_:withPotentialError:contextInfo:)), nil)
             } else {
                 DispatchQueue.global(qos: .background).async {
                     if let url = URL(string: videoUrl!), let urIData = NSData(contentsOf: url) {
-                        let documentsPath=NSSearchPathForDirectoriesInDomains(.documentDirectory,
-                                                                              .userDomainMask, true)[0];
+                        let documentsPath=NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask, true)[0];
                         let filePath="\(documentsPath)/\(UUID().uuidString).MOV"
                         DispatchQueue.main.async{
                             urIData.write(toFile: filePath, atomically: true)
@@ -172,57 +162,49 @@ class StatusCollectionVC: UIViewController,UIContextMenuInteractionDelegate {
         } else {
             saveAlertView()
         }
-        
-        
     }
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
-          configurationForMenuAtLocation location: CGPoint)
-          -> UIContextMenuConfiguration? {
-
-          let favorite = UIAction(title: "Favorite",
-            image: UIImage(systemName: "heart.fill")) { _ in
+                                configurationForMenuAtLocation location: CGPoint)
+    -> UIContextMenuConfiguration? {
+        
+        let favorite = UIAction(title: "Favorite",
+                                image: UIImage(systemName: "heart.fill")) { _ in
             // Perform action
-          }
-
-          let share = UIAction(title: "Share",
-            image: UIImage(systemName: "square.and.arrow.up.fill")) { action in
-            // Perform action
-          }
-
-          let delete = UIAction(title: "Delete",
-            image: UIImage(systemName: "trash.fill"),
-            attributes: [.destructive]) { action in
-             // Perform action
-           }
-
-           return UIContextMenuConfiguration(identifier: nil,
-             previewProvider: nil) { _ in
-             UIMenu(title: "Actions", children: [favorite, share, delete])
-           }
         }
-
-//    func createContextMenu() -> UIMenu {
-//        let shareAction = UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { _ in
-//            print("Share")
-//        }
-//        let copy = UIAction(title: "Copy", image: UIImage(systemName: "doc.on.doc")) { _ in
-//            print("Copy")
-//        }
-//        let saveToPhotos = UIAction(title: "Add To Photos", image: UIImage(systemName: "photo")) { _ in
-//            print("Save to Photos")
-//        }
-//        return UIMenu(title: "", children: [shareAction, copy, saveToPhotos])
-//    }
-//    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-//        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ -> UIMenu? in
-//            return self.createContextMenu()
-//        }
-//    }
+        let share = UIAction(title: "Share",
+                             image: UIImage(systemName: "square.and.arrow.up.fill")) { action in
+            // Perform action
+        }
+        let delete = UIAction(title: "Delete",
+                              image: UIImage(systemName: "trash.fill"),
+                              attributes: [.destructive]) { action in
+            // Perform action
+        }
+        return UIContextMenuConfiguration(identifier: nil,
+                                          previewProvider: nil) { _ in
+            UIMenu(title: "Actions", children: [favorite, share, delete])
+        }
+    }
+    //    func createContextMenu() -> UIMenu {
+    //        let shareAction = UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { _ in
+    //            print("Share")
+    //        }
+    //        let copy = UIAction(title: "Copy", image: UIImage(systemName: "doc.on.doc")) { _ in
+    //            print("Copy")
+    //        }
+    //        let saveToPhotos = UIAction(title: "Add To Photos", image: UIImage(systemName: "photo")) { _ in
+    //            print("Save to Photos")
+    //        }
+    //        return UIMenu(title: "", children: [shareAction, copy, saveToPhotos])
+    //    }
+    //    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+    //        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ -> UIMenu? in
+    //            return self.createContextMenu()
+    //        }
+    //    }
     var kkey :Int?
     
-    
     @IBAction func bakward(_ sender: UIButton) {
-        
         if seenStatuskey.count > 1 {
             seenStatuskey.remove(at: seenStatuskey.count-2)
             seenStatuskey.removeLast()
@@ -259,7 +241,7 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
     }
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         counter = 0
-//        print("Index Path - \(indexPath.item)")
+        //        print("Index Path - \(indexPath.item)")
         if kkey == indexPath.item {
             
         } else {
@@ -270,7 +252,7 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
         kkey = indexPath.item
         if ifc == 0 {
             print("yes of course")
-//            seenStatuskey.removeAll()
+            //            seenStatuskey.removeAll()
             let indexPath = IndexPath(item: identifier!, section: 0)
             kkey = indexPath.item
             detailsCollection.scrollToItem(at: indexPath, at: [.bottom], animated: false)
@@ -304,16 +286,16 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
             print("yes")
             progressView.trackTintColor = UIColor.gray
             progressView.progressTintColor = UIColor.blue
-//                                progressView.setProgress(50, animated: true)
+            //                                progressView.setProgress(50, animated: true)
             stack.addArrangedSubview(progressView)
         }
         print("stack \(progressViews) ---- \(stack)")
         cell?.userImage.kf.setImage(with: url1)
         cell?.userName.text = "\(frd["Name"] ?? "\(frd["Phone number"] ?? "")")"
-//        print("statuskey  ... \(frd["statuskey"] ?? "")")
-//        print("statusViedeo ... \(valll?["\(frd["statuskey"] ?? "")"] ?? "")")
-//        print("cnt  \(cnt)")
-//        print("Index Path \(indexPath.row)")
+        //        print("statuskey  ... \(frd["statuskey"] ?? "")")
+        //        print("statusViedeo ... \(valll?["\(frd["statuskey"] ?? "")"] ?? "")")
+        //        print("cnt  \(cnt)")
+        //        print("Index Path \(indexPath.row)")
         for i in 0...statuskey.count-1 {
             if valll?["\(statuskey[i])"] != nil {
                 if !seenStatuskey.contains("\(statuskey[i])") {
@@ -322,7 +304,6 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                     let statuscmt = "\(photo?["statusComment"] ?? "")"
                     print("comment  \(statuscmt)")
                     cell?.statusComment.text = statuscmt
-                    
                     if photo?["statusVideo"] == nil {
                         print("Photo")
                         cell?.videoImage.isHidden = false
@@ -351,7 +332,7 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                 }
             }
         }
-//        print("seenStatusKey ... \(seenStatuskey)")
+        //        print("seenStatusKey ... \(seenStatuskey)")
         if localBool == true {
             localBool = false
             print("status Count ... \(statuscount)")
@@ -365,21 +346,19 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
                     self.dismiss(animated: true, completion: nil)
                 }
             }
-           
         }
         if nameText == "You" {
             cell?.dismissBtn.setImage(UIImage(systemName: "ellipsis"), for: .normal)
-//            let interaction = UIContextMenuInteraction(delegate: self)
+            //            let interaction = UIContextMenuInteraction(delegate: self)
             
-//            cell?.dismissBtn.showsMenuAsPrimaryAction = true
-//            cell?.dismissBtn.menu = UIMenu(title: "delete", children: [favorite])
-//            let interaction = UIContextMenuInteraction(delegate: self)
-//            cell?.dismissBtn.addInteraction(interaction)
-//            cell?.dismissBtn.isUserInteractionEnabled = true
+            //            cell?.dismissBtn.showsMenuAsPrimaryAction = true
+            //            cell?.dismissBtn.menu = UIMenu(title: "delete", children: [favorite])
+            //            let interaction = UIContextMenuInteraction(delegate: self)
+            //            cell?.dismissBtn.addInteraction(interaction)
+            //            cell?.dismissBtn.isUserInteractionEnabled = true
         }else {
             cell?.dismissBtn.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         }
-        
         return cell!
     }
     
@@ -388,85 +367,77 @@ extension StatusCollectionVC: UICollectionViewDelegate,UICollectionViewDataSourc
         
         let cwidth = UIScreen.main.bounds.width
         return CGSize(width: cwidth, height: cheight)
-
+        
     }
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-            return 0
-        }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-           return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-       }
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
 }
 
 extension StatusCollectionVC {
     
     //    public var backgroundDismissColor: UIColor = .clear {
-//            didSet {
-//                navigationController?.view.backgroundColor = backgroundDismissColor
-//            }
-//        }
+    //            didSet {
+    //                navigationController?.view.backgroundColor = backgroundDismissColor
+    //            }
+    //        }
     @objc fileprivate func onDrag(_ sender: UIPanGestureRecognizer) {
-
-            let translation = sender.translation(in: view)
-
-            // Movement indication index
-            let movementOnAxis: CGFloat
-
-            // Move view to new position
-            switch axis {
-            case .vertical:
-                let newY = min(max(view.frame.minY + translation.y, 0), view.frame.maxY)
-                movementOnAxis = newY / view.bounds.height
-                view.frame.origin.y = newY
-
-            case .horizontal:
-                let newX = min(max(view.frame.minX + translation.x, 0), view.frame.maxX)
-                movementOnAxis = newX / view.bounds.width
-                view.frame.origin.x = newX
-            @unknown default:
-                fatalError()
-            }
-
-            let positiveMovementOnAxis = fmaxf(Float(movementOnAxis), 0.0)
-            let positiveMovementOnAxisPercent = fminf(positiveMovementOnAxis, 1.0)
-            let progress = CGFloat(positiveMovementOnAxisPercent)
+        
+        let translation = sender.translation(in: view)
+        // Movement indication index
+        let movementOnAxis: CGFloat
+        // Move view to new position
+        switch axis {
+        case .vertical:
+            let newY = min(max(view.frame.minY + translation.y, 0), view.frame.maxY)
+            movementOnAxis = newY / view.bounds.height
+            view.frame.origin.y = newY
+        case .horizontal:
+            let newX = min(max(view.frame.minX + translation.x, 0), view.frame.maxX)
+            movementOnAxis = newX / view.bounds.width
+            view.frame.origin.x = newX
+        @unknown default:
+            fatalError()
+        }
+        let positiveMovementOnAxis = fmaxf(Float(movementOnAxis), 0.0)
+        let positiveMovementOnAxisPercent = fminf(positiveMovementOnAxis, 1.0)
+        let progress = CGFloat(positiveMovementOnAxisPercent)
         navigationController?.view.backgroundColor = .clear
-
-            switch sender.state {
-            case .ended where sender.velocity(in: view).y >= velocityDismiss || progress > percentThresholdDismiss:
-                // After animate, user made the conditions to leave
-                UIView.animate(withDuration: 0.2, animations: {
-                    switch self.axis {
-                    case .vertical:
-                        self.view.frame.origin.y = self.view.bounds.height
-
-                    case .horizontal:
-                        self.view.frame.origin.x = self.view.bounds.width
-                    @unknown default:
-                        fatalError()
-                    }
-                    self.navigationController?.view.backgroundColor = .clear
-
-                }, completion: { finish in
-                    self.dismiss(animated: true) //Perform dismiss
-                })
-            case .ended:
-                // Revert animation
-                UIView.animate(withDuration: 0.2, animations: {
-                    switch self.axis {
-                    case .vertical:
-                        self.view.frame.origin.y = 0
-
-                    case .horizontal:
-                        self.view.frame.origin.x = 0
-                    @unknown default:
-                        fatalError()
-                    }
-                })
-            default:
-                break
-            }
-            sender.setTranslation(.zero, in: view)
+        switch sender.state {
+        case .ended where sender.velocity(in: view).y >= velocityDismiss || progress > percentThresholdDismiss:
+            // After animate, user made the conditions to leave
+            UIView.animate(withDuration: 0.2, animations: {
+                switch self.axis {
+                case .vertical:
+                    self.view.frame.origin.y = self.view.bounds.height
+                case .horizontal:
+                    self.view.frame.origin.x = self.view.bounds.width
+                @unknown default:
+                    fatalError()
+                }
+                self.navigationController?.view.backgroundColor = .clear
+            }, completion: { finish in
+                self.dismiss(animated: true) //Perform dismiss
+            })
+        case .ended:
+            // Revert animation
+            UIView.animate(withDuration: 0.2, animations: {
+                switch self.axis {
+                case .vertical:
+                    self.view.frame.origin.y = 0
+                case .horizontal:
+                    self.view.frame.origin.x = 0
+                @unknown default:
+                    fatalError()
+                }
+            })
+        default:
+            break
+        }
+        sender.setTranslation(.zero, in: view)
     }
 }
