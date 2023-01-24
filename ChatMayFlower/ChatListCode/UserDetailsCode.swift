@@ -14,7 +14,7 @@ import Kingfisher
 import MBProgressHUD
 import Contacts
 
-class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpdating {
+class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UITabBarControllerDelegate {
     func updateSearchResults(for searchController: UISearchController) {
         listOfData = []
         let searchText = searchController.searchBar.text
@@ -315,6 +315,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         mbProgressHUD(text: "Loading..")
         tabelView.delegate = self
         tabelView.dataSource = self
+        tabBarController?.delegate = self
         
         print(friends)
         
@@ -353,7 +354,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         super.viewDidAppear(animated)
         
         tabBarController?.tabBar.isHidden = false
-        tabBarController?.tabBarItem.accessibilityElementIsFocused()
+        
         print("current User",phones)
         
     }
@@ -362,6 +363,8 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
         super.viewWillAppear(animated)
         validAuth()
         tabelView.contentOffset = CGPoint(x: 0, y: searchController.searchBar.frame.height);
+        tabBarController?.tabBarItem.accessibilityElementIsFocused()
+        
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [self] _ in
             if newMsg == true {
                 print("Yes \(newMsg)")

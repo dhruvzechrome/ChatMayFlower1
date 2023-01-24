@@ -128,7 +128,8 @@ class StatusVCViewController: UIViewController {
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded){[self](snapshot) in
             _ = snapshot.key
-            //            print("Key",key)
+            print("singh ji",snapshot)
+            
             guard let _ = snapshot.value as? [String:Any] else {return}
             if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
                 databaseRef.child("\(snapshot.key)").child("status").observe(.childAdded) { snaps in

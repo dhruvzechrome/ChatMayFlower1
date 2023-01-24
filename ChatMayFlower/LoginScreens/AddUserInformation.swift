@@ -162,8 +162,7 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
             if tname.text != "" && tphoneNumber.text != ""{
                 DataBaseManager.shared.insertUser(with: ChatAppUser(phoneNumber: self.phones,name: tname.text!,profileImage : urlPath, location: location))
                 
-            
-                
+                tabBarController?.selectedIndex = 1
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
                 vc?.phones = self.phones
                 self.navigationController?.pushViewController(vc!, animated: true)
@@ -209,6 +208,7 @@ class AddUserInformation: UIViewController, UIImagePickerControllerDelegate & UI
                 }
                 if tname.text != "" && tphoneNumber.text != ""{
                     
+                    tabBarController?.selectedIndex = 1
                     let vc = self.storyboard?.instantiateViewController(withIdentifier: "UserDetailsCode") as? UserDetailsCode
                     vc?.phones = self.phones
                     self.navigationController?.pushViewController(vc!, animated: true)

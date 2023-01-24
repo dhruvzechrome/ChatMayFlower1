@@ -599,10 +599,10 @@ extension ChatConversionCode {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         print("inside")
-        if let  videoURL = info[.mediaURL] as? URL
+        if let  videoURL = info[.mediaURL] as? NSURL
         {
             let localFile = URL(string: "\(videoURL)")!
-            print("Video Url is -=-=-=-=-=-=-=-==-=-= \(localFile)")
+            print("Video Url is -=-=-=-=-=-=-=-==-=-= \(videoURL)")
             //            let asset = AVURLAsset(url: videoURL,options: nil)
             //            let imgGenerator = AVAssetImageGenerator(asset: asset)
             //            imgGenerator.appliesPreferredTrackTransform = true
@@ -619,7 +619,7 @@ extension ChatConversionCode {
                 mid = groupMsgId
             }
             DispatchQueue.main.asyncAfter(deadline: .now()) {
-                let uploadTask = fileRef.putFile(from: localFile, metadata: nil){metadata, error in
+                let uploadTask = fileRef.putFile(from: localFile , metadata: nil){metadata, error in
                     var urlpth = ""
                     if error == nil && metadata != nil {
                         
@@ -645,6 +645,7 @@ extension ChatConversionCode {
                         })
                     } else {
                         print("Error for uploading \(String(describing: error))-----------")
+                        picker.dismiss(animated: true, completion: nil)
 //                        print("Metadata is >>>>>>>>>>>>> \(metadata)")
                     }
                 }
