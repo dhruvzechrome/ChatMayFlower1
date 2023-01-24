@@ -1111,7 +1111,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
     }
     func showToast(message : String, font: UIFont) {
 
-        let toastLabel = UILabel(frame: CGRect(x: self.view.frame.size.width/2 - 75, y: self.view.frame.size.height-100, width: UIScreen.main.bounds.width-100, height: 35))
+        let toastLabel = UILabel(frame: CGRect(x: 20, y: self.view.frame.size.height-100, width: UIScreen.main.bounds.width-100, height: 35))
         toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         toastLabel.textColor = UIColor.white
         toastLabel.font = font
@@ -1294,6 +1294,13 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                                 cell?.receivermsg.text = "📷 Photo"
                             }
                         }
+                        if let url = URL(string: "\(cell?.receiverreply.text ?? "")") {
+                            if UIApplication.shared.canOpenURL(url){
+                                print("nesg")
+                                cell?.receiverreply.textColor = UIColor.tintColor
+                                cell?.receiverreply.attributedText = NSAttributedString(string: "\(cell?.receiverreply.text ?? "")",attributes: [NSAttributedString.Key.underlineColor : UIColor.tintColor,NSAttributedString.Key.underlineStyle : true])
+                            }
+                        }
                         cell?.selectionStyle = .none
                         if indexPath.row == chatMapKey.count-1 {
                             if oppositeSeenStatus == false {
@@ -1371,7 +1378,13 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                         if indexPath.row == chatMapKey.count-1 {
                             toggle = true
                         }
-                        
+                        if let url = URL(string: "\(cell?.senderreply.text ?? "")") {
+                            if UIApplication.shared.canOpenURL(url){
+                                print("nesg")
+                                cell?.senderreply.textColor = UIColor.tintColor
+                                cell?.senderreply.attributedText = NSAttributedString(string: "\(cell?.senderreply.text ?? "")",attributes: [NSAttributedString.Key.underlineColor : UIColor.tintColor,NSAttributedString.Key.underlineStyle : true])
+                            }
+                        }
                         return cell!
                     }
                 } else if abc?["\(receiverid)chatVideo"] != nil || abc?["\(phoneid)chatVideo"] != nil {
@@ -1461,7 +1474,13 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                                 toggle = false
                             }
                         }
-                        
+                        if let url = URL(string: "\(cell?.receiverreply.text ?? "")") {
+                            if UIApplication.shared.canOpenURL(url){
+                                print("nesg")
+                                cell?.receiverreply.textColor = UIColor.tintColor
+                                cell?.receiverreply.attributedText = NSAttributedString(string: "\(cell?.receiverreply.text ?? "")",attributes: [NSAttributedString.Key.underlineColor : UIColor.tintColor,NSAttributedString.Key.underlineStyle : true])
+                            }
+                        }
                         return cell!
                         
                     } else {
@@ -1520,6 +1539,13 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             
                             if abc?["\(receiverid)text"] == nil {
                                 cell?.sendermsg.text = "📷 Video"
+                            }
+                        }
+                        if let url = URL(string: "\(cell?.senderreply.text ?? "")") {
+                            if UIApplication.shared.canOpenURL(url){
+                                print("nesg")
+                                cell?.senderreply.textColor = UIColor.tintColor
+                                cell?.senderreply.attributedText = NSAttributedString(string: "\(cell?.senderreply.text ?? "")",attributes: [NSAttributedString.Key.underlineColor : UIColor.tintColor,NSAttributedString.Key.underlineStyle : true])
                             }
                         }
                         cell?.selectionStyle = .none
@@ -1668,6 +1694,13 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             }
                         }
                     }
+                    if let url = URL(string: "\(cell?.receiverReply.text ?? "")") {
+                        if UIApplication.shared.canOpenURL(url){
+                            print("nesg")
+                            cell?.receiverReply.textColor = UIColor.tintColor
+                            cell?.receiverReply.attributedText = NSAttributedString(string: "\(cell?.receiverReply.text ?? "")",attributes: [NSAttributedString.Key.underlineColor : UIColor.tintColor,NSAttributedString.Key.underlineStyle : true])
+                        }
+                    }
                     cell?.selectionStyle = .none
                     if indexPath.row == chatMapKey.count-1 {
                         if oppositeSeenStatus == false {
@@ -1730,9 +1763,6 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                         }
                     }
                     else {
-                        //                            if groupK == "yes" {
-                        //                                var kepp = mid.split(separator: "+")
-                        //                            }
                         if groupK == "yes"{
                             let checking = mid.split(separator: "+")
                             for i in  0...checking.count-1 {
@@ -1747,9 +1777,12 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             cell?.senderReply.text = chatText?["\(phoneid)"] as? String
                         }
                     }
-                    if groupK == "yes" {
-//                        cell?.senderNumber.text = "You"
-                        
+                    if let url = URL(string: "\(cell?.senderReply.text ?? "")") {
+                        if UIApplication.shared.canOpenURL(url){
+                            print("nesg")
+                            cell?.senderReply.textColor = UIColor.tintColor
+                            cell?.senderReply.attributedText = NSAttributedString(string: "\(cell?.senderReply.text ?? "")",attributes: [NSAttributedString.Key.underlineColor : UIColor.tintColor,NSAttributedString.Key.underlineStyle : true])
+                        }
                     }
                     cell?.selectionStyle = .none
                     if indexPath.row == chatMapKey.count-1 {
@@ -1782,6 +1815,13 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             } else {
                                 cell?.receiverComentImage.text = chatText?["\(receiverid)text"] as? String
                                 
+                            }
+                            if let url = URL(string: "\(cell?.receiverComentImage.text ?? "")") {
+                                if UIApplication.shared.canOpenURL(url){
+                                    print("nesg")
+                                    cell?.receiverComentImage.textColor = UIColor.tintColor
+                                    cell?.receiverComentImage.attributedText = NSAttributedString(string: "\(cell?.receiverComentImage.text ?? "")",attributes: [NSAttributedString.Key.underlineColor : UIColor.tintColor,NSAttributedString.Key.underlineStyle : true])
+                                }
                             }
                             if groupK == "yes" {
                                 cell?.receiverNumber.text = "\(userNumberKey.replacingOccurrences(of: "chatPhoto", with: ""))"
@@ -1818,6 +1858,8 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             let tapGesture1 = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.openLink))
                             cell?.senderImageComment.addGestureRecognizer(tapGesture1)
                             cell?.senderImageComment.tag = indexPath.row
+                            
+                            
                             let tapGesture = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.imageTappSenderReceiver))
                             cell?.viewC.addGestureRecognizer(tapGesture)
                             cell?.viewC.tag = indexPath.row
@@ -1831,6 +1873,13 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                             cell?.selectionStyle = .none
                             if indexPath.row == chatMapKey.count-1 {
                                 toggle = true
+                            }
+                            if let url = URL(string: "\(cell?.senderImageComment.text ?? "")") {
+                                if UIApplication.shared.canOpenURL(url){
+                                    print("nesg")
+                                    cell?.senderImageComment.textColor = UIColor.tintColor
+                                    cell?.senderImageComment.attributedText = NSAttributedString(string: "\(cell?.senderImageComment.text ?? "")",attributes: [NSAttributedString.Key.underlineColor : UIColor.tintColor,NSAttributedString.Key.underlineStyle : true])
+                                }
                             }
                             return cell!
                         }
@@ -1983,10 +2032,17 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                         cell?.viewC.tag = indexPath.row
                         let interaction = UIContextMenuInteraction(delegate: self)
                         cell?.viewC.addInteraction(interaction)
-                        cell?.senderMessage.attributedText = NSAttributedString(string: "\(txtChat ?? "")")
+                        cell?.senderMessage.text =  "\(txtChat ?? "")"
                         let tapGesture1 = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.openLink))
                         cell?.senderMessage.addGestureRecognizer(tapGesture1)
                         cell?.senderMessage.tag = indexPath.row
+                        if let url = URL(string: "\(txtChat ?? "")") {
+                            if UIApplication.shared.canOpenURL(url){
+                                print("nesg")
+                                cell?.senderMessage.textColor = UIColor.tintColor
+                                cell?.senderMessage.attributedText = NSAttributedString(string: "\(txtChat ?? "")",attributes: [NSAttributedString.Key.underlineColor : UIColor.tintColor,NSAttributedString.Key.underlineStyle : true])
+                            }
+                        }
                         cell?.selectionStyle = .none
                         if groupK == "yes" {
 //                            cell?.senderNumber.text = "You"
@@ -1998,7 +2054,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                     }
                     else {
                         let cell = chatTable.dequeueReusableCell(withIdentifier: "ReceiverViewCell", for: indexPath) as? ReceiverViewCell
-                        cell?.receiverMessages.attributedText = NSAttributedString(string: "\(txtChat ?? "")")
+                        cell?.receiverMessages.text = "\(txtChat ?? "")"
                         let tapGesture1 = UITapGestureRecognizer (target: self, action: #selector(ChatConversionCode.openLink))
                         cell?.receiverMessages.addGestureRecognizer(tapGesture1)
                         cell?.receiverMessages.tag = indexPath.row
@@ -2007,8 +2063,17 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                         cell?.viewC.addGestureRecognizer(tapGesture)
                         cell?.viewC.tag = indexPath.row
                         let interaction = UIContextMenuInteraction(delegate: self)
-                       
                         cell?.viewC.addInteraction(interaction)
+                        
+                        
+                        if let url = URL(string: "\(txtChat ?? "")") {
+                            if UIApplication.shared.canOpenURL(url){
+                                print("nesg")
+                                cell?.receiverMessages.textColor = UIColor.tintColor
+                                cell?.receiverMessages.attributedText = NSAttributedString(string: "\(txtChat ?? "")",attributes: [NSAttributedString.Key.underlineColor : UIColor.tintColor,NSAttributedString.Key.underlineStyle : true])
+                            }
+                        }
+                        
                         if groupK == "yes" {
                             cell?.receiverNumber.text = "\(userNumberKey)"
                             _ = allUserOfContact.filter {user in
@@ -2227,7 +2292,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
         // Selected Drug and notes
         _ = "\(uniqueKey)"
         let indexPathRow = IndexPath(row: indexPath, section: 0)
-        
+        oppositeSeenStatus = true
         if (chatTable.cellForRow(at: indexPathRow) as? SenderViewCell) != nil {
             forwardChat = ""
             forwardChatPhoto = ""
@@ -2239,7 +2304,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             print("SenderViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
             let action = UIContextualAction(style: .normal,
                                             title: "↩️") { [weak self] (action, view, completionHandler) in
-                self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:userNumberKey)
+                self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:"You")
                 completionHandler(true)
             }
             action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
@@ -2260,7 +2325,7 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             print("my  IOIOIOIOIOIOIs")
             let action = UIContextualAction(style: .normal,
                                             title: "↩️") { [weak self] (action, view, completionHandler) in
-                self?.replyforPhotos(chats: self?.forwardChat ?? "" , user:userNumberKey.replacingOccurrences(of: "chatPhoto", with: "") ,photourl: self?.forwardChatPhoto ?? "")
+                self?.replyforPhotos(chats: self?.forwardChat ?? "" , user:"You",photourl: self?.forwardChatPhoto ?? "")
                 completionHandler(true)
             }
             action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
@@ -2333,25 +2398,28 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
             forwardChatPhoto = ""
             forwardChatVideo = ""
             forwardChatKey = ""
+            var newUser = ""
             if groupK == "yes" {
                 let checking = mid.split(separator: "+")
                 for i in  0...checking.count-1 {
                     if chatText?["+\(checking[i])"] != nil {
                         print("OKOKKOOOOK")
                         forwardChat = "\(chatText?["+\(checking[i])"] ?? "")"
+                        newUser = "+\(checking[i])"
                         forwardChatKey = "\(phones)"
                         break
                     }
                 }
             } else {
                 forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
+                newUser = receiverName
                 forwardChatKey = "\(phones)"
                 
             }
             print("ReceiverViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
             let action = UIContextualAction(style: .normal,
                                             title: "↩️") { [weak self] (action, view, completionHandler) in
-                self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:userNumberKey)
+                self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:newUser)
                 completionHandler(true)
             }
             action.backgroundColor = UIColor(displayP3Red: 10, green: 5, blue: 15, alpha: 0)
@@ -2376,11 +2444,12 @@ extension ChatConversionCode : UITableViewDelegate, UITableViewDataSource,UICont
                 }
             } else {
                 forwardChat = "\(chatText?["\(receiverUserid)"] ?? "")"
-                newUser = "\(receiverUserid)"
+                newUser = "\(receiverName)"
                 forwardChatKey = "\(phones)"
                 
             }
             print("ReceiverReplyViewCell ForwardChat - \(forwardChat) | ForwardChatPhoto - \(forwardChatPhoto) |  ForwardChatVideo - \(forwardChatVideo) | ForwardChatKey - \(forwardChatKey)")
+            print("chat \(forwardChat) user \(newUser)")
             let action = UIContextualAction(style: .normal,
                                             title: "↩️") { [weak self] (action, view, completionHandler) in
                 self?.handleMarkAsFavourite(chats: self?.forwardChat ?? "" , user:newUser)
@@ -2576,7 +2645,6 @@ extension ChatConversionCode {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: chatTable.frame.width, height: 50))
         replyUser = UILabel(frame: CGRect(x: 10, y: 0, width: chatTable.frame.width-60, height: 30))
         replytxt = UILabel(frame: CGRect(x: 20, y: 25, width: chatTable.frame.width-60, height: 20))
-        
         let closebtn = UIButton()
         closebtn.setImage(UIImage(systemName: "clear"), for: .normal)
         closebtn.tintColor = .black
@@ -2586,8 +2654,6 @@ extension ChatConversionCode {
         view.addSubview(replyUser!)
         view.addSubview(replytxt!)
         view.addSubview(closebtn)
-        
-        
         return view
     }
     
