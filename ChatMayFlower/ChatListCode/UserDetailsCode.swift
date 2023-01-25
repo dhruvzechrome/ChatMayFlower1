@@ -111,7 +111,7 @@ class UserDetailsCode: UIViewController, UISearchBarDelegate, UISearchResultsUpd
     
     var currentUserData : [String:String] = [:]
     func getData() {
-        
+        usersDetails.removeAll()
         databaseRef = Database.database().reference().child("Contact List")
         databaseRef.observe(.childAdded) {[weak self](snapshot) in
             //            self!.mbProgressHUD(text: "Loading.")

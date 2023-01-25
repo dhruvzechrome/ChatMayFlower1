@@ -86,6 +86,7 @@ class StatusSentCode: UIViewController,UITextFieldDelegate {
                                             if let cv = cvc.viewControllers.first as? StatusVCViewController {
                                                 cv.getRefresh()
                                                 self.dismiss(animated: true) {
+                                                    cv.getRefresh()
                                                     hideProgress()
                                                 }
                                             }
@@ -105,8 +106,9 @@ class StatusSentCode: UIViewController,UITextFieldDelegate {
                                     if let vc = self.presentingViewController as? UITabBarController {
                                         if let cvc = vc.viewControllers?.last as? UINavigationController {
                                             if let cv = cvc.viewControllers.first as? StatusVCViewController {
-                                                cv.getRefresh()
+                                               
                                                 self.dismiss(animated: true) {
+                                                    cv.getRefresh()
                                                     hideProgress()
                                                 }
                                             }

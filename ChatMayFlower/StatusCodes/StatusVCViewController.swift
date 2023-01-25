@@ -72,7 +72,7 @@ class StatusVCViewController: UIViewController {
             navigationController?.present(vc!, animated: true, completion: nil)
         }
         
-        getData()
+        
         print("Current user == \(currentUser)")
     }
     func getContact(){
@@ -203,7 +203,6 @@ class StatusVCViewController: UIViewController {
         currentUserStatus.removeAll()
         key.removeAll()
         statusData.removeAll()
-        details.removeAll()
         _ = Storage.storage().reference()
         
         databaseRef = Database.database().reference().child("Contact List")
