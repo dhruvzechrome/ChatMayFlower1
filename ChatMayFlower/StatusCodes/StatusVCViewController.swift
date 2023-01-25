@@ -194,7 +194,87 @@ class StatusVCViewController: UIViewController {
             print("All user of firebase \(details) --- \(statuskey)")
         }
     }
-    
+    func getRefresh() {
+        // Create Firebase Storage Reference
+        statuskey.removeAll()
+        statusDetail.removeAll()
+        currentUserData.removeAll()
+        currentAData.removeAll()
+        currentUserStatus.removeAll()
+        key.removeAll()
+        statusData.removeAll()
+        details.removeAll()
+        _ = Storage.storage().reference()
+        
+        databaseRef = Database.database().reference().child("Contact List")
+        databaseRef.observe(.childAdded){[self](snapshot) in
+            _ = snapshot.key
+            print("singh ji",snapshot)
+            
+            guard let _ = snapshot.value as? [String:Any] else {return}
+            if let snapshots = snapshot.children.allObjects as? [DataSnapshot]{
+                databaseRef.child("\(snapshot.key)").child("status").observe(.childAdded) { snaps in
+                    _ = snaps.value
+                    
+                    if !statuskey.contains("\(snaps.key)") {
+                        print("my status1 \(snaps.key)")
+                        statuskey.append("\(snaps.key)")
+                        statusDetail.append(snaps.value as! [String:String])
+                        print("All user of firebase 121212 \(details) --- \(statuskey)")
+                    }
+                   
+                }
+                for snap in snapshots {
+                    let _ = snap.key
+                    let _ = snap.value!
+                    let userMap = snapshot.value! as! [String:Any]
+                    
+                    if snapshot.key == currentUser {
+                        currentUserData["Name"] = "\(userMap["Name"] ?? "")"
+                        currentUserData["Phone number"] = "\(userMap["Phone number"] ?? "")"
+                        currentUserData["location"] = "\(userMap["location"] ?? "")"
+                        currentUserData["profilepic"] = "\(userMap["photo url"] ?? "")"
+                        currentUserData["statuskey"] = "\(userMap["statuskey"] ?? "")"
+                        currentUserStatus = userMap["status"] as? [String : Any] ?? ["":""]
+                        currentUserData["status"] = "\(userMap["status"] ?? "")"
+                        
+                        currentAData["Name"] = "\(userMap["Name"] ?? "")"
+                        currentAData["Phone number"] = "\(userMap["Phone number"] ?? "")"
+                        currentAData["location"] = "\(userMap["location"] ?? "")"
+                        currentAData["profilepic"] = "\(userMap["photo url"] ?? "")"
+                        currentAData["statuskey"] = "\(userMap["statuskey"] ?? "")"
+                        currentAData["status"] = userMap["status"] as? [String:Any]
+//                            print("my status \(snaps.value)")
+                        statusTableView.reloadData()
+                    }
+                    
+                    if !key.contains(snapshot.key) {
+                        print("data of all firebase user \(userMap)")
+                        if snapshot.key != currentUser {
+                            
+                            if userMap["status"] != nil {
+                                _ = allUser.filter {user in
+                                    let frd = user["Phone number"]
+                                    if frd == snapshot.key && userMap["status"] != nil{
+                                        key.append(snapshot.key)
+                                        
+//                                        print("Other user status \(snaps.value)")
+                                        statusData.append(["Name": "\(user["Name"] ?? "")","Phone number":"\(userMap["Phone number"] ?? "")","status":userMap["status"]! ,"statuskey":"\(userMap["statuskey"] ?? "")","profilepic":"\(userMap["photo url"] ?? "")"])
+                                    }
+                                    return true
+                                }
+                            }
+                        }
+                        
+                    }
+                    
+                }
+            }
+            details = [[currentUserData], statusData]
+            statusTableView.reloadData()
+            print("All user of firebase \(details) --- \(statuskey)")
+        }
+    }
 }
 
 extension StatusVCViewController : UITableViewDelegate, UITableViewDataSource {

@@ -81,9 +81,17 @@ class StatusSentCode: UIViewController,UITextFieldDelegate {
                                         return
                                     }
                                     print("Update Successfully")
-                                    self.dismiss(animated: true) {
-                                        hideProgress()
+                                    if let vc = self.presentingViewController as? UITabBarController {
+                                        if let cvc = vc.viewControllers?.last as? UINavigationController {
+                                            if let cv = cvc.viewControllers.first as? StatusVCViewController {
+                                                cv.getRefresh()
+                                                self.dismiss(animated: true) {
+                                                    hideProgress()
+                                                }
+                                            }
+                                        }
                                     }
+                                    
                                 }
                             } else {
                                 database.child("Contact List").child("\(currentUser)").updateChildValues(["statuskey":"\(unique)"])
@@ -94,8 +102,15 @@ class StatusSentCode: UIViewController,UITextFieldDelegate {
                                         return
                                     }
                                     print("Update Successfully")
-                                    self.dismiss(animated: true) {
-                                        hideProgress()
+                                    if let vc = self.presentingViewController as? UITabBarController {
+                                        if let cvc = vc.viewControllers?.last as? UINavigationController {
+                                            if let cv = cvc.viewControllers.first as? StatusVCViewController {
+                                                cv.getRefresh()
+                                                self.dismiss(animated: true) {
+                                                    hideProgress()
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
