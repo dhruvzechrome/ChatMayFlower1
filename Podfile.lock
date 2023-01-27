@@ -612,9 +612,6 @@ PODS:
     - FirebaseAnalytics (~> 10.4.0)
   - Firebase/CoreOnly (10.4.0):
     - FirebaseCore (= 10.4.0)
-  - Firebase/Database (10.4.0):
-    - Firebase/CoreOnly
-    - FirebaseDatabase (~> 10.4.0)
   - Firebase/Firestore (10.4.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 10.4.0)
@@ -710,7 +707,7 @@ PODS:
     - GoogleUtilities/Network (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleDataTransport (9.2.0):
+  - GoogleDataTransport (9.2.1):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
@@ -816,11 +813,11 @@ DEPENDENCIES:
   - Firebase/Analytics
   - Firebase/Auth
   - Firebase/Core
-  - Firebase/Database
   - Firebase/Firestore
   - Firebase/Messaging
   - FirebaseAuth
   - FirebaseCore
+  - FirebaseDatabase
   - FirebaseStorage
   - JGProgressHUD
   - Kingfisher
@@ -881,7 +878,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: e7304d6ce5f83d9139f0a61383a2302beb99b111
   FirebaseStorage: 2fa8f1799f6ebff74c0311d9fa7e316404936080
   GoogleAppMeasurement: 173fa22ce7d62c29332568e853b39b2525a0e584
-  GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
+  GoogleDataTransport: ea169759df570f4e37bdee1623ec32a7e64e67c4
   GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
   "gRPC-C++": 9675f953ace2b3de7c506039d77be1f2e77a8db2
   gRPC-Core: 943e491cb0d45598b0b0eb9e910c88080369290b
@@ -899,6 +896,6 @@ SPEC CHECKSUMS:
   SteviaLayout: c2ecdcff57d44e38fd2f65e54ad52aeae28ca0c4
   YPImagePicker: f36043210c10b0783034eb1947d6e06e31c461e4
 
-PODFILE CHECKSUM: b3c3615eb41c12515f5d1186ecdfd2a420be31a4
+PODFILE CHECKSUM: 6db7502559ff5de36fabcfa6eacd4d6d44f7493f
 
 COCOAPODS: 1.11.3

@@ -4,11 +4,7 @@
    <FileRef
       location = "group:ChatMayFlower.xcodeproj">
    </FileRef>
-   <Group
-      location = "container:"
-      name = "New Group">
-      <FileRef
-         location = "group:Pods/Pods.xcodeproj">
-      </FileRef>
-   </Group>
+   <FileRef
+      location = "group:Pods/Pods.xcodeproj">
+   </FileRef>
 </Workspace>
